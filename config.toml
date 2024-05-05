@@ -24,31 +24,10 @@ highlight_theme = "base16-ocean-light"
 [extra]
 default_language = "en"
 
-[extra.show]
-tags = true
-links = true
-
-[languages.en.translations]
-language_name = "English"
-about = "About"
-home = "Home"
-tags = "Tags"
-archive = "Archive"
-links = "Links"
-date_format = "%Y-%m-%d"
-next_page = "Next Page"
-last_page = "Last Page"
-
-[extra.social]
-github = "rinekri"
-twitter = "rinekri"
-linkedin = "rinekri"
-
 [extra.comment.utterances]
 repo = "rinekri/blog-comments"
 issue_term = "pathname"
 theme = "github-light"
-
 
 [extra.papermod]
 title = "rinekri"
