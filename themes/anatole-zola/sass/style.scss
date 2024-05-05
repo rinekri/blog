@@ -850,11 +850,11 @@ a.btn {
 /* color styles */
 /* light mode */
 html.theme--light {
-  background-color: #fff;
+  background-color: #F1F6F9;
 
   body {
     color: rgba(0, 0, 0, 0.5);
-    background-color: #fff;
+    background-color: #F1F6F9;
   }
 
   a:link,
@@ -870,12 +870,12 @@ html.theme--light {
   /*basic styles ends*/
 
   .page-top {
-    background-color: #fff;
-    border-bottom: 1px solid #f2f2f2;
+    background-color: #F1F6F9;
+    border-bottom: 1px solid #9BA4B5;
 
     .nav {
       a {
-        color: #5A5A5A;
+        color: #212A3E;
       }
 
       a:hover {
@@ -883,14 +883,14 @@ html.theme--light {
       }
 
       a.current {
-        color: #5A5A5A;
-        border-bottom: 1px solid #5A5A5A;
+        color: #212A3E;
+        border-bottom: 1px solid #394867;
       }
     }
 
     .information #language-switch {
       button {
-        color: #5f5f5f;
+        color: #212A3E;
 
         &:hover {
           background-color: #f5f5f5;
@@ -911,8 +911,8 @@ html.theme--light {
   }
 
   #sidebar {
-    background-color: #fff;
-    border-right: 1px solid #f2f2f2;
+    background-color: #F1F6F9;
+    border-right: 1px solid #9BA4B5;
 
     .logo-title {
       .description {
@@ -939,11 +939,11 @@ html.theme--light {
   }
 
   .post {
-    background-color: #FFF;
+    background-color: #F1F6F9;
 
     .post-title {
       h2 {
-        color: #5f5f5f;
+        color: #212A3E;
       }
 
       h3 {
@@ -951,7 +951,7 @@ html.theme--light {
       }
 
       a {
-        color: #5f5f5f;
+        color: #212A3E;
       }
     }
 
@@ -965,11 +965,11 @@ html.theme--light {
       }
 
       h3 {
-        color: #5F5F5F;
+        color: #212A3E;
       }
 
       h4 {
-        color: #5F5F5F;
+        color: #212A3E;
       }
 
       blockquote {
@@ -994,16 +994,16 @@ html.theme--light {
     }
 
     .post-footer {
-      border-bottom: 1px solid #f2f2f2;
+      border-bottom: 1px solid #9BA4B5;
 
       .meta {
-        color: #bbbbbb;
+        color: #9BA4B5;
 
         a {
-          color: #bbbbbb;
+          color: #9BA4B5;
 
           &:hover {
-            color: #4786D6;
+            color: #394867;
           }
         }
       }
@@ -1018,11 +1018,11 @@ html.theme--light {
   }
 
   .pagination {
-    border-bottom: 1px solid #f2f2f2;
+    border-bottom: 1px solid #9BA4B5;
   }
 
   #disqus_thread {
-    border-bottom: 1px solid #f2f2f2;
+    border-bottom: 1px solid #9BA4B5;
   }
 
   .footer {

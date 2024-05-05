@@ -1,8 +1,9 @@
 # The URL the site will be built for
 base_url = "https://rinekri.com"
-theme = "anatole-zola"
+# theme = "anatole-zola"
+theme = "papermod"
 taxonomies = [
-  {name = "tags"},
+  {name = "tags", feed = true},
 ]
 title = "Ilya Nekrasov"
 description = "Android developer"
@@ -47,3 +48,37 @@ linkedin = "rinekri"
 repo = "rinekri/blog-comments"
 issue_term = "pathname"
 theme = "github-light"
+
+
+[extra.papermod]
+title = "rinekri"
+default_theme = "light"
+theme = "light"
+language_direction = "en"
+keywords = ["Ilya Nekrasov", "rinekri", "Android", "blog"]
+show_theme_toggle = false
+show_scroll_to_top = true
+show_code_copy_buttons = true
+show_reading_time = true
+show_word_count = true
+show_post_nav_links = false
+show_post_meta = true
+posts_title = "Last posts"
+default_toc_open = false
+show_post_edit_button = false
+edit_post_url = "https://github.com/rinekri/blog/tree/master"
+#copyright = ""
+date_format = "%Y-%m-%d"
+navigation = [
+    { url = "$BASE_URL/archive", title = "Archive" },
+    { url = "$BASE_URL/tags", title = "Tags" },
+]
+
+home_title = "Ilya Nekrasov"
+home_content = "Hi! I'm an <b>Android Developer</b> with more then <b>7 years</b> of experience.<br>I worked on apps for banks, corporate chats, maps, disks, and for a lot of smaller projects.<br>Interested in different sides of developing: CI/CD, build optimizations, different languages and platforms."
+social_icons = [
+    { url = "https://github.com/rinekri", title = "GitHub", icon = "github" },
+    { url = "https://www.linkedin.com/in/rinekri", title = "LinkedIn", icon = "linkedin" },
+    { url = "https://x.com/rinekri", title = "X", icon = "twitter" },
+    { url = "$BASE_URL/atom.xml", title = "RSS", icon = "rss" },
+]
