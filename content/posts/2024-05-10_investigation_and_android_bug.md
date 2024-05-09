@@ -2,6 +2,9 @@
 
 title = "Investigating an Android bug: The process"
 
+[taxonomies]
+tags = ["android", "bug", "guide", "experience"]
+
 +++
 
 Detective story of uncovering the reason behind a strange dark mode bug, with a helpful summary for anyone
