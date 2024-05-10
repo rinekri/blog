@@ -32,7 +32,6 @@
       {{ page.content | safe }}
   </div>
   {% endif %}
-  {% include "comments.html" %}
 
   <footer class="post-footer">
       {% if page.taxonomies.tags %}
@@ -51,6 +50,8 @@
     {#- if (and site.Params.ShowShareButtons (ne .Params.disableShare true)) }}
     {{- partial "share_icons.html" . -}}
     {{- end #}
+    {% include "comments.html" %}
+
   </footer>
 
 </article>
