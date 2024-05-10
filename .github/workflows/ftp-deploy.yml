@@ -1,0 +1,30 @@
+name: FTP deploy
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: 
+      image: ghcr.io/getzola/zola:v0.18.0
+    steps:
+      - 
+        name: Checkout code
+        uses: actions/checkout@v4
+      -
+        name: Build site
+        run: |
+          zola build
+      - name: Deploy
+        uses: SamKirkland/FTP-Deploy-Action@4.3.5
+        with:
+          ftp-server: ftp.rinekri.com
+          ftp-username: rinekric
+          ftp-password: ${{ secrets.FTP_PASSWORD }}
+          dangerous-clean-slate: true
+          dry-run: true
+          local-dir: ./public/
+          server-dir: ./domains/rinekri.com/public_html
+          
