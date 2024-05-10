@@ -27,5 +27,5 @@ jobs:
           dangerous-clean-slate: true
           dry-run: true
           local-dir: ./public/
-          server-dir: ./domains/rinekri.com/public_html
+          server-dir: ./domains/rinekri.com/public_html/
           
