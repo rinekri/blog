@@ -7,16 +7,13 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      packages: read
-    container: 
-      image: ghcr.io/getzola/zola:v0.18.0
-      options: --user root
     steps:
       - 
         name: Checkout code
         uses: actions/checkout@v4
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: zola@0.17.1
       -
         name: Build site
         run: |
