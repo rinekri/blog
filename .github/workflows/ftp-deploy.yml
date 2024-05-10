@@ -11,19 +11,19 @@ jobs:
       - 
         name: Checkout code
         uses: actions/checkout@v4
-      - uses: taiki-e/install-action@v2
+      - name: Install Zola
+        uses: taiki-e/install-action@v2
         with:
-          tool: zola@0.17.1
-      -
-        name: Build site
+          tool: zola@0.18.0
+      - name: Build site
         run: |
           zola build
       - name: Deploy
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          ftp-server: ftp.rinekri.com
-          ftp-username: rinekric
-          ftp-password: ${{ secrets.FTP_PASSWORD }}
+          server: ftp.rinekri.com
+          username: rinekric
+          password: ${{ secrets.FTP_PASSWORD }}
           dangerous-clean-slate: true
           dry-run: true
           local-dir: ./public/
