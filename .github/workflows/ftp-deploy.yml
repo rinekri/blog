@@ -24,6 +24,5 @@ jobs:
           server: ftp.rinekri.com
           username: rinekric
           password: ${{ secrets.FTP_PASSWORD }}
-          dry-run: true
           local-dir: ./public/
           server-dir: ./domains/rinekri.com/public_html/
