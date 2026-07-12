@@ -16,6 +16,29 @@
 <meta name="description" content="{{ config.description }}">
 {% endif %}
 
+{% set og_title = page.title | default(value=config.title) %}
+{% if page.description %}
+  {% set og_description = page.description %}
+{% elif page.summary is defined and page.summary %}
+  {% set og_description = page.summary | striptags %}
+{% else %}
+  {% set og_description = config.description %}
+{% endif %}
+<meta property="og:title" content="{{ og_title }}">
+<meta property="og:description" content="{{ og_description }}">
+<meta property="og:type" content="{% if page.title %}article{% else %}website{% endif %}">
+<meta property="og:site_name" content="{{ config.title }}">
+{% if current_url %}<meta property="og:url" content="{{ current_url }}">{% endif %}
+{% if page.extra.cover %}
+<meta property="og:image" content="{{ current_url ~ page.extra.cover }}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+{% endif %}
+<meta name="twitter:card" content="{% if page.extra.cover %}summary_large_image{% else %}summary{% endif %}">
+<meta name="twitter:title" content="{{ og_title }}">
+<meta name="twitter:description" content="{{ og_description }}">
+{% if page.extra.cover %}<meta name="twitter:image" content="{{ current_url ~ page.extra.cover }}">{% endif %}
+
 {% if page.author %}
 <meta name="author" content="{{ page.author }}">
 {% elif config.author %}
