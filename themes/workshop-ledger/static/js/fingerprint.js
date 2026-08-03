@@ -176,6 +176,13 @@ import { hashSeed, mulberry32 } from "./prng.js";
         redrawAll();
     }
 
+    // Post titles swap in a web font (Newsreader) after first paint — the
+    // reflow can change a card's box after its fingerprint canvas already
+    // sized/drew itself, leaving stale, mis-scaled strokes.
+    if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(redrawAll);
+    }
+
     // Auto (system) mode has no explicit commit step, so pick up the
     // system flip directly.
     if (window.matchMedia) {
