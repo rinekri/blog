@@ -442,4 +442,14 @@ import { hashSeed, mulberry32 } from "./prng.js";
     } else {
         init();
     }
+
+    // Hero heading uses a swapped-in web font (Newsreader) — its arrival
+    // reflows .signature-hero's content-driven height after the canvas has
+    // already been sized/drawn once, leaving stale, mis-scaled strokes.
+    if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(function () {
+            resizeCanvas();
+            draw();
+        });
+    }
 })();
