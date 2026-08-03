@@ -77,6 +77,9 @@
   color: var(--ink-soft);
   max-width: 640px;
   margin: 0 0 30px;
+  background: color-mix(in srgb, var(--paper) 90%, transparent);
+  padding: 8px 14px;
+  border-radius: var(--radius);
 }
 
 .signature-hero__cta {
@@ -88,6 +91,7 @@
   color: var(--ink);
   border-bottom: 2px solid var(--spark);
   padding-bottom: 3px;
+  margin: 6px 0 12px 14px;
   pointer-events: auto;
   transition: color 0.15s ease;
 }
@@ -100,7 +104,8 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 22px;
+  margin-top: 10px;
+  margin-left: 14px;
   pointer-events: auto;
 }
 
