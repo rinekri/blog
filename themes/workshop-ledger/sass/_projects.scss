@@ -1,0 +1,654 @@
+// ============================================================
+// /projects/ — flagship cards + dense row lists, grouped with
+// live-filtering chips (static/js/projects-filter.js)
+// ============================================================
+
+// Landing highlight for #project-<seed> jumps (hero canvas, resume links,
+// search). JS-toggled class, not :target — history.replaceState() updates
+// location.hash but doesn't make the browser re-evaluate :target matching.
+.pcard.is-highlighted,
+.prow.is-highlighted {
+  background-color: color-mix(in srgb, var(--spark) 10%, transparent);
+  transition: background-color 0.3s ease;
+}
+
+.prow {
+  border-radius: var(--radius);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pcard.is-highlighted,
+  .prow.is-highlighted {
+    transition: none;
+  }
+}
+
+.page-header .kicker {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 14.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 10px;
+}
+
+.lead-strip {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  color: var(--ink);
+  line-height: 1.6;
+  max-width: 74ch;
+  margin: 0 0 22px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.lead-strip b {
+  color: var(--moss);
+  font-weight: 600;
+  font-family: var(--font-sans);
+}
+
+.lead-strip a {
+  @extend %interactive-link;
+}
+
+// Sized down from the page's one real intro sentence so it reads as a
+// pointer to an alternate view, not a second lead paragraph.
+.lead-strip--secondary {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink-soft);
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-top: -10px;
+}
+
+// ---------- filter chip bar ----------
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 22px;
+  position: sticky;
+  // Sticks below the pinned .site-header instead of both competing for
+  // top:0. +2px for the header's border-bottom, not included in --header-height.
+  top: calc(var(--header-height) + 2px);
+  z-index: 5;
+  background: var(--paper);
+  padding-block: 10px;
+  border-bottom: 2px solid var(--ink);
+}
+
+.fchip {
+  @extend %interactive-chip;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--card);
+  color: var(--ink-soft);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.fchip.active {
+  border-color: var(--moss);
+  color: var(--moss);
+  background: var(--paper-dim);
+}
+
+.fchip .n {
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-faint);
+  font-size: 14px;
+}
+
+.fchip.active .n {
+  color: var(--moss);
+}
+
+.stack-filter {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--card);
+  color: var(--ink);
+  min-width: 200px;
+  flex: 1 1 200px;
+  max-width: 320px;
+}
+
+.stack-filter:focus-visible {
+  outline: 2px solid var(--moss);
+  outline-offset: 1px;
+}
+
+.stack-filter::placeholder {
+  color: var(--ink-faint);
+}
+
+.cat-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 22px;
+}
+
+.cat-legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink-faint);
+}
+
+// ---------- group sections ----------
+.pgroup {
+  margin-bottom: 8px;
+}
+
+.pgroup-head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 34px 0 14px;
+  font-family: var(--font-mono);
+  font-size: 14.5px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.pgroup-head .line {
+  flex: 1;
+  height: 2px;
+  background: var(--ink);
+}
+
+.pgroup-head .cnt {
+  color: var(--moss);
+}
+
+.pgroup:first-of-type .pgroup-head {
+  margin-top: 0;
+}
+
+// ---------- flagship cards ----------
+.anchors {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-flow: dense;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.pcard:has(.pcard-more[open]) {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 700px) {
+  .anchors {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pcard {
+  @extend %interactive-card;
+  @extend %interactive-row-fill;
+  @include interactive-row-title(".pcard-name");
+  position: relative;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  // Header (66px) + filter-bar (~65px) are both pinned now, stacked —
+  // this needs to clear both, not just the filter-bar alone.
+  scroll-margin-top: 156px;
+}
+
+.pcard .fp {
+  width: 100%;
+  height: 48px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper-dim);
+  display: block;
+  margin-bottom: 9px;
+}
+
+.pcard-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 6px 8px;
+  margin-bottom: 5px;
+  // Reserves a lane for the absolutely-positioned .dtoggle so the badge
+  // stops short of the card's edge. flex-wrap is a safety net only — the
+  // real fix is .pcard-name/.badge below allowing shrink/wrap.
+  padding-right: 38px;
+}
+
+.pcard-name {
+  font-family: var(--font-mono);
+  font-size: 17.5px;
+  font-weight: 600;
+  color: var(--ink);
+  // Flex items default to min-width:auto — combined with a shrink-resistant
+  // .badge, that's what let this row overflow instead of sharing width.
+  min-width: 0;
+}
+
+.pcard-name::before {
+  content: "› ";
+  color: var(--moss);
+}
+
+// /resume/'s link_to_projects=true stretches this sibling <a> over the whole
+// card, kept BELOW the name link and toggle so both stay independently clickable.
+.pcard-stretched-link {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.pcard-name a {
+  position: relative;
+  z-index: 2;
+}
+
+.pcard-name .dot {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 7px;
+  margin-bottom: 2px;
+}
+
+.pcard-name a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.pcard-name a:hover {
+  text-decoration: underline;
+}
+
+.pcard-desc {
+  font-size: 16px;
+  color: var(--ink-soft);
+  line-height: 1.55;
+  margin-bottom: 10px;
+  flex: 1;
+}
+
+.pcard-meta {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink-faint);
+  display: flex;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+
+.pcard-meta .stat {
+  color: var(--spark-deep);
+  font-weight: 600;
+}
+
+// ---------- expandable detail panel (cards + rows) ----------
+// No border/background/padding until open — closed, only the toggle icon shows.
+.pcard-more {
+  margin-top: 10px;
+}
+
+.pcard-more[open] {
+  padding: 14px 20px 16px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+// .prow-more is a plain <div> (not its own <details> — see .prow-entry),
+// so open/closed state is driven by the parent .prow-entry[open].
+.prow-more {
+  margin-top: 0;
+}
+
+.prow-entry[open] .prow-more {
+  padding: 14px 0 16px 38px;
+  border-top: 1px solid var(--line);
+}
+
+// Progressive enhancement (Chromium 129+ interpolate-size + ::details-content),
+// degrades to instant snap elsewhere, no JS. Screen-only: unscoped block-size:0
+// would fight _print.scss's forced-open panels and re-collapse them in print.
+@media screen {
+  .pcard-more,
+  .prow-entry {
+    interpolate-size: allow-keywords;
+  }
+
+  .pcard-more::details-content,
+  .prow-entry::details-content {
+    block-size: 0;
+    overflow: clip;
+    transition: block-size 0.25s ease, content-visibility 0.25s allow-discrete;
+  }
+
+  .pcard-more[open]::details-content,
+  .prow-entry[open]::details-content {
+    block-size: auto;
+  }
+}
+
+// Positioned unconditionally, including while [open], so the toggle stays
+// pinned instead of falling into flow as the panel's first child. 75px =
+// card padding-top (18px) + .fp height (48px) + its margin (9px) — constants
+// that don't shift with title wrap, since wrap only grows .pcard-top's bottom.
+.pcard-more summary {
+  position: absolute;
+  top: 75px;
+  right: 20px;
+  z-index: 2;
+  list-style: none;
+  cursor: pointer;
+}
+
+.pcard-more summary::-webkit-details-marker {
+  display: none;
+}
+
+.dtoggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--ink-soft);
+  transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.dtoggle:hover {
+  color: var(--moss);
+  border-color: var(--moss);
+  background: var(--paper-dim);
+}
+
+// No box/border/floating badge — an inline glyph riding the row's own
+// %interactive-row-fill hover, so a dense list gains no second element.
+.prow-toggle {
+  display: inline-flex;
+  align-items: center;
+  color: var(--ink-faint);
+  transition: color 0.15s ease;
+}
+
+.prow:hover .prow-toggle {
+  color: var(--moss);
+}
+
+.dtoggle__cross {
+  position: relative;
+  width: 12px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 1px;
+  transition: transform 0.2s ease;
+}
+
+.dtoggle__cross::before {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: -5px;
+  width: 2px;
+  height: 12px;
+  background: currentColor;
+  border-radius: 1px;
+}
+
+// native <details>'s own [open] state drives the morph — no JS, same
+// "state attribute selects the rotated form" idiom as the mobile
+// nav-toggle's hamburger-to-X bars (sass/_layout.scss).
+details[open] > summary .dtoggle__cross {
+  transform: rotate(45deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dtoggle__cross {
+    transition: none;
+  }
+}
+
+// Panels are force-opened for the résumé PDF export (sass/_print.scss);
+// the toggle itself has no job left to do there.
+@media print {
+  .dtoggle,
+  .prow-toggle {
+    display: none;
+  }
+}
+
+.pcard-more > * + *,
+.prow-more > * + * {
+  margin-top: 16px;
+}
+
+.pcard-more__label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink-faint);
+  margin-bottom: 4px;
+}
+
+// Wins over the generic `.pcard-more > * + *` 16px rule so a label stays
+// tight against the content it owns, instead of reading as its own section.
+.pcard-more__label + * {
+  margin-top: 4px;
+}
+
+.pcard-arch {
+  font-size: 16px;
+  color: var(--ink-soft);
+  line-height: 1.55;
+}
+
+.pcard-achievements {
+  margin: 0;
+  padding-inline-start: 18px;
+  font-size: 16px;
+  color: var(--ink-soft);
+  line-height: 1.55;
+}
+
+.pcard-achievements li {
+  margin-bottom: 4px;
+}
+
+.pcard-achievements li:last-child {
+  margin-bottom: 0;
+}
+
+.pcard-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+// ---------- visibility badges ----------
+.badge {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 3px 6px;
+  border-radius: var(--radius);
+  border: 1px solid;
+  text-align: center;
+  // Wraps rather than truncates — a status word like "CONFIDENTIAL" needs
+  // to stay legible, and nowrap would overflow past the toggle's lane.
+  white-space: normal;
+  max-width: 108px;
+  flex-shrink: 1;
+}
+
+.badge.public {
+  color: var(--moss);
+  border-color: var(--moss);
+}
+
+.badge.confidential {
+  color: var(--ink-faint);
+  border-color: var(--line);
+}
+
+.badge.artifact {
+  color: var(--ink);
+  border-color: var(--ink-faint);
+  background: var(--paper-dim);
+}
+
+// ---------- dense row list ----------
+.prow {
+  @extend %interactive-row-fill;
+  @include interactive-row-title(".prow-name a");
+  display: grid;
+  grid-template-columns: 12px minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 10px;
+  margin-inline: -10px;
+  border-top: 1px solid var(--line);
+
+  // align-items:center centers the dot against the row's full height; when
+  // name wraps 2+ lines, pin dot to the first line instead (cap-height nudge).
+  > .dot {
+    align-self: start;
+    margin-top: 6px;
+  }
+  // Header (66px) + filter-bar (~65px) are both pinned now, stacked —
+  // this needs to clear both, not just the filter-bar alone.
+  scroll-margin-top: 156px;
+}
+
+// <summary class="prow"> needs the browser's default disclosure-marker
+// suppressed, same as .pcard-more summary above — the toggle glyph
+// (.prow-toggle) is the only expand/collapse affordance shown.
+summary.prow {
+  cursor: pointer;
+  list-style: none;
+}
+
+summary.prow::-webkit-details-marker {
+  display: none;
+}
+
+// :first-of-type matches by tag name, which can't reliably pick the first
+// row across a mixed div/summary sequence — a Tera modifier class is used instead.
+.prow--first {
+  border-top: none;
+}
+
+// Rows with a toggle (wrapped in .prow-entry) get a 4th grid column for
+// it; plain rows (no expandable content) keep the original 3-column grid
+// so no empty track/gap appears where there's nothing to show.
+.prow-entry summary.prow {
+  grid-template-columns: 12px minmax(0, 1fr) auto auto;
+}
+
+@media (max-width: 640px) {
+  .prow {
+    grid-template-columns: 12px minmax(0, 1fr);
+  }
+
+  .prow-entry summary.prow {
+    grid-template-columns: 12px minmax(0, 1fr) auto;
+  }
+
+  .prow .prow-badge {
+    display: none;
+  }
+
+  .pcard,
+  .prow {
+    // Header (66px) + filter-bar (~116px once its chips wrap at this
+    // width) stacked, both pinned.
+    scroll-margin-top: 208px;
+  }
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.dot--leadership {
+  background: var(--cat-leadership);
+}
+
+.dot--architecture {
+  background: var(--cat-architecture);
+}
+
+.dot--feature {
+  background: var(--cat-feature);
+}
+
+.prow-name {
+  font-family: var(--font-mono);
+  font-size: 16.5px;
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.prow-name a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid var(--line);
+}
+
+.prow-name .yr {
+  color: var(--ink-soft);
+  font-weight: 600;
+  margin-left: 6px;
+  font-size: 14px;
+}
+
+.prow-desc {
+  display: block;
+  font-size: 15.5px;
+  color: var(--ink-soft);
+  margin-top: 2px;
+}
+
+// ---------- NDA masking ----------
+.mask {
+  font-family: var(--font-mono);
+  background: var(--ink-faint);
+  color: var(--ink-faint);
+  opacity: 0.28;
+  padding: 0 3px;
+  border-radius: 1px;
+  letter-spacing: 1px;
+  user-select: none;
+}

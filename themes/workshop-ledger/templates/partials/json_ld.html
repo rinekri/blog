@@ -1,0 +1,80 @@
+{%- set resume = load_data(path="data/resume.toml") -%}
+{%- set current_role = resume.employment | first -%}
+{%- set person_id = config.base_url ~ "/#person" -%}
+{%- set person_image = config.base_url ~ "/" ~ config.extra.portrait_image -%}
+{%- set_global knows_about = [] -%}
+{%- for group in resume.skills -%}
+  {%- for item in group.items -%}
+    {%- set_global knows_about = knows_about | concat(with=item.name) -%}
+  {%- endfor -%}
+{%- endfor -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": {{ person_id | json_encode() | safe }},
+  "name": {{ resume.full_name | json_encode() | safe }},
+  "jobTitle": {{ current_role.role | json_encode() | safe }},
+  "worksFor": {
+    "@type": "Organization",
+    "name": {{ current_role.company | json_encode() | safe }}
+  },
+  "url": {{ config.base_url | json_encode() | safe }},
+  "image": {{ person_image | json_encode() | safe }},
+  "knowsAbout": [
+    {%- for skill in knows_about %}{{ skill | json_encode() | safe }}{% if not loop.last %},{% endif %}{% endfor -%}
+  ],
+  "sameAs": [
+    {%- set_global same_as = [] -%}
+    {%- for item in config.extra.social_icons -%}
+      {%- if item.icon != "rss" -%}
+        {%- set_global same_as = same_as | concat(with=item.url | replace(from='$BASE_URL', to=config.base_url)) -%}
+      {%- endif -%}
+    {%- endfor -%}
+    {%- for url in same_as %}{{ url | json_encode() | safe }}{% if not loop.last %},{% endif %}{% endfor -%}
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": {{ config.title | json_encode() | safe }},
+  "url": {{ config.base_url | json_encode() | safe }},
+  "author": { "@id": {{ person_id | json_encode() | safe }} }
+}
+</script>
+
+{#- Only emit BreadcrumbList where the page renders a matching visual trail (posts, tags) — claiming a crumb the page doesn't show reads as spammy structured data. -#}
+{%- if page.title or term %}
+{%- set_global crumb_names = ["Home"] -%}
+{%- set_global crumb_items = [config.base_url] -%}
+{%- if term -%}
+  {%- set_global crumb_names = crumb_names | concat(with="Tags") -%}
+  {%- set_global crumb_items = crumb_items | concat(with=get_url(path='@/tags/_index.md')) -%}
+  {%- set_global crumb_names = crumb_names | concat(with=term.name) -%}
+  {%- set_global crumb_items = crumb_items | concat(with=current_url) -%}
+{%- elif page.title -%}
+  {%- set_global crumb_names = crumb_names | concat(with="Posts") -%}
+  {%- set_global crumb_items = crumb_items | concat(with=get_url(path='@/posts/_index.md')) -%}
+  {%- set_global crumb_names = crumb_names | concat(with=page.title) -%}
+  {%- set_global crumb_items = crumb_items | concat(with=page.permalink) -%}
+{%- endif %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {%- for name in crumb_names %}
+    {
+      "@type": "ListItem",
+      "position": {{ loop.index }},
+      "name": {{ name | json_encode() | safe }},
+      "item": {{ crumb_items[loop.index0] | json_encode() | safe }}
+    }{% if not loop.last %},{% endif %}
+    {%- endfor %}
+  ]
+}
+</script>
+{%- endif %}

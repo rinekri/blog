@@ -1,0 +1,227 @@
+// ============================================================
+// Post list (/posts/, /tags/<tag>/) — a rich fingerprint-banner card
+// for the newest year (or every result on tag pages), compact
+// title-only rows for older years.
+// ============================================================
+
+.post-list__total {
+  margin-top: 14px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink-faint);
+}
+
+.post-list__archive-link {
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink-faint);
+}
+
+.post-list__archive-link a {
+  @extend %interactive-link;
+}
+
+.post-list__year {
+  margin-top: 48px;
+}
+
+.post-list__year:first-child {
+  margin-top: 0;
+}
+
+// Scoped to /posts/ only — .year-heading is shared with /archive/,
+// which must stay at its current density/size.
+.post-list__year .year-heading {
+  margin-bottom: 10px;
+}
+
+.post-list__year .year-heading__num {
+  font-size: 48px;
+}
+
+// Same "label + trailing rule" language as .pgroup-head .line and .list-heading::after.
+.post-list__year .year-heading__line {
+  flex: 1;
+  height: 2px;
+  background: var(--ink);
+}
+
+// ---------- rich card (newest year on /posts/, every result on /tags/) ----------
+
+// Fixed column counts with real per-card borders, not auto-fit — auto-fit
+// leaves unfilled last-row tracks unsized, letting the gap background
+// show through as a solid block instead of a thin line.
+.post-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 2px solid var(--ink);
+  background: var(--paper);
+}
+
+.post-card {
+  @extend %interactive-row-fill;
+  @include interactive-row-title(".post-card__title");
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  color: inherit;
+  text-decoration: none;
+}
+
+.post-card:nth-child(3n) {
+  border-right: 0;
+}
+
+.post-card:last-child {
+  border-right: 0;
+  border-bottom: 0;
+}
+
+@media (max-width: 1000px) {
+  .post-card-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .post-card:nth-child(3n) {
+    border-right: 1px solid var(--line);
+  }
+
+  .post-card:nth-child(2n) {
+    border-right: 0;
+  }
+
+  .post-card:last-child {
+    border-right: 0;
+  }
+}
+
+.post-card__fp {
+  display: block;
+  width: 100%;
+  height: 160px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper-dim);
+  margin-bottom: 16px;
+}
+
+.post-card__meta {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 10px;
+}
+
+.post-card__meta span + span::before {
+  content: "·";
+  margin-inline: 8px;
+}
+
+.post-card__title {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 26px;
+  line-height: 1.25;
+  color: var(--ink);
+  margin: 0 0 10px;
+  text-wrap: balance;
+}
+
+.post-card__summary {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+
+// ---------- compact row (older years on /posts/) ----------
+
+.post-row-list {
+  border: 2px solid var(--ink);
+}
+
+.post-row {
+  @extend %interactive-row-fill;
+  @include interactive-row-title(".post-row__title");
+  display: block;
+  padding: 16px 20px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.post-row-list .post-row + .post-row {
+  border-top: 1px solid var(--line);
+}
+
+.post-row__meta {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink-faint);
+  margin-bottom: 3px;
+}
+
+.post-row__meta span + span::before {
+  content: "·";
+  margin-inline: 6px;
+}
+
+.post-row__title {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 17px;
+  color: var(--ink);
+}
+
+// Continues the frame's 2px ink weight through the pager instead of
+// leaving it a disconnected 1px-bordered widget.
+.post-list + .paginav {
+  border-top: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+}
+
+.post-list + .paginav a {
+  padding: 20px 8px;
+}
+
+// ---------- tag-page sibling chips ----------
+
+.term-siblings {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.term-siblings__label {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink-faint);
+}
+
+@media (max-width: 720px) {
+  .post-card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .post-card {
+    border-right: 0;
+  }
+
+  .post-card__fp {
+    height: 130px;
+  }
+}

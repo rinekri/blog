@@ -1,0 +1,579 @@
+// ---------- signature hero (full-bleed generative composite) ----------
+// Breaks out of .shell's max-width via the viewport-relative margin trick
+// below; sass/_base.scss sets `overflow-x: hidden` on <html> as the safety
+// net for that trick.
+.signature-hero {
+  position: relative;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  min-height: 88vh;
+  display: flex;
+  overflow: hidden;
+  border-bottom: 2px solid var(--ink);
+  margin-bottom: 56px;
+}
+
+.signature-hero__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.signature-hero__content {
+  position: relative;
+  z-index: 1;
+  margin: auto;
+  max-width: var(--shell-width);
+  width: 100%;
+  padding-inline: var(--gap);
+  padding-block: 60px;
+  pointer-events: none;
+}
+
+// Sized for the hero name's weight; too soft for the smaller mono kicker
+// (a blurred shadow's falloff still lets a thin glyph's stroke show
+// through against a saturated canvas line) — see .signature-hero__kicker's
+// own solid backdrop pill instead.
+%hero-text-halo {
+  text-shadow: 0 0 6px var(--paper), 0 0 6px var(--paper), 0 0 12px var(--paper);
+}
+
+.signature-hero__kicker {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 14px;
+  background: color-mix(in srgb, var(--paper) 90%, transparent);
+  padding: 4px 10px;
+  border-radius: var(--radius);
+}
+
+.signature-hero__name {
+  @extend %hero-text-halo;
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: var(--font-size-display);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin: 0 0 20px;
+  text-wrap: balance;
+}
+
+.accent-word {
+  color: var(--spark);
+  font-style: italic;
+}
+
+.signature-hero__role {
+  font-family: var(--font-sans);
+  font-size: clamp(17px, 2vw, 22px);
+  color: var(--ink-soft);
+  max-width: 640px;
+  margin: 0 0 30px;
+}
+
+.signature-hero__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--ink);
+  border-bottom: 2px solid var(--spark);
+  padding-bottom: 3px;
+  pointer-events: auto;
+  transition: color 0.15s ease;
+}
+
+.signature-hero__cta:hover {
+  color: var(--spark-deep);
+}
+
+.signature-hero__catfilter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 22px;
+  pointer-events: auto;
+}
+
+.signature-hero__catbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--ink-soft);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.signature-hero__catbtn:hover {
+  border-color: var(--moss);
+  color: var(--ink);
+}
+
+.signature-hero__catbtn.is-active {
+  border-color: var(--moss);
+  color: var(--moss);
+  background: var(--paper-dim);
+}
+
+.signature-hero__scroll-hint {
+  position: absolute;
+  z-index: 1;
+  bottom: 28px;
+  left: 28px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink-faint);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.signature-hero__scroll-hint::after {
+  content: "";
+  width: 22px;
+  height: 1px;
+  background: var(--ink-faint);
+}
+
+// The dim canvas strokes alone read as empty space rather than an
+// invitation on first paint — a slow pulse gives visitors a reason to
+// move the mouse over the field.
+@media (prefers-reduced-motion: no-preference) {
+  .signature-hero__scroll-hint {
+    animation: scroll-hint-pulse 2.6s ease-in-out infinite;
+  }
+
+  @keyframes scroll-hint-pulse {
+    0%, 100% { opacity: 0.55; }
+    50% { opacity: 1; }
+  }
+}
+
+.signature-hero__label {
+  position: absolute;
+  z-index: 2;
+  transform: translate(-50%, calc(-100% - 10px));
+  pointer-events: none;
+  background: var(--card);
+  border: 1px solid var(--spark);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: var(--radius);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  white-space: nowrap;
+}
+
+.signature-hero__label.is-visible {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .signature-hero__label {
+    transition: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .signature-hero {
+    min-height: 70vh;
+  }
+}
+
+// ---------- "the numbers" — continuous bordered ledger ----------
+.numbers {
+  padding-block: 64px;
+}
+
+.list-heading {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 26px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.list-heading .glyph {
+  width: 16px;
+  height: 16px;
+}
+
+.list-heading::after {
+  content: "";
+  flex: 1;
+  height: 2px;
+  background: var(--ink);
+}
+
+// ---------- stat row ----------
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border: 2px solid var(--ink);
+  margin-bottom: 40px;
+}
+
+// Named .nstat, not .stat — collides with the inline <span class="stat">
+// marker used in data/projects.toml's meta text, scoped elsewhere via
+// .pcard-meta .stat / .pcard__stars .stat.
+.nstat {
+  @extend %interactive-row-fill;
+  @include interactive-row-title(".nstat__num");
+  display: block;
+  padding: 26px 22px;
+  border-right: 2px solid var(--ink);
+  font-variant-numeric: tabular-nums;
+  color: inherit;
+  text-decoration: none;
+}
+
+.nstat:last-child {
+  border-right: 0;
+}
+
+.nstat__num {
+  display: block;
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 52px;
+  line-height: 1;
+  margin-bottom: 8px;
+  color: var(--ink);
+}
+
+.nstat__label {
+  font-size: 15px;
+  color: var(--ink-soft);
+}
+
+// ---------- chip row ----------
+// Base look comes from sass/_components.scss; tunes margins for this
+// context instead of inheriting that rule's symmetric margin-block.
+.numbers .chip-row {
+  margin-top: 0;
+  margin-bottom: 46px;
+}
+
+.numbers .chip-row .chip-icon {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+  fill: currentColor;
+  color: var(--moss);
+}
+
+.numbers .chip-row .chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+// ---------- card row ----------
+.card-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 2px solid var(--ink);
+}
+
+// Named .numbers-card, not .pcard — collides with sass/_projects.scss's
+// .pcard, which wins the cascade since it imports after _home.scss.
+// Not %interactive-card (sass/_interactive.scss) — this tile owns only its
+// right-side divider, not a full border box, so background-fill +
+// title-recolor is used instead (shared with .pcard/.repo-card/.notes-*).
+.numbers-card {
+  @extend %interactive-row-fill;
+  @include interactive-row-title(".numbers-card__name");
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 24px;
+  border-right: 2px solid var(--ink);
+  color: inherit;
+  text-decoration: none;
+}
+
+.numbers-card:last-child {
+  border-right: 0;
+}
+
+.numbers-card__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.numbers-card__name {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 17.5px;
+  color: var(--ink);
+}
+
+.numbers-card__stars {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 14px;
+  color: var(--spark-deep);
+  white-space: nowrap;
+}
+
+.numbers-card__desc {
+  font-size: 16px;
+  color: var(--ink-soft);
+  line-height: 1.55;
+}
+
+.numbers-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: auto;
+  padding-top: 4px;
+}
+
+.chip.chip--sm {
+  padding: 3px 9px;
+  font-size: 13px;
+}
+
+@media (max-width: 720px) {
+  .stat-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .nstat:nth-child(2) {
+    border-right: 0;
+  }
+
+  .card-row {
+    grid-template-columns: 1fr;
+  }
+
+  .numbers-card {
+    border-right: 0;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  .numbers-card:last-child {
+    border-bottom: 0;
+  }
+}
+
+// ---------- bench notes (recent posts) ----------
+// Extends .numbers' flush-ledger chrome directly below it rather than a
+// second full-bleed moment — the hero stays the page's one dramatic break.
+.bench-notes {
+  padding-block: 64px;
+}
+
+.notes-frame {
+  border: 2px solid var(--ink);
+}
+
+.notes-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+}
+
+.notes-grid--solo {
+  grid-template-columns: 1fr;
+}
+
+.notes-featured {
+  @extend %interactive-row-fill;
+  @include interactive-row-title(".notes-featured__title");
+  display: block;
+  padding: 24px;
+  border-right: 2px solid var(--ink);
+  color: inherit;
+  text-decoration: none;
+}
+
+.notes-grid--solo .notes-featured {
+  border-right: 0;
+}
+
+.notes-featured__fp {
+  display: block;
+  width: 100%;
+  height: 180px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper-dim);
+  margin-bottom: 16px;
+}
+
+.notes-featured__meta {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 10px;
+}
+
+.notes-featured__meta span + span::before {
+  content: "·";
+  margin-inline: 8px;
+}
+
+.notes-featured__title {
+  display: block;
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 30px;
+  line-height: 1.2;
+  color: var(--ink);
+  margin-bottom: 10px;
+  text-wrap: balance;
+}
+
+.notes-featured__summary {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  margin: 0;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+
+.notes-side {
+  display: flex;
+  flex-direction: column;
+}
+
+.notes-row {
+  @extend %interactive-row-fill;
+  @include interactive-row-title(".notes-row__title");
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  flex: 1;
+  padding: 18px 22px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.notes-side .notes-row + .notes-row {
+  border-top: 1px solid var(--line);
+}
+
+.notes-row__meta {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink-faint);
+}
+
+.notes-row__meta span + span::before {
+  content: "·";
+  margin-inline: 6px;
+}
+
+.notes-row__title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 19px;
+  line-height: 1.3;
+  color: var(--ink);
+}
+
+// A lone side post has as much vertical room as .notes-featured and reads
+// as sparse centered — give it the same top-aligned banner treatment.
+.notes-side--solo .notes-row {
+  justify-content: flex-start;
+}
+
+.notes-row__fp {
+  display: block;
+  width: 100%;
+  height: 100px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper-dim);
+  margin-bottom: 6px;
+}
+
+.notes-row__summary {
+  margin: 4px 0 0;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+
+.notes-more {
+  margin: 0;
+  padding: 16px 22px;
+  border-top: 2px solid var(--ink);
+  font-family: var(--font-mono);
+  font-size: 14px;
+}
+
+.notes-more a {
+  @extend %interactive-link;
+}
+
+.notes-more__sep {
+  color: var(--ink-faint);
+  margin-inline: 4px;
+}
+
+// templates/base.html renders <main> and the footer as siblings, so a
+// direct adjacent-sibling selector on .bench-notes (nested inside <main>)
+// can't reach .site-footer — :has() is needed to cross that boundary and
+// zero out the sitewide footer margin, since .bench-notes' own
+// padding-block already provides separation.
+.site-main:has(> .bench-notes) + .site-footer {
+  margin-top: 0;
+}
+
+@media (max-width: 720px) {
+  .notes-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .notes-grid:not(.notes-grid--solo) .notes-featured {
+    border-right: 0;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  .notes-featured__fp {
+    height: 140px;
+  }
+}

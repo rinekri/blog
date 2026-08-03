@@ -1,0 +1,17 @@
+{% if config.extra.comment.utterances %}
+<a id="comments"></a>
+{# theme.js injects the real utterances <script> once resolved theme is known, so the embed matches the page instead of config's static default. #}
+<div id="utterances-mount"
+    data-repo="{{ config.extra.comment.utterances.repo }}"
+    data-issue-term="{{ config.extra.comment.utterances.issue_term }}"
+></div>
+<noscript>
+<script src="https://utteranc.es/client.js"
+    repo="{{ config.extra.comment.utterances.repo }}"
+    issue-term="{{ config.extra.comment.utterances.issue_term }}"
+    theme="{{ config.extra.comment.utterances.theme }}"
+    crossorigin="anonymous"
+    async>
+</script>
+</noscript>
+{% endif %}

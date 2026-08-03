@@ -1,0 +1,1111 @@
+# Data for /projects/ (templates/projects.html).
+# "card" items render in the .anchors grid (flagship/most-interesting per group, with a
+# generative fingerprint canvas); "row" items render in the denser .prow list below.
+
+lead_strip = "Alongside engineering work, I lead <b>KODE's Android department — 26 people</b> (grown from 17 over 2025). <a href=\"/leadership/\">More on hiring, mentorship, and grading →</a>"
+lead_strip_secondary = "Prefer a different view? Browse the <a href=\"/stack/\">stack wall</a> or the <a href=\"/graph/\">project graph</a> →"
+#
+# Additional fields (added for /resume/, see data/resume.toml):
+#   company            - "KODE" for every commercial/opensource item (outstaff/client work is
+#                         still KODE employment); omitted entirely for personal-group items.
+#   role               - only set when company is set. Three eras, matching data/resume.toml's
+#                         employment array: "Android Department Lead" (2025+), "Team Lead"
+#                         (2020-2024, plus Otkritie — dated 2019-20 but it's the project that
+#                         actually led to the promotion), "Android Developer" (before 2020).
+#                         Used by /resume/ to bucket items under the matching era.
+#   date_start/date_end - parsed from the existing `meta` year fragment. Informational only,
+#                         not used for filtering. date_end = "present" for open-ended spans
+#                         or spans reaching into the current year (2026). Omitted for
+#                         personal/idea-stage items with a literal "—" placeholder.
+#   category           - only set on company="KODE" items. One of "leadership" (people/process
+#                         management), "architecture" (tech-lead/process/tooling authorship),
+#                         "feature" (shipped IC/product work). Drives /resume/'s 3-bucket
+#                         grouping (templates/resume.html) — items missing this field simply
+#                         don't appear in any Experience bucket, so keep it set on every
+#                         company="KODE" entry.
+#   achievements       - optional list of strings, concrete results/impact. Shown in the
+#                         /projects/ expand panel alongside architecture/stack. Omitted where
+#                         no verifiable detail exists beyond `desc` — don't pad with filler.
+#   features           - optional list of strings, granular "what was built" (concrete screens/
+#                         flows/modules), one line per feature — more exhaustive and less curated
+#                         than `achievements` (which stays impact-focused highlights). Rendered
+#                         `| safe`, same list markup as achievements, shown above it in the
+#                         expand panel. Omitted where there's nothing beyond what
+#                         `desc`/`achievements` already say — don't pad with filler.
+#   architecture       - optional single string, technical approach/notes. Rendered `| safe`
+#                         (same convention as `desc`, which already embeds inline
+#                         `<span class="mask">` markup for confidential entries).
+#   stack              - concrete named technologies/techniques drawn from each entry's own
+#                         achievements/architecture text, not just the top-level framework.
+#                         Used to render only once per entry — inside the Details expand panel
+#                         (a duplicate short preview on the row face was removed) — so there's
+#                         no fixed tag-count cap; add as many specific names as the entry's own
+#                         detail supports. Shown on /resume/'s Selected Projects grid and in the
+#                         /projects/ expand panel.
+#
+# Confidentiality note: achievements/architecture text must not name a client/employer beyond
+# what `vis`/`badge_label`/`desc` already discloses for that entry — keep the same masking
+# discipline `desc` already uses for `vis = "confidential"` items.
+
+[[groups]]
+key = "commercial"
+label = "Commercial"
+
+  [[groups.items]]
+  kind = "card"
+  vis = "public"
+  name = "Utair"
+  url = "https://kode.ru/projects/utair"
+  badge_label = "Public"
+  desc = 'Flight booking and check-in — asynchronous flow over WebSocket.'
+  meta = ['<span class="stat">×50</span> sales', '<span>2017–18</span>']
+  company = "KODE"
+  role = "Android Developer"
+  date_start = 2017
+  date_end = 2018
+  category = "feature"
+  home_feature = true
+  architecture = 'Clean Architecture + MVP across dedicated Gradle modules — domain/data/presentation split, Conductor-based routing, Kodein-DI.'
+  features = [
+    "<strong>Flight list v2</strong> — reworked flight-search parameter retrieval/storage and domain models, plus routing between the search and results screens.",
+    '<strong>Tariff cards</strong> — expandable tariff details with a standby-status display and a disabled-tariff alert state.',
+    '<strong>Push notification handling</strong> — support for non-standard notification channel IDs and default data-notification display logic.',
+    "<strong>Payment-state handling</strong> — a dedicated \"already paid\" order error and routing.",
+  ]
+  achievements = [
+    '<strong>Shipped the full class-upgrade flow</strong> end to end — boarding pass → order → services — with upgrade state persisted per flight segment.',
+    "<strong>Built the async WebSocket booking layer</strong> from scratch (Socket.IO + a reactive RxSocket wrapper) as a new layer in the app's architecture.",
+    '<strong>Laid the feature-analytics tracking pattern</strong> (a reusable AnalyticsAdapter) later reused across the app, not a one-off.',
+  ]
+  stack = ["Kotlin", "RxJava2", "RxAndroid", "RxBinding", "RxRelay", "Socket.IO", "Conductor", "Mosby3 (MVP/MVI)", "Kodein-DI", "Retrofit", "OkHttp", "Moshi", "AdapterDelegates", "Epoxy", "Firebase", "Crashlytics", "AppMetrica", "Detekt", "GitLab CI"]
+  seed = "utair-mobile"
+
+  [[groups.items]]
+  kind = "card"
+  vis = "confidential"
+  name = "VoIP platform"
+  badge_label = "Confidential"
+  desc = 'Corporate calls and video conferencing — <span class="mask">██████</span>, WebRTC/pjsip.'
+  meta = ['<span>2022–25, again from 2026</span>']
+  company = "KODE"
+  role = "Team Lead"
+  date_start = 2022
+  date_end = "present"
+  category = "architecture"
+  architecture = "MVP-style client (Dagger DI, Moxy presentation layer, Cicerone navigation) on top of a proprietary SIP calling SDK, plus a separate cross-product design-system library — outstaff engagement embedded directly in the client's product team, not a delivered-and-handed-off project."
+  features = [
+    "<strong>Built call-quality instrumentation</strong> — MOS scoring and RTP statistics (jitter, RTT, loss) in the SIP SDK, surfaced through a QoS diagnostic dialog in the app.",
+    "<strong>Built codec configuration</strong> — remote-config and dev-settings-driven Opus codec tuning, plus SDP override support in the SIP SDK.",
+    "<strong>Migrated the Settings screen to Jetpack Compose</strong> with a full theme switcher, converting the underlying screen from Java to Kotlin.",
+    "<strong>Migrated voicemail onto a new backend API</strong> and shipped a feature-flagged redesigned voicemail UI.",
+    "<strong>Handled new Android runtime call-permission rules</strong> (Android 13+) and adapted incoming-call push/answer-from-push handling around them.",
+    "<strong>Founded a cross-product design-system library</strong> from its first commit — module structure, CI/CD, publishing pipeline, and a Figma-to-code design-token pipeline (colors/typography) for both Compose and legacy XML theming.",
+    "<strong>Built most of that design system's base components from scratch</strong> (buttons, selection controls, tabs, snackbar, avatar, list items) with a screenshot-testing suite and a storybook-style demo app for designers.",
+    "<strong>Migrated the design system from Material 2 to Material 3</strong> as it grew to be shared by a second product in the same suite.",
+  ]
+  achievements = [
+    "<strong>Diagnosed and fixed ~30 flaky or broken UI acceptance tests</strong> across calling, chat, voicemail, and hunt-group flows — root causes ranged from missing click-readiness waits to notification-timing races to hidden dialogs blocking interaction.",
+    '<strong>Built a custom Espresso failure handler</strong> that auto-captures a screenshot and full stack trace on any test failure, cutting the guesswork out of debugging flaky UI runs.',
+    "<strong>Carried the app across three Android platform-target migrations</strong> (Android 14/15/16), replacing legacy background-work APIs with WorkManager and adapting to predictive back.",
+    "<strong>Became the lead maintainer of the client's shared design-system library</strong>, the majority contributor across its lifetime and the foundation both the main app and a second product build on.",
+    "<strong>Sustained a multi-year, top-tier contribution</strong> to the main app itself alongside the SDK and design-system work, spanning platform migrations, calling/voicemail features, and ongoing QA hardening.",
+  ]
+  stack = ["Kotlin", "Java", "WebRTC", "pjsip", "XMPP", "Jetpack Compose", "Material 3", "ConstraintLayout", "Dagger", "Moxy", "Cicerone", "Retrofit", "OkHttp", "Gson", "Room", "WorkManager", "Glide", "RxJava", "Espresso", "Robolectric", "Detekt", "Firebase", "Pendo", "Splunk"]
+  seed = "voip-platform-conf"
+
+  [[groups.items]]
+  kind = "card"
+  vis = "confidential"
+  name = "Mapping service"
+  badge_label = "Confidential"
+  desc = 'Offline maps, client app. Search, bookmarks — <span class="mask">████</span> contributor.'
+  meta = ['<span>2021–22, 2025–26</span>']
+  company = "KODE"
+  role = "Team Lead"
+  date_start = 2021
+  date_end = "present"
+  category = "feature"
+  architecture = 'Feature work sits on top of a large legacy C++ mapping core exposed to Android via hand-written JNI; newer feature modules layer Compose plus a modular core/feature split over the untouched legacy engine.'
+  features = [
+    '<strong>Added a ruler mode</strong> and an offline/online mobile-network toggle to the map view.',
+    '<strong>Added star-rating filters</strong> to hotel-booking search.',
+    '<strong>Redesigned the bottom navigation bar and bottom sheet</strong>, and unified text styles/theming into a shared UI kit.',
+    "<strong>Wired up feature toggles</strong> and CI integrations with the team's issue tracker and chat tooling.",
+    '<strong>Integrated an internal MR/commit-policy validator</strong> and set up automated test pipelines.',
+  ]
+  achievements = [
+    '<strong>Shipped search and bookmarks</strong> (categories, history, suggestions, filters, result highlighting, sync, sharing) end to end in the client app of a large open-source mapping engine.',
+    '<strong>Migrated legacy modules</strong> onto a new core/feature/data/domain structure.',
+    '<strong>Modernized CI/CD</strong> in a later return phase — build-cache warm-up, linter migration, dependency updates.',
+  ]
+  stack = ["Kotlin", "C++", "CMake", "JNI/C++ interop", "Jetpack Compose", "kotlin-inject", "Anvil", "Decompose", "Ktor", "kotlinx.serialization", "SQLDelight", "DataStore", "KSP", "Kotest", "Paparazzi"]
+  seed = "mapping-service-nda"
+
+  [[groups.items]]
+  kind = "row"
+  vis = "public"
+  icon = "chart"
+  name = "National Lottery"
+  url = "https://kode.ru/projects/naczionalnaya-lotereya-virtualnaya-fabrika-schastlivyh-biletov"
+  badge_label = "Public"
+  desc = 'Instant lottery kiosks'
+  meta = ['2024–26']
+  company = "KODE"
+  role = "Team Lead"
+  date_start = 2024
+  date_end = "present"
+  category = "feature"
+  features = [
+    '<strong>Restructured feature modules</strong> by purpose (map, tickets, a new business module) as part of the module cleanup.',
+    '<strong>Added error-state feedback</strong> — insufficient-coin and pin-change error snackbars, unfilled-profile-field indicators, and a tournament description screen.',
+    '<strong>Added an instant-game close-confirmation dialog</strong> and a config refresh after coin collection.',
+    '<strong>Migrated the CI/CD setup</strong> to a newer internal plugin/toolkit and fixed a Windows-only ktlint issue.',
+  ]
+  achievements = [
+    '<strong>Built the core UI components</strong> of the game loop (bottom bar, statistics, scan, and draw screens) and a module restructuring pass.',
+    '<strong>Closed out a round of bug fixes</strong> across the already-shipped screens.',
+    '<strong>Shipped to a large public audience</strong> — the app drew strong download volume shortly after release.',
+  ]
+  stack = ["Kotlin", "Coroutines", "Jetpack Compose", "Material3", "Accompanist", "Coil", "Lottie", "Dagger", "Anvil", "Unicorn2 (MVI)", "way", "pathfinder", "Retrofit", "kotlinx.serialization", "OkHttp", "SQLDelight", "LibGDX", "AppMetrica", "AppsFlyer", "Firebase", "LeakCanary", "ML Kit", "Detekt", "ktlint"]
+  seed = "national-lottery"
+
+  [[groups.items]]
+  kind = "row"
+  vis = "confidential"
+  icon = "hierarchy"
+  name = "Loyalty platform (travel)"
+  badge_label = "Confidential"
+  desc = 'Miles for purchases, in-house backend'
+  meta = ['2022–23']
+  company = "KODE"
+  role = "Team Lead"
+  date_start = 2022
+  date_end = 2023
+  category = "architecture"
+  architecture = 'Clean Architecture, feature modules split into data/domain/ui/routing, MVI on top of a custom state-machine core, Conductor-based routing.'
+  features = [
+    '<strong>Shipped the profile module</strong> to release, including a QR-code scanning flow.',
+    '<strong>Built the geolocation and place-selection flow</strong> as a dedicated, reusable module.',
+    '<strong>Added resource-locale selection</strong> and config-driven base-URL switching.',
+    "<strong>Implemented a hash-cache layer</strong> (in-memory, later refactored into a repository) and the core flow-switching logic between the app's main sections.",
+  ]
+  achievements = [
+    "<strong>Forked the base template</strong> and set the initial architecture and code-generation conventions with the project's first commit.",
+    '<strong>Built the ground-up foundation</strong>: base routing, base UI components, theming, and the network layer.',
+    '<strong>Set up CI/CD</strong> — internal/release build tagging, daily builds.',
+    "<strong>Led development for most of the project's active life</strong> — the largest single contributor by commit volume.",
+    "<strong>Shipped a genuinely public, still-active app</strong> — later confirmed live on major app stores with a wide install base.",
+  ]
+  stack = ["Kotlin", "Coroutines", "Jetpack Compose", "Accompanist", "Coil", "Lottie", "MVI (Unicorn/Machine)", "SQLDelight", "Conductor", "Toothpick", "Retrofit", "OkHttp", "Moshi", "DataStore", "Firebase", "WorkManager", "LeakCanary", "ML Kit", "CameraX", "Kotest", "MockK", "Turbine", "Detekt", "ktlint"]
+  seed = "loyalty-travel"
+
+  [[groups.items]]
+  kind = "row"
+  vis = "public"
+  icon = "building"
+  name = "BurgerKing Logist"
+  url = "https://kode.ru/projects/burger-king"
+  badge_label = "Public"
+  desc = 'Courier profile, order status tracking'
+  meta = ['2021']
+  company = "KODE"
+  role = "Team Lead"
+  date_start = 2021
+  date_end = 2021
+  category = "feature"
+  features = [
+    '<strong>Refined push-notification handling</strong> across the courier app.',
+    '<strong>Carried the app through to production release</strong> — swapped in the production Firebase config and cleaned up the auth interceptor for the app-key header.',
+  ]
+  achievements = [
+    '<strong>Owned the courier profile screen</strong> and the order list/status flow — the two largest modules in the app by change volume.',
+    '<strong>Shipped the order-search and status-display logic</strong> that went to production ahead of launch.',
+  ]
+  stack = ["Kotlin", "MVI", "RxJava2", "RxRelay", "RxAndroid", "Toothpick", "Conductor", "Retrofit", "OkHttp", "Moshi", "SQLDelight", "Epoxy", "Coil", "Firebase", "Kotest", "MockK", "ktlint", "Detekt", "GitLab CI"]
+  seed = "burgerking"
+
+  [[groups.items]]
+  kind = "row"
+  vis = "confidential"
+  icon = "grid"
+  name = "Cloud storage"
+  badge_label = "Confidential"
+  desc = 'Tech lead — deleting files from previews (photo/video/audio/documents), context menu with action categories, critical cross-module bug fixes'
+  meta = ['2021']
+  company = "KODE"
+  role = "Team Lead"
+  date_start = 2021
+  date_end = 2021
+  category = "architecture"
+  features = [
+    '<strong>Configured routing</strong> for the albums flow.',
+    '<strong>Refactored business logic out of the UI layer</strong> into domain models, and extracted shared mediators between feature modules.',
+    "<strong>Adapted the shared UI kit</strong> to the project's needs.",
+  ]
+  achievements = [
+    '<strong>Tech-led the project</strong> for roughly half a year — architecture calls, code review, and hands-on mentoring across the team.',
+    '<strong>Shipped cross-cutting delete-from-preview logic</strong> for photo/video/audio/document files and a context menu with action categories.',
+    "<strong>Fixed critical, cross-module bugs</strong> (a file-selection hang, multi-folder copy) touching 34 of the app's 46 feature modules.",
+  ]
+  stack = ["Kotlin", "RxJava2", "Toothpick", "Conductor", "Retrofit", "OkHttp", "Moshi", "SQLDelight", "Glide", "Epoxy", "WorkManager", "Kotest", "MockK"]
+  seed = "cloud-storage"
+
+  [[groups.items]]
+  kind = "row"
+  vis = "public"
+  icon = "building"
+  name = "Otkritie"
+  url = "https://tagline.ru/kode/cases/otkrytie--mobiljniy-bank-i-cifrovoy-ofis/"
+  badge_label = "Public"
+  desc = 'Team lead for the payments team — SBP (Russian Faster Payments System) transfers, templates'
+  meta = ['2019–20']
+  company = "KODE"
+  role = "Team Lead"
+  date_start = 2019
+  date_end = 2020
+  category = "leadership"
+  features = [
+    "<strong>Built the money-operations details and history screens</strong> — the app's core day-to-day banking view.",
+    '<strong>Shipped internal transfers</strong> alongside the SBP/phone and by-requisites transfer flows.',
+  ]
+  achievements = [
+    "<strong>Led the core payments team</strong> for about a year — the app's most heavily used, highest-stakes module.",
+    '<strong>Shipped the key payment flows</strong>: SBP/phone transfers, legal-entity transfers by requisites (incl. tax payments), and scheduled payment templates.',
+    '<strong>Drove architecture refactors</strong> of the money-operations and payment-templates modules.',
+  ]
+  stack = ["Kotlin", "RxJava2", "MVVM", "Toothpick", "Retrofit", "OkHttp", "Gson", "Room", "Mockito", "AssertJ"]
+  seed = "otkritie"
+
+  [[groups.items]]
+  kind = "row"
+  vis = "public"
+  icon = "hierarchy"
+  name = "Sochi Casino"
+  url = "https://kode.ru/projects/kazino"
+  badge_label = "Public"
+  desc = 'Loyalty program, poker functionality'
+  meta = ['2019']
+  company = "KODE"
+  role = "Android Developer"
+  date_start = 2019
+  date_end = 2019
+  category = "feature"
+  features = [
+    '<strong>Built the registration and verification flow</strong> with its own routing.',
+    '<strong>Hardened authentication</strong> (PIN, OTP, fingerprint) with real validation and error handling, not just stubs.',
+    '<strong>Refined push notifications</strong> and updated the shared UI kit and screen styles.',
+  ]
+  achievements = [
+    "<strong>Wrote the project's first commit</strong> and shaped its initial module structure.",
+    '<strong>Built a feature-toggle system</strong> with an admin debug panel, reused by the team afterward.',
+    '<strong>Shipped the poker functionality</strong> end to end — variant list, tournament rules, blind selector.',
+    '<strong>Won industry recognition</strong> — the app placed in the "Golden App" awards (Entertainment category) and won a Tagline Awards design honor.',
+  ]
+  stack = ["Kotlin", "MVI (rx-flux)", "RxJava2", "RxAndroid", "RxRelay", "RxBinding", "Toothpick", "Conductor", "Retrofit", "OkHttp", "Moshi", "SQLDelight", "Epoxy", "Picasso", "Firebase", "AppMetrica", "Detekt", "ktlint", "TestNG"]
+  seed = "sochi-casino"
+
+  [[groups.items]]
+  kind = "row"
+  vis = "confidential"
+  icon = "building"
+  name = "Consumer lending"
+  badge_label = "Confidential"
+  desc = 'Loans, SelfID verification — <span class="mask">██████</span>'
+  meta = ['2018–19']
+  company = "KODE"
+  role = "Android Developer"
+  date_start = 2018
+  date_end = 2019
+  category = "feature"
+  features = [
+    '<strong>Added feature-toggle-gated mock data</strong> and currency mapping to the loans list.',
+    '<strong>Handled identity-verification edge cases</strong> (e.g. an unrecognized-phone error state).',
+    '<strong>Built the loan-repayment step flow</strong> — a progress indicator across repayment steps, plus the bottom navigation menu.',
+  ]
+  achievements = [
+    "<strong>Stood up several core lending features</strong> from scratch in the product's first year: loans list, loan origination, identity verification, and fingerprint login.",
+    '<strong>Added an SSL/network-security backport</strong> so certificate pinning worked on older Android versions — a real requirement for a banking app.',
+    "<strong>Returned years later in an infrastructure capacity</strong> — fixed CI runner and Gradle-cache issues and advised on build rules for the long-running, multi-market codebase.",
+    '<strong>Formalized team process</strong> — wrote the fork/contribution wiki, commit-message conventions, and Android Studio project templates.',
+  ]
+  stack = ["Kotlin", "Jetpack Compose", "Material3", "MVI (Unicorn2)", "Toothpick", "Retrofit", "OkHttp", "Moshi", "Coroutines", "Coil", "DataStore", "SSL/certificate pinning", "Firebase", "Amplitude", "Adjust", "Zendesk", "Onfido (KYC)", "LeakCanary", "WorkManager", "Detekt", "ktlint", "TestNG"]
+  seed = "consumer-lending"
+
+  [[groups.items]]
+  kind = "row"
+  vis = "confidential"
+  icon = "hierarchy"
+  name = "Appkode Android starter-kit"
+  badge_label = "Internal"
+  desc = "Shared app template — theming, auth, CI/CD — forked into client apps"
+  meta = ['2018–19']
+  company = "KODE"
+  role = "Android Developer"
+  date_start = 2018
+  date_end = 2019
+  category = "architecture"
+  architecture = "A shared starter-kit template forked per client engagement — theming, auth, and CI/CD infrastructure built once and reused, with each fork then diverging into its own client-specific feature set."
+  achievements = [
+    "<strong>Built the shared theming/design-system foundation</strong> (typography, color palette, base styles) reused across every project forked from the template.",
+    "<strong>Built a reusable authentication template module</strong> — PIN/fingerprint and JWT-based login flows — for downstream apps to adopt directly.",
+    "<strong>Set up the CI/CD release pipeline</strong> — automated changelog generation from git tags/commits, APK publishing, and crash-reporting integration — reused across every fork.",
+    "<strong>Authored the team's engineering wiki and conventions</strong> — git flow, commit-message templates, and code style, plus the fork/onboarding steps for new client projects.",
+  ]
+  stack = ["Kotlin", "Android Views", "Conductor", "Toothpick", "RxJava2", "Retrofit", "GitLab CI", "Detekt"]
+  seed = "appkode-starter-kit"
+
+  [[groups.items]]
+  kind = "row"
+  vis = "confidential"
+  icon = "building"
+  name = "Hospital registration app"
+  badge_label = "Confidential"
+  desc = 'Patient registration, document scanning — <span class="mask">████</span>'
+  meta = ['2018']
+  company = "KODE"
+  role = "Android Developer"
+  date_start = 2018
+  date_end = 2018
+  category = "feature"
+  achievements = [
+    "<strong>Built the document-scanning feature end to end</strong> — camera capture, a native recognition pipeline, and UI for scan progress, results, and error states.",
+    "<strong>Built the patient-registration flow</strong> — multi-section form navigation, custom date/dropdown selectors, and save/loading states.",
+    "<strong>Wired the scanner into registration</strong> — recognized document data feeds directly into the registration form.",
+  ]
+  stack = ["Kotlin", "Android Views", "Conductor", "Mosby MVI", "Retrofit", "Room", "RxJava2", "Native (SWIG) interop"]
+  seed = "hospital-registration"
+
+  [[groups.items]]
+  kind = "row"
+  vis = "confidential"
+  icon = "building"
+  name = "Loyalty program"
+  badge_label = "Confidential"
+  desc = 'White-label for restaurant chains, two brands'
+  meta = ['2017–18']
+  company = "KODE"
+  role = "Android Developer"
+  date_start = 2017
+  date_end = 2018
+  category = "feature"
+  features = [
+    '<strong>Added a payment-success confetti animation</strong> to the receipt confirmation screen.',
+    '<strong>Refactored the check-in result screen</strong> and its payment-status-dependent navigation.',
+    '<strong>Handled geo-permission edge cases</strong> and deferred map initialization for the venue map.',
+    '<strong>Optimized icon assets and shared color tokens</strong> as part of the white-label brand port.',
+  ]
+  achievements = [
+    '<strong>Shipped the post-payment "Thank You" redesign</strong> and a card-linking flow with contextual onboarding tooltips.',
+    '<strong>Reworked table-reservation and check-splitting flows</strong>, and redesigned the venue map (pin clustering, geo-onboarding).',
+    '<strong>Ported the whole UI theme</strong> to a second white-label brand without touching business logic.',
+    '<strong>Delivered features as one of many contributors</strong> on a large, fast-moving team, rather than owning the core architecture.',
+  ]
+  stack = ["Kotlin", "RxJava2", "RxAndroid", "RxRelay", "RxBinding", "Dagger", "Moxy (MVP)", "Retrofit", "OkHttp", "Gson", "requery (ORM)", "SQLCipher", "Glide", "Timber", "PermissionsDispatcher", "ZXing", "White-label theming"]
+  seed = "loyalty-restaurant"
+
+  [[groups.items]]
+  kind = "row"
+  vis = "confidential"
+  icon = "education"
+  name = "Educational app"
+  badge_label = "Confidential"
+  desc = '2 releases, 9 months — <span class="mask">████</span> for migrant workers'
+  meta = ['2016–18']
+  company = "KODE"
+  role = "Android Developer"
+  date_start = 2016
+  date_end = 2018
+  category = "feature"
+  features = [
+    '<strong>Added push-notification re-engagement prompts</strong> ("learn a new word" reminders).',
+    '<strong>Built word-example display logic</strong> and fixed an auto-update bug in a later maintenance pass.',
+  ]
+  achievements = [
+    '<strong>Designed and built a language-learning app</strong> from scratch — word cards, categories, quizzes, progress tracking — largely solo.',
+    '<strong>Shipped two full releases</strong>, including a complete architecture rewrite between them.',
+    '<strong>Supported two localized flavors</strong> for two different audiences with separate assets and translations.',
+  ]
+  stack = ["Kotlin", "MVP (Moxy)", "Conductor", "Dagger", "Retrofit", "OkHttp", "Moshi", "RxJava", "RxAndroid", "RxRelay", "SQLDelight", "Groupie", "Firebase Cloud Messaging", "Picasso", "Product flavors"]
+  seed = "educational-app"
+
+  [[groups.items]]
+  kind = "row"
+  vis = "public"
+  icon = "building"
+  name = "BlueOrange"
+  url = "https://kode.ru/projects/blue-or"
+  badge_label = "Public"
+  desc = 'Mobile bank for businesses and individuals'
+  meta = ['2016–18']
+  company = "KODE"
+  role = "Android Developer"
+  date_start = 2016
+  date_end = 2018
+  category = "feature"
+  architecture = "Bootstrapped the app from project inception — multi-flavor Gradle setup, MVP (Moxy) base controllers, DataBinding, RxJava2 — as the founding engineer and top contributor for the engagement's full ~19 months."
+  features = [
+    '<strong>Updated the root-detection security module</strong> to cover new threat patterns.',
+    '<strong>Built account-list refresh logic</strong> for the balances screen.',
+    "<strong>Built the accounts and cards modules</strong> — account list/detail, paginated transaction history, card list/detail/activation.",
+    '<strong>Built payment features</strong>: own-account transfers, free-form payments with input validation, and payment templates.',
+    "<strong>Refactored multi-language support into a standalone module</strong>, and fixed a set of memory leaks (integrating LeakCanary to catch more).",
+    "<strong>Updated the real-time socket protocol</strong> powering the app's live-data channel.",
+  ]
+  achievements = [
+    "<strong>Founding engineer</strong> — set up the app's architecture from its first commit and remained its single largest contributor throughout.",
+    "<strong>Built the UI-routing layer</strong> between screen controllers and the app's error/snackbar messaging.",
+    '<strong>Shipped core banking features</strong>: quick balances, Digipass authentication, payment templates, language switching.',
+    '<strong>Carried the app across three major release cycles</strong> (1.0 → 2.0 → 3.0), taking on a growing share of release-integration and branch-merge responsibility over the engagement.',
+  ]
+  stack = ["Kotlin", "MVP (Moxy)", "Conductor", "Dagger", "RxJava", "RxAndroid", "RxRelay", "RxBinding", "Retrofit", "OkHttp", "Moshi", "Groupie", "Firebase", "Crashlytics", "Digipass auth", "LeakCanary", "Mockito", "Spek"]
+  seed = "blueorange"
+
+  [[groups.items]]
+  kind = "row"
+  vis = "public"
+  icon = "building"
+  name = "Binbank"
+  url = "https://kode.ru/projects/ee-bank"
+  badge_label = "Public"
+  desc = 'Modular decomposition of a legacy bank app'
+  meta = ['2017']
+  company = "KODE"
+  role = "Android Developer"
+  date_start = 2017
+  date_end = 2017
+  category = "architecture"
+  architecture = 'Migrated a legacy MVP monolith toward modular boundaries (network/DB pulled into dedicated modules) while shipping features in parallel.'
+  features = [
+    '<strong>Shipped a deposit-settings screen</strong> with a deposit-closing flow.',
+    '<strong>Added region selection</strong> in the provider list and auto-detected the payment operator from user input.',
+    '<strong>Built payment templates</strong> for recurring transactions.',
+    '<strong>Shipped the branch/ATM map</strong> — pin clustering plus address and metro-station search.',
+  ]
+  achievements = [
+    '<strong>Ran a systematic modular decomposition</strong> of an inherited legacy app — pulled services into a dedicated network module, split out the local database, migrated the package after a corporate rebrand.',
+    '<strong>Wrote the architecture-vision doc</strong> that guided the refactor.',
+    "<strong>Fixed the bulk of the app's bugs and crashes</strong>, including payment-transaction crashes.",
+    '<strong>Helped ship a top-ranked banking app</strong> — placed near the top of an independent mobile banking industry ranking, ahead of several major national banks.',
+  ]
+  stack = ["Java", "MVP", "Realm", "RxJava2", "RxAndroid", "RxRelay", "Retrofit", "OkHttp", "Gson", "Butterknife", "Epoxy", "AutoValue", "AppMetrica", "Espresso"]
+  seed = "binbank"
+
+  [[groups.items]]
+  kind = "row"
+  vis = "public"
+  icon = "globe"
+  name = "HM (My Yugra)"
+  url = "https://kode.ru/projects/moya-yugra"
+  badge_label = "Public"
+  desc = 'Regional tourism guide, 1st place in its category'
+  meta = ['2016']
+  company = "KODE"
+  role = "Android Developer"
+  date_start = 2016
+  date_end = 2016
+  category = "feature"
+  seed = "hm-yugra"
+
+  [[groups.items]]
+  kind = "row"
+  vis = "public"
+  icon = "message"
+  name = "MobiNews / AvtoDost"
+  url = "https://kode.ru/projects/yol"
+  badge_label = "Public"
+  desc = 'Community app for driver discussions'
+  meta = ['2016']
+  company = "KODE"
+  role = "Android Developer"
+  date_start = 2016
+  date_end = 2016
+  category = "feature"
+  features = [
+    '<strong>Built the "travel companion" matching flow</strong> (filters, a dedicated Travel screen/presenter) for finding fellow drivers.',
+    '<strong>Worked the profile screen</strong> — gender, city, and avatar fields.',
+    '<strong>Fixed push-notification bugs</strong>, including duplicate re-subscription and companion/offer alerts.',
+    '<strong>Fixed database-migration and image-cropping bugs</strong>, added Wi-Fi-only content loading, and localized the app with a default RU locale.',
+  ]
+  achievements = [
+    '<strong>Stabilized a two-year-old legacy codebase</strong> through release, joining at its final push.',
+    '<strong>Shipped Facebook-based registration</strong>, push notifications, and profile/filter logic fixes.',
+  ]
+  stack = ["Java", "RxJava", "RxAndroid", "RxRelay", "RxBinding", "Dagger 2", "Retrofit", "OkHttp", "Moshi", "Butterknife", "Glide", "AutoValue", "Facebook SDK", "Socket.IO", "Crashlytics"]
+  seed = "mobinews"
+
+  [[groups.items]]
+  kind = "row"
+  vis = "confidential"
+  icon = "globe"
+  name = "Travel service"
+  badge_label = "Confidential"
+  desc = 'Guide booking without intermediaries'
+  meta = ['2016']
+  company = "KODE"
+  role = "Android Developer"
+  date_start = 2016
+  date_end = 2016
+  category = "feature"
+  seed = "travel-service"
+
+[[groups]]
+key = "opensource"
+label = "Open Source"
+
+  [[groups.items]]
+  kind = "card"
+  vis = "public"
+  name = "build-publish-plugin"
+  url = "https://github.com/appKODE/build-publish-plugin"
+  badge_label = "Public"
+  desc = 'Gradle plugin: automated build publishing, changelog, Jira/ClickUp.'
+  meta = ['<span class="stat">★11</span> GitHub', '<span>since 2022, sole maintainer</span>']
+  company = "KODE"
+  role = "Team Lead"
+  date_start = 2022
+  date_end = "present"
+  category = "architecture"
+  home_feature = true
+  stars = "11"
+  architecture = 'plugin-core supplies shared DSL/build-service infrastructure; each integration (Firebase, Play, Slack, Telegram, Jira, Confluence, ClickUp, Nextcloud) is its own Gradle module with a thin HTTP client behind it.'
+  features = [
+    '<strong>Migrated the whole toolchain</strong> to version catalogs and KSP (from kapt), moving build scripts onto Kotlin DSL conventions.',
+    '<strong>Moved the Jira integration onto a shared build service</strong> — one HTTP client per integration instead of recreating one on every task invocation.',
+    '<strong>Migrated Confluence and Jira serialization</strong> from Moshi to Kotlinx Serialization, and added test coverage for the Confluence and Telegram integrations.',
+  ]
+  achievements = [
+    "<strong>Sole maintainer for ~83% of the project's history</strong> — led the move from a monolithic plugin to the modular \"build-publish-novo\" line (plugin-core + independent integration modules).",
+    '<strong>Introduced a provider-agnostic issue-resolver seam</strong> shared by the Jira and ClickUp integrations.',
+    '<strong>Shipped major version 2.0</strong> (a deliberate DSL break) followed by 2.1 with multi-instance/multi-project Jira support.',
+  ]
+  stack = ["Kotlin", "Gradle Plugin API", "kotlinx.serialization", "OkHttp", "Retrofit", "grgit (Git)", "Gradle Plugin Portal publishing", "Jira API", "ClickUp API", "Slack API", "Telegram API", "Confluence API"]
+  seed = "build-publish-plugin"
+
+  [[groups.items]]
+  kind = "card"
+  vis = "confidential"
+  name = "MR Validation Tool"
+  badge_label = "Internal"
+  desc = 'AI-powered MR/PR reviewer — I defined the architecture and development phases and drove the review, rather than hand-writing all the code myself.'
+  meta = ['<span>2026 · architecture author</span>']
+  company = "KODE"
+  role = "Android Department Lead"
+  date_start = 2026
+  date_end = "present"
+  category = "architecture"
+  architecture = 'Layered plugin system (core → plugins-core → plugins-extended → plugins-ai) with AI providers wrapped in Decorator layers for caching, fallback, and multi-model consensus.'
+  features = [
+    '<strong>Decomposed the core validation API</strong> into separate modules with registry-based defaults.',
+    '<strong>Added a knowledge-enrichment layer</strong> (issue tracker, wiki, CI, and symbol context) with prompt-injection protection, PII redaction, and SSRF hardening.',
+  ]
+  achievements = [
+    '<strong>Defined the architecture for a 131-module MR/PR validator</strong> — 21 built-in rules, 8 output formats, AI review across 7 LLM providers with consensus/fallback/caching.',
+    '<strong>Directed the implementation</strong> (largely AI-agent-executed under this oversight) through 43 releases in under 3 months.',
+    "<strong>Ported the tool's regex engine</strong> to a from-scratch Kotlin port of Pomsky, embedded via WASM instead of a subprocess.",
+  ]
+  stack = ["Kotlin Multiplatform", "WASM (Chicory)", "Ktor", "kotlinx.serialization", "ANTLR-Kotlin", "Pomsky (regex DSL)", "Multi-LLM orchestration (Anthropic/OpenAI/Gemini/Ollama/LiteLLM/Bifrost)", "Mokkery", "ktlint", "Detekt", "kover", "Dokka", "OWASP dependency-check", "Docker", "Gradle Plugin API"]
+  seed = "karandash-ai-reviewer"
+
+  [[groups.items]]
+  kind = "card"
+  vis = "artifact"
+  name = "Career Framework"
+  badge_label = "Own product"
+  desc = 'Grading web app: 33 competency matrices, onboarding→offboarding. React+Express+Prisma, sole author.'
+  meta = ['<span>sole author · 6 weeks, 2026</span>']
+  company = "KODE"
+  role = "Android Department Lead"
+  date_start = 2026
+  date_end = 2026
+  category = "feature"
+  architecture = 'Content (33 competency matrices) and code live in separate repositories so data can be edited independently of the viewer; the backend owns all lifecycle logic, the frontend consumes it via React Query.'
+  features = [
+    '<strong>Built a process-manager CLI</strong> (start/stop/status/logs) that checks Postgres readiness and runs pending Prisma migrations before bringing the stack up.',
+  ]
+  achievements = [
+    '<strong>Built and shipped a full-stack grading tool</strong> solo in 6 weeks — React/TypeScript frontend, Express/Prisma backend.',
+    '<strong>Grew it into a full employee-lifecycle tool</strong>: onboarding, 1:1/probation, review cycles, compensation, offboarding, analytics.',
+    '<strong>Built an interactive setup wizard</strong> covering Google OAuth, database, Redis queues, and email config.',
+  ]
+  stack = ["React", "TypeScript", "Vite", "React Router", "TanStack Query", "Zustand", "XState", "Recharts", "FlexSearch", "Excalidraw", "Express", "Prisma", "Zod", "JWT (jsonwebtoken)", "Google OAuth", "Redis (Bull + ioredis)", "Nodemailer", "Helmet", "Playwright", "Vitest"]
+  seed = "career-grading-framework"
+
+  [[groups.items]]
+  kind = "row"
+  vis = "public"
+  icon = "window"
+  name = "app-quality-plugin"
+  url = "https://github.com/appKODE/app-quality-plugin"
+  badge_label = "Public"
+  desc = 'detekt+ktlint without duplication'
+  meta = ['2026']
+  company = "KODE"
+  role = "Android Department Lead"
+  date_start = 2026
+  date_end = "present"
+  category = "architecture"
+  stars = "1"
+  features = [
+    '<strong>Wired up the task graph</strong> — ktlintCheck/ktlintFormat, per-module Detekt with platform-specific rule merging, a git-hooks setup task, and aggregate pipelineCheck/prePushCheck tasks.',
+    '<strong>Replaced hardcoded dependency coordinates</strong> with lazy version-catalog lookups.',
+    "<strong>Built an extensible dependency-slot system</strong> (DSL closures) so consumers can override any tool's version without forking the plugin.",
+  ]
+  achievements = [
+    '<strong>Designed and built the plugin from scratch</strong> — centralizes detekt + ktlint config across every KODE Android repo instead of copy-pasted per-project setup.',
+    '<strong>Solved Gradle configuration-cache compatibility</strong> with a dedicated round of provider-based fixes.',
+    "<strong>Reused the Build Publish Plugin's core infrastructure</strong> instead of duplicating it.",
+  ]
+  stack = ["Kotlin", "Gradle Plugin API", "AGP", "KSP", "Detekt", "ktlint", "Gradle config cache"]
+  seed = "app-quality-plugin"
+
+  [[groups.items]]
+  kind = "row"
+  vis = "public"
+  icon = "window"
+  name = "uikit"
+  url = "https://github.com/appKODE/uikit"
+  badge_label = "Public"
+  desc = 'Compose design kit, Maven Central'
+  meta = ['2026']
+  company = "KODE"
+  role = "Android Department Lead"
+  date_start = 2026
+  date_end = "present"
+  category = "feature"
+  features = [
+    '<strong>Added Showkase previews</strong> for the existing component gallery.',
+    '<strong>Added a Gradle-wrapper validation workflow</strong> alongside the release/pre-merge CI pipeline.',
+  ]
+  achievements = [
+    "<strong>Migrated Maven Central publishing</strong> off deprecated Sonatype OSSRH onto the current vanniktech plugin.",
+    '<strong>Updated the toolchain</strong> (Kotlin, AGP, Compose, Material3) and added release/pre-merge CI workflows.',
+  ]
+  stack = ["Kotlin", "Jetpack Compose", "Material3", "Coroutines", "Maven Central (vanniktech)", "Spotless", "ktlint"]
+  seed = "uikit"
+
+  [[groups.items]]
+  kind = "row"
+  vis = "public"
+  icon = "window"
+  name = "pomsky-kt"
+  url = "https://github.com/appKODE/pomsky-kt"
+  badge_label = "Public"
+  desc = 'Ported the regex DSL from Rust to KMP'
+  meta = ['2026']
+  company = "KODE"
+  role = "Android Department Lead"
+  date_start = 2026
+  date_end = "present"
+  category = "architecture"
+  features = [
+    '<strong>Built a pattern optimizer</strong> — auto-atomicization, dead-branch elimination, and alternation factoring.',
+    '<strong>Added capture inference</strong> — generates typed Kotlin data classes from named regex groups.',
+    '<strong>Added a `permute()` syntax</strong> for order-independent matching, plus a regex-diff tool, ASCII railroad diagrams, and a performance-benchmark command.',
+  ]
+  achievements = [
+    '<strong>Ported a Rust regex-DSL compiler to Kotlin Multiplatform</strong> from scratch — lexer, parser, AST, and compiler, no WASM bridge to the original.',
+    '<strong>Extended it well past the original</strong>: a decompiler/explainer, linter, ReDoS detector, complexity scorer, test generator, and fuzzer — none of which exist upstream.',
+    '<strong>Shipped Maven artifacts, a C-FFI shared library, and a CLI binary</strong> in 22 commits over 6 days.',
+  ]
+  stack = ["Kotlin Multiplatform", "Lexer/Parser/AST", "C FFI", "Clikt", "Mordant", "kotlinx.serialization", "Maven Central (vanniktech)", "Dokka", "CLI tooling"]
+  seed = "pomsky-kt"
+
+  [[groups.items]]
+  kind = "row"
+  vis = "confidential"
+  icon = "clock"
+  name = "AI Toolkit"
+  badge_label = "Internal"
+  desc = "Generator for CLAUDE.md/rules tailored to a project's stack"
+  meta = ['2026']
+  company = "KODE"
+  role = "Android Department Lead"
+  date_start = 2026
+  date_end = "present"
+  category = "architecture"
+  features = [
+    "<strong>Built a stack detector</strong> that reads a project's version catalog to identify its DI framework, navigation library, networking stack, and KMP UI split.",
+    "<strong>Added drift detection</strong> — generated rule files carry a content hash so re-running the installer can tell what's changed.",
+    '<strong>Built a token-usage optimizer subcommand</strong> — backs up existing config, installs a session-start hook, curates which MCP servers load per project, and trims the base context footprint by roughly two-thirds.',
+  ]
+  achievements = [
+    '<strong>Designed and built the entire toolkit</strong> from scratch in one sitting — a stack detector, a slim CLAUDE.md generator, and a compiler for 14 code-generation skills.',
+    '<strong>In active use across roughly a dozen real projects</strong> with different stacks (DI, navigation, networking, KMP or not).',
+    '<strong>Added a token-usage optimizer</strong> for Claude Code sessions, grounded in published context-engineering research.',
+  ]
+  stack = ["Bash", "PowerShell", "Python", "Markdown", "JSON", "Claude Code Skill format", "Prompt engineering"]
+  seed = "ai-toolkit"
+
+  [[groups.items]]
+  kind = "row"
+  vis = "confidential"
+  icon = "clock"
+  name = "CI Toolkit"
+  badge_label = "Internal"
+  desc = 'Unified chain of GitLab CI templates — architecture author'
+  meta = ['2026']
+  company = "KODE"
+  role = "Android Department Lead"
+  date_start = 2026
+  date_end = "present"
+  category = "architecture"
+  features = [
+    '<strong>Built the devops-facing layer</strong> — runner topology config plus host-side maintenance scripts (metrics, image pruning, stale-emulator sweep) for a three-runner fleet.',
+    '<strong>Wrote per-topic documentation</strong> with diagrams covering architecture, templates, scripts, and both developer/devops workflows.',
+  ]
+  achievements = [
+    '<strong>Owned the architecture solo</strong>: unified GitLab CI YAML templates plus 29 Bash scripts, replacing per-project, drifting CI pipelines.',
+    '<strong>Built cache choreography</strong> with flock-based locking across a multi-runner topology, plus emulator lifecycle and UI-test orchestration.',
+    '<strong>Added a cross-platform smoke-test harness</strong> (shellcheck + functional tests) gating every merge.',
+    "<strong>Root-caused a chronic disk-fill outage</strong> — GitLab's Docker executor treats <code>/cache</code> as a persistent managed volume that nothing was clearing; freed 51GB across 31 orphaned volumes and shipped a universal <code>after_script</code> fix.",
+  ]
+  stack = ["GitLab CI", "Bash", "Docker", "Docker Compose", "flock locking", "shellcheck"]
+  seed = "ci-toolkit"
+
+  [[groups.items]]
+  kind = "row"
+  vis = "confidential"
+  icon = "clock"
+  name = "Team infrastructure"
+  badge_label = "Internal"
+  desc = 'Self-hosted build servers, Maven proxy, Telegram delivery, monitoring'
+  meta = ['2026']
+  company = "KODE"
+  role = "Android Department Lead"
+  date_start = 2026
+  date_end = "present"
+  category = "architecture"
+  architecture = 'The same three build servers double as the egress point for their own proxy traffic and the target of their own monitoring — compute, network, and observability sharing one fleet.'
+  features = [
+    '<strong>Split the GitHub Actions runner pool into "queen" and "worker" roles</strong> — heavy release builds versus PR validation and daily builds.',
+    '<strong>Added a daily Docker cleanup job</strong> pruning stale images and orphaned volumes.',
+    "<strong>Routed CI git operations through the same proxy tunnel</strong>, with a Gradle-specific bypass for the internal build-cache host.",
+  ]
+  achievements = [
+    '<strong>Ran three build servers in production</strong> hosting GitHub Actions and GitLab Runner side by side for Android builds, sharing a Gradle cache with per-runner memory limits.',
+    '<strong>Stood up Reposilite</strong>, a self-hosted Postgres-backed Maven proxy, so runners stop round-tripping to external repositories on every build.',
+    "<strong>Deployed a self-hosted Telegram Bot API server</strong> to push CI-built APKs/AABs and changelogs straight from the pipeline, bypassing the public Bot API's 50MB upload cap.",
+    "<strong>Added Cronitor heartbeat monitoring</strong> across all three servers with an auto-recovering health assertion, plus a Squid/Xray proxy fixing an IPv6 resolution bug that 404'd non-standard Maven artifacts.",
+  ]
+  stack = ["GitHub Actions", "GitLab Runner", "Docker", "Docker Compose", "Reposilite", "PostgreSQL", "Telegram Bot API", "Squid", "Xray/VLESS proxy", "Cronitor"]
+  seed = "team-infrastructure"
+
+  [[groups.items]]
+  kind = "row"
+  vis = "confidential"
+  icon = "clock"
+  name = "Review Toolkit"
+  badge_label = "Internal"
+  desc = 'Base config for the MR Validation Tool'
+  meta = ['2026']
+  company = "KODE"
+  role = "Android Department Lead"
+  date_start = 2026
+  date_end = "present"
+  category = "architecture"
+  features = [
+    '<strong>Added a database scope</strong> with SQLDelight migration-safety rules — sequential migration numbering, ALTER-TABLE-only changes, required defaults on NOT NULL columns, and a DROP COLUMN ban.',
+    '<strong>Added platform-tag rules</strong> so a shared KMP config could scope policies like the changelog requirement to Android-only changes.',
+    '<strong>Kept the config in sync with breaking engine changes</strong> — migrated policy semantics and added remote-fallback config resolution.',
+  ]
+  achievements = [
+    '<strong>Designed and built the shared base config</strong> that lets every KODE Android/KMP project inherit one set of MR-validation and AI-review rules instead of duplicating config.',
+    '<strong>Adopted by multiple internal Android/KMP repos</strong> through config inheritance.',
+  ]
+  stack = ["YAML", "Karandash config DSL", "Markdown (AI prompt content)"]
+  seed = "review-toolkit"
+
+  [[groups.items]]
+  kind = "row"
+  vis = "confidential"
+  icon = "clock"
+  name = "MCP server for the time tracker"
+  badge_label = "Internal"
+  desc = '35 tools: time logging, reports, integrating AI agents with the corporate task tracker'
+  meta = ['2026']
+  company = "KODE"
+  role = "Android Department Lead"
+  date_start = 2026
+  date_end = "present"
+  category = "architecture"
+  features = [
+    '<strong>Built a consistency-check tool</strong> that flags zero-hour days, anomalous hours, and duplicate entry descriptions.',
+    '<strong>Made bulk operations dry-run by default</strong>, requiring an explicit confirmation flag to apply.',
+    '<strong>Built a resilient API client</strong> — transparent session re-auth on expiry, typed error mapping (not-found/rate-limit/validation), and short-lived response caching.',
+    '<strong>Wrote per-client connection guides</strong> covering every major MCP client the tool supports.',
+  ]
+  achievements = [
+    "<strong>Built a 35-tool MCP server</strong> wrapping the company's time-tracking system solo, end to end, in two weeks.",
+    '<strong>Shipped a multi-tenant hosted mode</strong> with a hand-rolled OAuth 2.1 flow and self-deployed it in production.',
+    '<strong>Covered all 35 tools</strong> with a live black-box test suite before calling it done.',
+  ]
+  stack = ["Python", "MCP SDK", "FastMCP", "FastAPI", "uvicorn", "Starlette", "httpx", "pydantic", "aiosqlite", "cryptography (Fernet)", "OAuth 2.1", "pytest"]
+  seed = "mcp-time-tracker"
+
+  [[groups.items]]
+  kind = "row"
+  vis = "public"
+  icon = "window"
+  name = "way"
+  url = "https://github.com/appKODE/way"
+  badge_label = "Public"
+  desc = 'KMP navigation, statechart model — parallel nodes'
+  meta = ['2023–26']
+  company = "KODE"
+  role = "Team Lead"
+  date_start = 2023
+  date_end = "present"
+  category = "feature"
+  features = [
+    '<strong>Fixed a Windows-only path-resolution bug</strong> in the schema-directory lookup.',
+    '<strong>Migrated the library off legacy root-publication logic</strong> onto vanniktech-maven-publish, and upgraded Dokka to V2.',
+    '<strong>Moved Gradle plugin configuration onto lazy providers</strong> for configuration-cache compatibility.',
+  ]
+  achievements = [
+    "<strong>Modernized the library's build/tooling/publishing</strong> and stood up CI/release workflows from scratch.",
+    "<strong>Shipped parallel-flow nodes</strong> (AND-states) — one of the library's headline features — on top of the existing statechart core.",
+    "<strong>Added Android product-flavor support</strong> to the Gradle plugin's schema resolution, letting a flavor override or extend the base navigation graph instead of every flavor sharing one flat schema.",
+  ]
+  stack = ["Kotlin Multiplatform", "Coroutines", "Compose Multiplatform", "KotlinPoet", "KSP", "Gradle Plugin", "Statechart/FSM (SCXML)", "Kotest", "Turbine", "Dokka", "Maven Central (vanniktech)"]
+  seed = "way"
+
+  [[groups.items]]
+  kind = "row"
+  vis = "public"
+  icon = "window"
+  name = "moxy-ksp"
+  url = "https://github.com/appKODE/moxy-ksp"
+  badge_label = "Public"
+  desc = 'KSP port of moxy-compiler, replacing kapt'
+  meta = ['2026']
+  company = "KODE"
+  role = "Android Department Lead"
+  date_start = 2026
+  date_end = "present"
+  category = "architecture"
+  architecture = "Mirrors the apt original's module boundaries — annotation-rule/util helpers, a presenter-binder generator, a view-state generator, and a MoxyReflector generator — with generic View/Presenter resolution ported from Types.asMemberOf to KSP's Resolver.asMemberOf."
+  features = [
+    "<strong>Ported the full annotation-processing pipeline</strong> — <code>@InjectPresenter</code>/<code>@InjectViewState</code>/<code>@ProvidePresenter</code>/<code>@ProvidePresenterTag</code>/<code>@RegisterMoxyReflectorPackages</code> — generating identical class shapes to the apt compiler.",
+    "<strong>Shipped a runnable sample module</strong> with behavioral tests covering all five StateStrategy implementations.",
+    "<strong>Fixed a KSP2-only lifetime crash</strong> in the reflector generator, caused by dereferencing stale symbols across processing-round boundaries.",
+    "<strong>Fixed a KSP1/KSP2 vararg-detection mismatch</strong> that silently mis-generated vararg view-method overrides.",
+    "<strong>Closed a CI gap</strong> where the sample module depended on a local Maven publish step no workflow actually ran.",
+  ]
+  achievements = [
+    "<strong>Ported moxy-compiler from kapt to KSP</strong>, targeting Moxy 1.5.6, published as <code>ru.kode.moxy-ksp:moxy-ksp</code>.",
+  ]
+  stack = ["Kotlin", "KSP", "KotlinPoet", "Gradle Plugin API", "Moxy MVP", "GitHub Actions", "Maven Central (vanniktech)"]
+  seed = "moxy-ksp"
+
+  [[groups.items]]
+  kind = "row"
+  vis = "public"
+  icon = "window"
+  name = "docker-android"
+  url = "https://github.com/appKODE/docker-android-rinekri"
+  badge_label = "Public"
+  desc = 'CI images — lead developer'
+  meta = ['2023–26']
+  company = "KODE"
+  role = "Team Lead"
+  date_start = 2023
+  date_end = "present"
+  category = "architecture"
+  features = [
+    '<strong>Added Java 17 support</strong> and git-lfs to the image, alongside build-tools path/version fixes.',
+    '<strong>Extended the variant matrix</strong> — added Allure to the UI-test image and new API-level/NDK/emulator combinations up through API 37.',
+  ]
+  achievements = [
+    '<strong>Reworked a multi-year-old set of Dockerfile branches</strong> into one parameterized Dockerfile + variants.json, cutting the cost of adding a new Java/API/NDK combination.',
+    '<strong>Set up tag-triggered publishing</strong> to Docker Hub via GitHub Actions.',
+    '<strong>Carried a personal 2020 fork through 5+ years</strong> and two employer changes, eventually formalizing it as company tooling.',
+  ]
+  stack = ["Docker", "GitHub Actions", "Android SDK", "NDK", "CMake", "OpenJDK", "Amazon Corretto", "Marathon (test runner)", "Allure", "gradle-profiler"]
+  seed = "docker-android"
+
+  [[groups.items]]
+  kind = "row"
+  vis = "public"
+  icon = "window"
+  name = "DarkModeBugSample"
+  url = "https://github.com/rinekri/DarkModeBugSample"
+  badge_label = "Public"
+  desc = 'Repro for an Android 14/15 platform bug'
+  meta = ['2024']
+  company = "KODE"
+  role = "Team Lead"
+  date_start = 2024
+  date_end = 2024
+  category = "feature"
+  achievements = [
+    '<strong>Traced a platform-level Android 14/15 bug</strong> from a vague visual symptom to its exact root cause (a resizeableActivity=false + resetConfig interaction) by tracking it through the Android Framework source.',
+    "<strong>Isolated it into a minimal reproducible sample</strong> and filed it with Google's Issue Tracker with video evidence.",
+  ]
+  stack = ["Kotlin", "AndroidX (core-ktx, appcompat, activity, ConstraintLayout, Material)", "Android Framework internals"]
+  seed = "darkmode-bug"
+
+  [[groups.items]]
+  kind = "row"
+  vis = "public"
+  icon = "window"
+  name = "recyclerview_adapters"
+  url = "https://github.com/appKODE/recyclerview_adapters"
+  badge_label = "Public"
+  desc = 'Demo for the DevFest talk, 4 approaches'
+  meta = ['2018']
+  company = "KODE"
+  role = "Android Developer"
+  date_start = 2018
+  date_end = 2018
+  category = "feature"
+  features = [
+    '<strong>Classic branch</strong> — a hand-rolled adapter with manual view-type dispatch and a nested adapter for an inner counter list.',
+    '<strong>AdapterDelegates branch</strong> — one delegate class per row type, wired through DiffUtil.',
+    '<strong>Groupie and Epoxy branches</strong> — a library-provided generic adapter (Groupie) and an annotation-processor-generated DSL (Epoxy), the two lowest-boilerplate approaches.',
+  ]
+  achievements = [
+    '<strong>Built the same list screen four ways</strong> (classic adapter, AdapterDelegates, Groupie, Epoxy) as conference material.',
+    '<strong>Presented the comparison</strong> at DevFest Kaliningrad 2018 and wrote it up on Habr.',
+  ]
+  stack = ["Kotlin", "RecyclerView", "AdapterDelegates", "Groupie", "Epoxy", "DiffUtil", "Picasso", "Moshi", "Timber"]
+  seed = "recyclerview"
+
+[[groups]]
+key = "personal"
+label = "Personal"
+
+  [[groups.items]]
+  kind = "row"
+  vis = "confidential"
+  icon = "clock"
+  name = "Expense tracker"
+  badge_label = "Personal"
+  desc = 'Personal spending tracker — Flutter client, self-hosted Go backend, Telegram login'
+  meta = ['2025–']
+  date_start = 2025
+  date_end = "present"
+  architecture = "Flutter client talking to a self-hosted Go backend built on PocketBase (embedded SQLite) via its official Dart SDK — realtime UI updates through PocketBase's subscription API rather than polling; product/place names are multi-language via a dedicated translations table, not locale fields."
+  features = [
+    "<strong>Photo receipts</strong> attached per spending entry.",
+    "<strong>Realtime sync</strong> across devices via PocketBase's live-subscription API.",
+    "<strong>Multi-language product/place names</strong> through a translations table shared across records.",
+  ]
+  achievements = [
+    '<strong>Self-hosted service</strong> with Telegram-based login for tracking personal spending.',
+    "<strong>Designed and built the whole product solo</strong> — a Flutter client plus a Go backend — after migrating off an earlier local-only data layer that didn't scale to multi-device sync.",
+    "<strong>Extracted the Telegram-login flow into a standalone open-source library</strong>, published separately from the app itself.",
+  ]
+  stack = ["Flutter", "Dart", "Riverpod", "go_router", "PocketBase (Dart SDK)", "Go", "PocketBase (Go)", "SQLite", "JWT", "Telegram Web App/Login Widget"]
+  seed = "expense-tracker"
+
+  [[groups.items]]
+  kind = "row"
+  vis = "confidential"
+  icon = "clock"
+  name = "Genealogy app"
+  badge_label = "Personal"
+  desc = 'Local-first genealogy research tool — own family tree and evidence base, no cloud vendor lock-in'
+  meta = ['2026']
+  date_start = 2026
+  date_end = "present"
+  architecture = "TypeScript monorepo: a framework-agnostic core (canonical data model, CRDT sync on Yjs, GEDCOM import/export), a React client, and an optional self-hostable Node server that acts purely as a sync/licensing/payments relay — client-side sealed sync means the server never sees real tree data, only ciphertext and account metadata."
+  features = [
+    "<strong>GEDCOM import/export</strong> for interoperability with existing genealogy tools.",
+    "<strong>Offline-first PWA</strong> with zero outbound network calls by default.",
+    "<strong>Tree federation</strong> — linking two independent users' family trees, with cross-tree DNA-confidence matching and merge review for duplicates.",
+    "<strong>Feature tiering and payments</strong> (two payment providers) for an eventual self-host-free / managed-paid model.",
+  ]
+  achievements = [
+    '<strong>Built a local-first data model</strong> with CRDT sync, solo, in an intense sprint — works offline across devices.',
+    "<strong>Designed and built the entire system solo</strong> as a three-package monorepo, reaching a feature-rich beta in under three weeks.",
+    "<strong>Built cross-tree relative-finding</strong> that matches records between two users' trees using keys only, without either side exposing raw family data.",
+  ]
+  stack = ["TypeScript", "React", "Zod", "Yjs (CRDT)", "graphology", "GEDCOM", "React Aria Components", "Radix UI", "Framer Motion", "Vite", "Tailwind CSS", "Zustand", "MapLibre GL", "Tesseract.js (OCR)", "jsPDF", "i18next", "React Hook Form", "Node.js", "Playwright"]
+  seed = "genealogy-app"
+
+  [[groups.items]]
+  kind = "row"
+  vis = "public"
+  icon = "clock"
+  name = "rinekri.com"
+  url = "https://rinekri.com"
+  badge_label = "Public"
+  desc = 'This site — theme built from scratch, generative signature system'
+  meta = ['2026']
+  date_start = 2026
+  date_end = "present"
+  achievements = ["<strong>Designed and built this site's theme</strong> from scratch, including a generative per-post signature/fingerprint system."]
+  architecture = 'Static site (Zola) with a hand-rolled Workshop Ledger theme — no JS framework, vanilla self-guarding JS modules only.'
+  stack = ["Zola", "Sass", "Vanilla JS", "Canvas API", "GitHub Actions"]
+  seed = "rinekri-com"
+
+  [[groups.items]]
+  kind = "row"
+  vis = "confidential"
+  icon = "clock"
+  name = "LogAnalyzer"
+  badge_label = "Personal"
+  desc = 'Desktop tool that parses noisy Splunk log exports into a readable, filterable view'
+  meta = ['2024']
+  date_start = 2024
+  date_end = 2024
+  architecture = "Single-screen Compose Multiplatform desktop app (Kotlin), packaged as native macOS/Windows/Linux installers — local file parsing only, no network layer."
+  features = [
+    "<strong>Configurable detail levels</strong> — collapse down to just messages, or expand date/source/other fields.",
+    "<strong>Chronological re-sorting</strong> (Splunk exports newest-first; call debugging reads better oldest-first).",
+    "<strong>Regex-based highlighting</strong> of significant log lines, and filtered JSON/log export.",
+    "<strong>Multi-file workflow</strong> — load, compare, and switch between several log files at once.",
+  ]
+  achievements = [
+    '<strong>Built a Kotlin Multiplatform parser</strong> for Splunk logs in a two-week sprint.',
+    "<strong>Solved a recurring personal pain point</strong> — turned a slow manual log-triage step into a two-click desktop tool.",
+    "<strong>Refactored its own architecture mid-build</strong> — moved logic from the UI layer into a ViewModel, then split it into separate reactive interactors as the tool grew.",
+  ]
+  stack = ["Kotlin Multiplatform", "Compose Multiplatform", "kotlinx.serialization", "kotlinx.datetime", "kotlinx-io", "FileKit", "Coroutines"]
+  seed = "loganalyzer"
+
+  [[groups.items]]
+  kind = "row"
+  vis = "confidential"
+  icon = "clock"
+  name = "Swipe app"
+  badge_label = "Personal"
+  desc = 'Renamed several times over its history, revived after an expired SSL cert, in-house backend'
+  meta = ['2020–23']
+  date_start = 2020
+  date_end = 2023
+  architecture = "Flutter client with WebRTC video calling, signaled through an inherited Elixir/Phoenix real-time backend (Channels over a single socket, plus a REST layer for CRUD) — took over and stabilized an existing multi-year-old codebase rather than building from scratch."
+  features = [
+    "<strong>Anonymous device-based login</strong> — no password, re-authenticates automatically per install.",
+    "<strong>Patched three inherited third-party libraries</strong> for null-safety and modern platform APIs to get the app buildable again.",
+  ]
+  achievements = [
+    '<strong>Kept it alive across multiple rebrands</strong> over its history; revived once after its SSL cert lapsed, backed by an in-house server.',
+    "<strong>Diagnosed why the product had fallen out of the app stores</strong> — a lapsed iOS certificate and a pulled Android listing — and re-published the Android build.",
+    "<strong>Migrated the backend to new hosting</strong> and stabilized it after several years without maintenance.",
+  ]
+  stack = ["Flutter", "WebRTC", "Elixir", "Phoenix", "Ecto", "PostgreSQL", "Guardian (JWT)"]
+  seed = "swipe-app"
+
+  [[groups.items]]
+  kind = "row"
+  vis = "confidential"
+  icon = "clock"
+  name = "Brainstorming app"
+  badge_label = "Idea"
+  desc = 'Concept stage, no code yet'
+  meta = ['—']
+  seed = "brainstorming-app"
+
+  [[groups.items]]
+  kind = "row"
+  vis = "confidential"
+  icon = "clock"
+  name = "Tags Setter"
+  badge_label = "Idea"
+  desc = 'Auto-tagging snippet for a personal notes vault — superseded by a proper tag taxonomy'
+  meta = ['—']
+  achievements = ['Wrote a working file-system-walking snippet that derived tags from folder structure across ~4,000 notes — the idea was later superseded by <strong>a more deliberate frontmatter and tag-taxonomy system</strong> instead of purely mechanical folder-based tagging.']
+  stack = ["Kotlin", "okio"]
+  seed = "tags-setter"
+

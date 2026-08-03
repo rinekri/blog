@@ -1,0 +1,98 @@
+// ============================================================
+// rinekri.com — "engineer's Workshop Ledger" theme
+// Design tokens: palette, type, spacing, layout widths.
+// ============================================================
+
+// Sass compiles independently of Zola's Tera templating, so config.base_url
+// isn't reachable here — _print.scss needs the bare domain (no protocol) to
+// tell internal links from external ones. Override this from your own root
+// sass/main.scss, BEFORE the theme @import, to match your own domain:
+//   $site-domain: "example.com";
+//   @import "../themes/workshop-ledger/sass/main";
+$site-domain: "rinekri.com" !default;
+
+:root {
+  --paper: #eef1ee;
+  --paper-dim: #e3e8e3;
+  --ink: #17211b;
+  --ink-soft: #47564c;
+  --ink-faint: #5c6a61;
+  // --moss is the site's primary interactive/emphasis color: default link
+  // hover, active nav, primary CTA buttons (e.g. .resume-download).
+  --moss: #2f5942;
+  --moss-deep: #1b3527;
+  // --spark is a deliberately rare "signature" highlight (hero accent, CTA
+  // labels, featured-stat callouts) — not the default PROSE link color
+  // (.post-content a stays moss) or a second primary-button color.
+  --spark: #b8721a;
+  --spark-deep: #8a5613;
+  --line: #cbd3cb;
+  --card: #f6f8f5;
+  --danger: #8a3b2f;
+
+  // Category-legend aliases — kept separate from --moss/--spark so a legend
+  // color can be repointed without implying "interactive" or "rare flourish".
+  --cat-leadership: var(--spark);
+  --cat-architecture: var(--moss);
+  --cat-feature: var(--ink-faint);
+
+  // Legacy aliases — existing post content (inline SVG charts) still
+  // references the old PaperMod-era variable names.
+  --primary: var(--ink);
+  --secondary: var(--ink-soft);
+  --accent: var(--moss);
+  --border: var(--line);
+
+  --font-serif: "Newsreader", ui-serif, Georgia, serif;
+  --font-sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  // Oversized display scale — chrome only (hero name, major section
+  // dividers), never body copy or in-content headings.
+  // Deliberately larger than the mockup's ceiling: any bounded clamp() has a
+  // viewport width past which relative fill only decreases as the window
+  // grows further — a conscious departure from exact-match, not a mismatch.
+  --font-size-display: clamp(60px, 10.5vw, 190px);
+
+  --radius: 3px;
+  // Also deliberately wider than the mockup's 1200px, same reasoning as
+  // --font-size-display above.
+  --shell-width: 1320px;
+  --prose-width: 700px;
+  --gap: 28px;
+  --header-height: 64px;
+
+  color-scheme: light;
+}
+
+// Dark palette lives in a mixin so it applies both automatically (system
+// preference) and explicitly (data-theme attribute) — a real 3-state
+// auto/light/dark toggle, not just prefers-color-scheme.
+@mixin dark-tokens {
+  --paper: #10141a;
+  --paper-dim: #171c23;
+  --ink: #e7eaed;
+  --ink-soft: #aab4bd;
+  --ink-faint: #8a95a0;
+  --moss: #6fa592;
+  --moss-deep: #a9cabd;
+  --spark: #e0a63f;
+  --spark-deep: #f0c374;
+  --line: #333c47;
+  --card: #161b21;
+  --danger: #d98f7f;
+
+  color-scheme: dark;
+}
+
+// System preference — applies unless the user has explicitly chosen light.
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    @include dark-tokens;
+  }
+}
+
+// Explicit user choice — wins over system preference either direction.
+:root[data-theme="dark"] {
+  @include dark-tokens;
+}

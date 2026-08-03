@@ -1,0 +1,53 @@
+{# >=1360px enhancement over partials/toc.html's <details> TOC (CSS-gated fallback below that width, not removed). Manually unrolled h2-h6: Tera macros can't self-recurse in this Zola version. #}
+{% if page.toc %}
+<nav class="guide-rail" aria-label="Table of contents">
+    <div class="guide-rail__status">
+        <canvas class="guide-rail__progress" data-seed="{{ page.slug }}" data-weight="0.4" aria-hidden="true"></canvas>
+        <span class="guide-rail__position"></span>
+    </div>
+    <div class="guide-rail__rule">
+        <div class="guide-rail__fill"></div>
+        {% for l2 in page.toc %}
+        <div class="guide-rail__group" data-id="{{ l2.id }}">
+            <a class="guide-rail__item guide-rail__item--h{{ l2.level }}" href="#{{ l2.id }}">{{ l2.title }}</a>
+            {% if l2.children | length > 0 %}
+            <div class="guide-rail__children">
+                {% for l3 in l2.children %}
+                <div class="guide-rail__group" data-id="{{ l3.id }}">
+                    <a class="guide-rail__item guide-rail__item--h{{ l3.level }}" href="#{{ l3.id }}">{{ l3.title }}</a>
+                    {% if l3.children | length > 0 %}
+                    <div class="guide-rail__children">
+                        {% for l4 in l3.children %}
+                        <div class="guide-rail__group" data-id="{{ l4.id }}">
+                            <a class="guide-rail__item guide-rail__item--h{{ l4.level }}" href="#{{ l4.id }}">{{ l4.title }}</a>
+                            {% if l4.children | length > 0 %}
+                            <div class="guide-rail__children">
+                                {% for l5 in l4.children %}
+                                <div class="guide-rail__group" data-id="{{ l5.id }}">
+                                    <a class="guide-rail__item guide-rail__item--h{{ l5.level }}" href="#{{ l5.id }}">{{ l5.title }}</a>
+                                    {% if l5.children | length > 0 %}
+                                    <div class="guide-rail__children">
+                                        {% for l6 in l5.children %}
+                                        <div class="guide-rail__group" data-id="{{ l6.id }}">
+                                            <a class="guide-rail__item guide-rail__item--h{{ l6.level }}" href="#{{ l6.id }}">{{ l6.title }}</a>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</nav>
+{% endif %}

@@ -1,0 +1,327 @@
+// ============================================================
+// Page shell, header/nav, footer
+// ============================================================
+
+.shell {
+  max-width: var(--shell-width);
+  margin-inline: auto;
+  padding-inline: var(--gap);
+}
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--paper);
+  border-bottom: 2px solid var(--ink);
+}
+
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap);
+  min-height: var(--header-height);
+}
+
+.site-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 16.5px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.site-logo__glyph {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.site-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.site-nav {
+  display: flex;
+  gap: 2px;
+}
+
+.site-nav a {
+  display: block;
+  padding: 8px 14px;
+  font-family: var(--font-mono);
+  font-size: 14.5px;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.site-nav a:hover {
+  color: var(--moss);
+  border-color: var(--moss);
+}
+
+.site-nav a[aria-current="page"] {
+  color: var(--moss);
+  border-color: var(--moss);
+}
+
+// ---------- mobile nav toggle + disclosure panel ----------
+// Crossover ~746px, below which .site-nav hides and this hamburger reveals
+// .site-nav-panel instead — see static/js/nav.js for the open/close logic.
+.nav-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius);
+  color: var(--ink-soft);
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.nav-toggle:hover {
+  color: var(--ink);
+  background: var(--card);
+}
+
+.nav-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.nav-icon__bar {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.nav-toggle[aria-expanded="true"] .nav-icon__bar--top {
+  transform: translateY(5px) rotate(45deg);
+}
+
+.nav-toggle[aria-expanded="true"] .nav-icon__bar--mid {
+  opacity: 0;
+}
+
+.nav-toggle[aria-expanded="true"] .nav-icon__bar--bottom {
+  transform: translateY(-5px) rotate(-45deg);
+}
+
+.site-nav-panel {
+  display: none;
+}
+
+.site-nav-panel[hidden] {
+  display: none;
+}
+
+body.nav-open {
+  overflow: hidden;
+}
+
+@media (max-width: 800px) {
+  .site-nav {
+    display: none;
+  }
+
+  .nav-toggle {
+    display: inline-flex;
+  }
+
+  // Wider than the base 4px gap so an imprecise thumb tap can't hit the
+  // wrong control — one opens a menu, the other repaints the whole page.
+  .site-header__actions {
+    gap: 10px;
+  }
+
+  .nav-toggle,
+  .theme-toggle {
+    width: 44px;
+    height: 44px;
+  }
+
+  .site-nav-panel {
+    display: block;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 25;
+    background: var(--paper);
+    border-bottom: 2px solid var(--ink);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.25s ease;
+  }
+
+  .site-nav-panel[hidden] {
+    display: none;
+  }
+
+  .site-nav-panel.is-open {
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+
+  .site-nav-panel a {
+    display: block;
+    padding: 14px 0;
+    font-family: var(--font-mono);
+    font-size: 14.5px;
+    border-top: 1px solid var(--line);
+  }
+
+  .site-nav-panel a:first-child {
+    border-top: none;
+  }
+
+  .site-nav-panel a:hover,
+  .site-nav-panel a[aria-current="page"] {
+    color: var(--moss);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-nav-panel,
+  .nav-icon__bar {
+    transition: none;
+  }
+}
+
+.site-main {
+  min-height: calc(100vh - var(--header-height) - 180px);
+  padding-block: 48px;
+}
+
+.site-footer {
+  border-top: 2px solid var(--ink);
+  margin-top: 64px;
+}
+
+.site-footer__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-block: 28px;
+}
+
+.site-footer__glyph {
+  width: 20px;
+  height: 20px;
+  color: var(--ink-faint);
+}
+
+.site-footer__meta {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink-faint);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+}
+
+// Separator is generated content bound to the preceding item, not a literal
+// flex sibling — can't end up orphaned alone on its own line.
+.site-footer__meta > span {
+  white-space: nowrap;
+}
+
+.site-footer__meta > span:not(:last-child)::after {
+  content: "·";
+  margin-inline-start: 10px;
+  color: var(--line);
+}
+
+.site-footer__meta a {
+  color: inherit;
+  border-bottom: 1px solid transparent;
+}
+
+.site-footer__meta a:hover {
+  color: var(--moss);
+  border-bottom-color: var(--moss);
+}
+
+.social-icons {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.social-icons a {
+  position: relative;
+  color: var(--ink-soft);
+  display: flex;
+}
+
+// Extends the 20px icon's tap target via an invisible pseudo-element instead
+// of padding, so the tight visual spacing between icons stays as designed.
+.social-icons a::before {
+  content: "";
+  position: absolute;
+  inset: -10px;
+}
+
+.social-icons svg {
+  width: 20px;
+  height: 20px;
+}
+
+.icon-duo {
+  width: 100%;
+  height: 100%;
+}
+
+.icon-duo .icon-duo__fill {
+  fill: var(--moss);
+}
+
+.icon-duo .icon-duo__stroke {
+  fill: var(--ink);
+}
+
+.social-icons a:hover .icon-duo .icon-duo__fill {
+  fill: var(--moss-deep);
+}
+
+// top-of-page skip / scroll-to-top
+// Translucent background (border stays solid) so the fixed corner box
+// doesn't fully obscure text under it on mobile.
+.top-link {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--card) 82%, transparent);
+  backdrop-filter: blur(2px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--ink-soft);
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 20;
+}
+
+.top-link svg {
+  width: 14px;
+  height: 14px;
+}
+
+.top-link:hover {
+  color: var(--moss);
+  border-color: var(--moss);
+}

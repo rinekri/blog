@@ -1,0 +1,49 @@
+{# `| safe` throughout: Tera autoescapes by default even though this output is plain text, which would otherwise entity-escape apostrophes/slashes. #}
+{%- set resume = load_data(path="data/resume.toml") -%}
+{%- set projects = load_data(path="data/projects.toml") -%}
+{%- set_global kode_items = [] -%}
+{%- for group in projects.groups -%}
+{%- if group.key != "personal" -%}
+{%- set_global kode_items = kode_items | concat(with=group.items) -%}
+{%- endif -%}
+{%- endfor -%}
+{{ config.extra.hero_name | safe }}
+{{ resume.location | default(value="") | safe }} — {{ resume.contact_email | safe }}
+
+{{ resume.summary | default(value="") | striptags | safe }}
+
+EMPLOYMENT
+{% for era in resume.employment -%}
+{%- set era_items = kode_items | filter(attribute="company", value=era.company) | filter(attribute="role", value=era.role) -%}
+----
+{{ era.role | safe }}, {{ era.company | safe }} ({{ era.date_start }}-{{ era.date_end }})
+{%- set cat_keys = ["leadership", "architecture", "feature"] -%}
+{%- set cat_labels = ["Leadership", "Architecture", "Features shipped"] -%}
+{% for cat_key in cat_keys -%}
+{%- set cat_items = era_items | filter(attribute="category", value=cat_key) -%}
+{% if cat_items | length > 0 %}
+{{ cat_labels[loop.index0] }}:
+{% for item in cat_items -%}
+- {{ item.desc | striptags | safe }}
+{% endfor -%}
+{% endif -%}
+{% endfor %}
+{% endfor -%}
+EDUCATION
+{% for e in resume.education | default(value=[]) -%}
+- {{ e.school | safe }} ({{ e.date_start }}-{{ e.date_end }})
+{% endfor %}
+LANGUAGES
+{% for l in resume.languages | default(value=[]) -%}
+- {{ l.name | safe }}: {{ l.level | safe }}
+{% endfor %}
+CERTIFICATIONS
+{% for c in resume.certifications | default(value=[]) -%}
+- {{ c.name | safe }} ({{ c.date }})
+{% endfor %}
+SKILLS
+{% for group in resume.skills -%}
+{{ group.category | safe }}: {% for item in group.items -%}{{ item.name | safe }}{% if not loop.last %}, {% endif %}{% endfor %}
+{% endfor %}
+Full portfolio with project detail: {{ get_url(path="@/projects/_index.md") | safe }}
+Formatted resume: {{ get_url(path="@/resume/_index.md") | safe }}

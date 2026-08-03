@@ -1,0 +1,227 @@
+// /about/ — narrative "personal record" page, prose hardcoded in
+// templates/about.html. Reuses leadership's bench/arc/pull/org-tree idiom
+// (sass/_leadership.scss) verbatim; .systems-grid/.systems-converge below is
+// the only new component.
+
+// ---------- hero: generative portrait canvas ----------
+
+.about-contact {
+  color: var(--ink-soft);
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.signature-toy {
+  margin-block: 40px;
+  padding: 20px 22px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--card);
+}
+
+.signature-toy__label {
+  display: block;
+  font-size: 14px;
+  color: var(--ink-soft);
+  margin-bottom: 12px;
+  max-width: 60ch;
+}
+
+.signature-toy__row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.signature-toy__input {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+  color: var(--ink);
+  flex: 1 1 200px;
+  min-width: 160px;
+}
+
+.signature-toy__input:focus-visible {
+  outline: 2px solid var(--moss);
+  outline-offset: 1px;
+}
+
+.signature-toy__canvas {
+  width: 200px;
+  height: 88px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  flex-shrink: 0;
+}
+
+.signature-toy__save {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+  color: var(--ink-soft);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.signature-toy__save:hover {
+  color: var(--moss);
+  border-color: var(--moss);
+}
+
+.signature-toy__more {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink-faint);
+  margin: 14px 0 0;
+}
+
+.signature-toy__more a {
+  @extend %interactive-link;
+}
+
+.about-hero {
+  display: flex;
+  justify-content: center;
+  padding: 24px 0 44px;
+}
+
+.about-hero__portrait {
+  position: relative;
+  width: min(420px, 86vw);
+  height: min(420px, 86vw);
+}
+
+.portrait-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+// Approximates static/js/portrait.js's computed inner-ring radius as a %
+// of the box — not pixel-exact, verified by eye.
+.portrait-photo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 46%;
+  height: 46%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: 50% 20%;
+  // Hard seam so photo and generative ring read as separate layers.
+  box-shadow: 0 0 0 3px var(--paper), 0 0 0 4px var(--line);
+}
+
+// ---------- bench grid, solo variant (no aside on this page) ----------
+
+.bench--solo {
+  grid-template-columns: 1fr;
+}
+
+// Widening the whole container also stretched the prose paragraph past a
+// readable measure — cap only the paragraph, not the diagram.
+.bench__main--wide {
+  max-width: none;
+}
+
+.bench__main--wide > p {
+  max-width: 68ch;
+}
+
+// ---------- two systems: converging org-tree pair ----------
+
+.systems-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin: 22px 0 0;
+}
+
+@media (max-width: 700px) {
+  .systems-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+// Fixed rotation angles rather than per-viewport trigonometry (an
+// intentional approximation). Shallow angle + generous margin-top keeps the
+// tip clear of the taller KODE column's text regardless of rendered width.
+.systems-converge {
+  position: relative;
+  height: 24px;
+  margin-top: 64px;
+}
+
+.systems-converge__bar {
+  position: absolute;
+  top: 0;
+  width: 44%;
+  height: 2px;
+  background: var(--line);
+}
+
+.systems-converge__bar--left {
+  left: 0;
+  transform-origin: right center;
+  transform: rotate(5deg);
+}
+
+.systems-converge__bar--right {
+  right: 0;
+  transform-origin: left center;
+  transform: rotate(-5deg);
+}
+
+.systems-converge__dot {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--spark);
+  transform: translate(-50%, -50%);
+}
+
+// Stacked single-column trees have nothing left to converge into.
+@media (max-width: 700px) {
+  .systems-converge {
+    display: none;
+  }
+}
+
+// ---------- coda ----------
+
+.log-continues {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink-faint);
+  // .bench is display: grid, which blocks margin collapsing, so .pull's
+  // 36px bottom margin adds instead of collapsing — 20px corrects the
+  // stack to the intended 56px total gap.
+  margin: 20px 0 0;
+}
+
+// Two of these run back to back; the full 56px gap read as two separate
+// sections rather than one connected coda.
+.log-continues + .log-continues {
+  margin-top: 10px;
+}
+
+.log-continues a {
+  @extend %interactive-link;
+}

@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block content %}
+<header class="page-header">
+    <div class="breadcrumbs"><a href="{{ config.base_url }}">Home</a></div>
+    <h1 class="section-display">Tags</h1>
+</header>
+{% set clusters = config.extra.tag_clusters | default(value=[]) %}
+{% set_global clustered_names = [] %}
+{% for cluster in clusters %}
+{% for tag_name in cluster.tags %}
+{% set_global clustered_names = clustered_names | concat(with=tag_name) %}
+{% endfor %}
+{% endfor %}
+
+{% set posts_section = get_section(path="posts/_index.md") %}
+{% set total_posts = posts_section.pages | length %}
+{% set_global spec_idx = 0 %}
+
+{% set_global max_page_count = 1 %}
+{% for term in terms %}
+{% if term.page_count > max_page_count %}{% set_global max_page_count = term.page_count %}{% endif %}
+{% endfor %}
+
+<p class="tag-index__meta">{{ terms | length }} tags catalogued &middot; {{ total_posts }} posts indexed</p>
+
+<div class="tag-clusters">
+    {% for cluster in clusters %}
+    {% set cluster_pos = loop.index %}
+    {% if cluster_pos is odd %}{% set_global cluster_tint = "moss" %}{% else %}{% set_global cluster_tint = "spark" %}{% endif %}
+    {% set_global cluster_terms = [] %}
+    {% for tag_name in cluster.tags %}
+    {% for term in terms %}
+    {% if term.name == tag_name %}
+    {% set_global cluster_terms = cluster_terms | concat(with=term) %}
+    {% endif %}
+    {% endfor %}
+    {% endfor %}
+    {% if cluster_terms | length > 0 %}
+    <div class="tag-cluster">
+        <div class="tag-index__head">
+            <span class="tag-index__num">{% if cluster_pos < 10 %}0{{ cluster_pos }}{% else %}{{ cluster_pos }}{% endif %}</span>
+            <span class="tag-index__label">{{ cluster.name }}</span>
+            <span class="tag-index__line"></span>
+        </div>
+        <div class="specimen-grid">
+            {% for term in cluster_terms %}
+            {% set_global spec_idx = spec_idx + 1 %}
+            <a class="specimen" href="{{ term.permalink }}">
+                <span class="specimen__idx">No. {% if spec_idx < 10 %}0{{ spec_idx }}{% else %}{{ spec_idx }}{% endif %}</span>
+                <span class="specimen__name">{{ term.name }}</span>
+                <canvas class="specimen__canvas" data-seed="{{ term.name }}" data-tint="{{ cluster_tint }}" data-weight="{{ 0.5 + 0.5 * term.page_count / max_page_count }}" width="80" height="80" aria-hidden="true"></canvas>
+                <span class="specimen__count">{% if term.page_count == 1 %}1 post{% else %}{{ term.page_count }} posts{% endif %}</span>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+
+    {% set_global other_terms = [] %}
+    {% for term in terms %}
+    {% if not (clustered_names is containing(term.name)) %}
+    {% set_global other_terms = other_terms | concat(with=term) %}
+    {% endif %}
+    {% endfor %}
+    {% if other_terms | length > 0 %}
+    {% set other_pos = clusters | length + 1 %}
+    {% if other_pos is odd %}{% set_global other_tint = "moss" %}{% else %}{% set_global other_tint = "spark" %}{% endif %}
+    <div class="tag-cluster">
+        <div class="tag-index__head">
+            <span class="tag-index__num">{% if other_pos < 10 %}0{{ other_pos }}{% else %}{{ other_pos }}{% endif %}</span>
+            <span class="tag-index__label">Other</span>
+            <span class="tag-index__line"></span>
+        </div>
+        <div class="specimen-grid">
+            {% for term in other_terms %}
+            {% set_global spec_idx = spec_idx + 1 %}
+            <a class="specimen" href="{{ term.permalink }}">
+                <span class="specimen__idx">No. {% if spec_idx < 10 %}0{{ spec_idx }}{% else %}{{ spec_idx }}{% endif %}</span>
+                <span class="specimen__name">{{ term.name }}</span>
+                <canvas class="specimen__canvas" data-seed="{{ term.name }}" data-tint="{{ other_tint }}" data-weight="{{ 0.5 + 0.5 * term.page_count / max_page_count }}" width="80" height="80" aria-hidden="true"></canvas>
+                <span class="specimen__count">{% if term.page_count == 1 %}1 post{% else %}{{ term.page_count }} posts{% endif %}</span>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock content %}

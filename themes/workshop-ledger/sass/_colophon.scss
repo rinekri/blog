@@ -1,0 +1,35 @@
+// /colophon/ — "how this site works" meta page. Reuses leadership's bench
+// idiom (sass/_leadership.scss) for prose. .mark-catalog echoes the tags
+// index's .specimen-grid (sass/_post.scss) but skips %interactive-card,
+// since these cards are proof, not links.
+
+.mark-catalog {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin: 22px 0 8px;
+}
+
+.mark-catalog__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--card);
+}
+
+.mark-catalog__seed {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink-faint);
+}
+
+.mark-catalog__caption {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink-faint);
+  margin: 0 0 14px;
+}

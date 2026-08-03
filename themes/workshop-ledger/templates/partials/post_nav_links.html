@@ -1,0 +1,16 @@
+{% if page.higher or page.lower %}
+<nav class="paginav">
+    {% if page.higher %}
+    <a class="prev" href="{{ page.higher.permalink }}">
+        <span class="title">« Prev</span>
+        <span>{{ page.higher.title }}</span>
+    </a>
+    {% endif %}
+    {% if page.lower %}
+    <a class="next" href="{{ page.lower.permalink }}">
+        <span class="title">Next »</span>
+        <span>{{ page.lower.title }}</span>
+    </a>
+    {% endif %}
+</nav>
+{% endif %}

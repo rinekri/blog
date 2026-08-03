@@ -1,0 +1,24 @@
+{% import "macros/glyph.svg.html" as glyph -%}
+{% import "macros/social_icon.svg.html" as social -%}
+{# Computed once here so partials/head.html's og:image and page.html's JSON-LD don't each recompute it. #}
+{% if page.extra.cover %}{% set_global cover_image_url = current_url ~ page.extra.cover %}{% endif %}
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ config.extra.language_direction }}">
+<head>
+    {% block head %}
+    {% include "partials/head.html" %}
+    {% include "partials/json_ld.html" %}
+    {% endblock head %}
+</head>
+<body id="top" data-whoami="{{ config.author }} — {{ config.description }}{% if config.extra.hero_status_focus %}. {{ config.extra.hero_status_focus }}{% endif %}">
+    {% block header %}
+    {% include "partials/header.html" %}
+    {% endblock header %}
+    <main class="site-main shell">
+        {% block content %}{% endblock content %}
+    </main>
+    {% block footer %}
+    {% include "partials/footer.html" %}
+    {% endblock footer %}
+</body>
+</html>

@@ -13,7 +13,7 @@ cover = "og-cover.png"
 June 16th is a small anniversary for me — 10 years in the profession. To mark the round number, I pulled out my very first project — the one that got me into this field in the first place — and gave it an honest review. Along the way I revisited the whole journey and thought about what it's like to start out today, in the age of AI.
 
 <!-- more -->
-# Introduction
+## Introduction
 June 16, 2026 marks exactly 10 years since I became an Android developer and joined KODE. It's a round date, so I wanted to do more than just note it — I wanted to make it meaningful.
 
 So I came up with an unusual experiment: dig out my very first project — the one I submitted for a competition and used to break into the profession — and honestly review it. Ten years later, through the eyes of someone who now runs reviews, interviews candidates, and mentors interns himself.
@@ -21,7 +21,7 @@ So I came up with an unusual experiment: dig out my very first project — the o
 It's also a good excuse to look back: where I started, what's changed over the years, and what it's like to get into development now that AI is at your fingertips. The next review like this — of the code, and of myself — I'll probably do again in another 10 years, in 2036.
 
 But first, how I even ended up here.
-# How I Got Into IT
+## How I Got Into IT
 ## From Finance to Programming
 Honestly, in school I had no clear idea what I wanted to be. At first I picked the economics track, like my parents — they're both in finance — and even got a finance diploma from college. But afterward I spent a long time thinking about what to do next, and decided to take a sharp turn into programming. I passed the entrance exams with the bare minimum score, scraping in at the bottom of the cutoff — but it was worth it. I'm really grateful my parents supported that decision: they didn't talk me out of it, only helped. That's essentially how my path into IT began.
 ## It All Started With a Game Server
@@ -34,13 +34,13 @@ I didn't really know the language back then, so I started there: found a Java bo
 I've shared bits of this story before — about choosing the profession, how I learned, and how I settled on Android specifically — as posts on my [LinkedIn](https://www.linkedin.com/in/rinekri).
 
 That very competition project is what we're going to review now.
-# The Project Itself
+## The Project Itself
 I haven't opened it once since then and don't remember what or how I did things there — so I'll look at it as if from the outside, trying to judge the old code impartially, by the same criteria I now use to review other people's projects.
 
 Of course, there was no GitHub back then — it sat in my Google Drive — so for the sake of this article I uploaded it to a [repository](https://github.com/rinekri/first-project-made-in-2016).
 
 The exact assignment description didn't survive, but the general idea was this: build a small app where you enter an Instagram username, fetch all of that user's posts, assemble a collage out of them, and share it anywhere. I graded it category by category — build, repo setup, libraries, architecture, code quality, design, logic — the full line-by-line breakdown with code snippets is collapsed at the very end of this post if you want the receipts. Here's the bottom line:
-# Review Results
+## Review Results
 So, my decade-old project scored **10 points**. I honestly excluded some criteria because they simply didn't exist in 2016 (Compose, coroutines, skeletons, theme switching) — it would've been unfair to hold my past self to them.
 
 | Section | Points | Verdict |
@@ -61,7 +61,7 @@ What's bad: the language — Java instead of Kotlin (that's just how the timing 
 Would I make it through an internship with a project like this today? Honestly — probably not. By today's standards the list of minuses is too serious: a reviewer would immediately latch onto the main-thread work, the lack of architecture, and no Git. But if you allow for the fact that it's 2016, and that I wrote this myself, with no mentor and no understanding of "how it's supposed to be done" — the project shows enough of an engineering foundation for everything else to grow out of it. Which, as it turns out, is exactly what happened.
 
 My main takeaway is this: over ten years the bar for juniors has risen dramatically — what used to be "more or less fine" back then wouldn't pass the very first filter today. But the fundamentals — clean decomposition, meaningful names, care for the user — are valued just as much as ever, and it's far easier to layer a trendy stack on top of that foundation than the other way around.
-# What Changed in 10 Years (2016 → 2026)
+## What Changed in 10 Years (2016 → 2026)
 Laying the stack then and now side by side makes the difference clearer than any score:
 
 | What          | Then (2016)                        | Now (2026)                          |
@@ -78,7 +78,7 @@ Laying the stack then and now side by side makes the difference clearer than any
 | Process       | no Git                              | Git + CI + PR review (often with AI)|
 
 Almost every line in the right column isn't just "trendier" — it's a way to avoid the exact mistakes I broke down above: coroutines get rid of `AsyncTask.get()` on the main thread, Coil removes the manual bitmap fiddling, DI removes global singletons holding a `Context`.
-# What I Did These 10 Years
+## What I Did These 10 Years
 
 <figure class="review-chart">
 <svg viewBox="0 0 640 190" width="640" height="190" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="timeline-title timeline-desc" xmlns="http://www.w3.org/2000/svg">
@@ -90,8 +90,7 @@ Almost every line in the right column isn't just "trendier" — it's a way to av
     .review-chart .label { fill: var(--secondary, #6c6c6c); font-size: 11.5px; }
     .review-chart .line  { stroke: var(--border, #eee); stroke-width: 2; }
     .review-chart .tick  { stroke: var(--border, #eee); stroke-width: 1.5; }
-    .review-chart .dot   { fill: #2a78d6; }
-    body.dark .review-chart .dot { fill: #3987e5; }
+    .review-chart .dot   { fill: var(--accent, #2f5942); }
   </style>
   <line class="line" x1="40" y1="95" x2="600" y2="95" stroke-linecap="round"></line>
   <circle class="dot" cx="70" cy="95" r="6"></circle>
@@ -158,7 +157,7 @@ Over the years I've taken part in roughly a dozen and a half projects across a w
 <span class="chip">Corporate Services</span>
 </div>
 
-On some I was a regular developer, on others a tech lead — responsible for architecture, reviews, talking with the client, and making sure the team actually shipped. The range of work spans everything from screen layout to research-flavored things like WebRTC integration and call-quality scoring (MOS). Along the way I also grew into leading the whole Android department — these days that's on the order of two dozen engineers, organized into sub-teams under deputy leads and tech leads I helped put that structure in place for.
+On some I was a regular developer, on others a tech lead — responsible for architecture, reviews, talking with the client, and making sure the team actually shipped. The range of work spans everything from screen layout to research-flavored things like WebRTC integration and call-quality scoring (MOS{% sidenote() %}Mean Opinion Score — a 1–5 rating of perceived call audio quality, gathered from real listeners or estimated algorithmically.{% end %}). Along the way I also grew into leading the whole Android department — these days that's on the order of two dozen engineers, organized into sub-teams under deputy leads, with tech leads running a separate technical vertical across those same teams — a structure I helped put in place.
 
 ## Infrastructure and Build
 A separate, sizable chunk of the work is things the user never sees but that save the team time every day:
@@ -187,7 +186,7 @@ I've always liked closing out routine work with utilities:
 * **Tags Setter** — a utility that auto-tags notes based on folder hierarchy;
 * an interactive Android developer roadmap — a skills map for growing the team.
 
-Some of this is internal tooling with no public links, but the logic is the same as in the open-source pieces. For example, I put a minimal reproduction for my article about a dark-mode bug up on GitHub — [DarkModeBugSample](https://github.com/rinekri/DarkModeBugSample).
+Some of this is internal tooling with no public links, but the logic is the same as in the open-source pieces. For example, I put a minimal reproduction for my article about a dark-mode bug up on GitHub — [DarkModeBugSample](https://github.com/rinekri/DarkModeBugSample) ([writeup on /projects/](/projects/#project-darkmode-bug)).
 
 ## Teaching and Mentoring
 The further along I got, the more I was drawn not just to writing code, but to passing on what I'd learned:
@@ -211,8 +210,7 @@ Instead of vague labels, it's built around **eight levels (L0–L7) mapped to ra
     .review-chart text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     .review-chart .cat  { fill: var(--secondary, #6c6c6c); font-size: 13px; }
     .review-chart .axis { stroke: var(--border, #eee); stroke-width: 1; }
-    .review-chart .bar  { fill: #2a78d6; }
-    body.dark .review-chart .bar { fill: #3987e5; }
+    .review-chart .bar  { fill: var(--accent, #2f5942); }
   </style>
   <line class="axis" x1="212" y1="4" x2="212" y2="266"></line>
   <text class="cat" x="204" y="22" text-anchor="end">L0 · Onboarding</text>
@@ -270,12 +268,12 @@ On top of that, levels are cross-checked against a formula-driven 360° survey, 
 
 ## Talks
 I've spoken at GDG / DevFest conferences a few times:
-* <svg class="mini-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>**"RecyclerView at Full Power: A Library Breakdown"** — at DevFest Kaliningrad 2018. Covered the different ways to build lists on Android and which libraries to use for it. What's left: a [Habr article](https://habr.com/ru/companies/redmadrobot/articles/428525/), a [repo with examples](https://github.com/appKODE/recyclerview_adapters) (the classics, Epoxy, Groupie, AdapterDelegates), and a [YouTube recording](https://www.youtube.com/watch?v=d8lh84BJGvM).
+* <svg class="mini-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>**"RecyclerView at Full Power: A Library Breakdown"** — at DevFest Kaliningrad 2018 (full entry on [/speaking/](/speaking/)). Covered the different ways to build lists on Android and which libraries to use for it. What's left: a [Habr article](https://habr.com/ru/companies/redmadrobot/articles/428525/), a [repo with examples](https://github.com/appKODE/recyclerview_adapters) (the classics, Epoxy, Groupie, AdapterDelegates), and a [YouTube recording](https://www.youtube.com/watch?v=d8lh84BJGvM).
 * <svg class="mini-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>**"Building Apps for the Google Voice Assistant"** — another GDG talk, co-presented with colleagues, about building skill-apps for the voice assistant. I had the material for it because I was tech lead across a cluster of voice-assistant projects for a large enterprise client around that time — one delivery became something of a flagship in that space and opened the door to more work like it. [YouTube recording](https://www.youtube.com/watch?v=TEEY91ZN7a8).
 
 ## Blog and Open Source
 <svg class="mini-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>And then there's this blog — [rinekri.com](https://rinekri.com) — also part of the journey: here I dig into technical stories (like investigating a dark-mode bug — [minimal reproduction](https://github.com/rinekri/DarkModeBugSample) and the [bug report to Google](https://issuetracker.google.com/issues/335782501)) and write about how I got into the profession. I put code up on [GitHub](https://github.com/rinekri), and occasionally post on [X](https://x.com/rinekri).
-# What Stayed the Same
+## What Stayed the Same
 Here's what hasn't changed in ten years — and to me, this is the main point. When I now look at interns as a mentor, I'm not looking at knowledge of the trendy stack (that's easy to pick up), but at a handful of things that turned out to matter far more:
 * curiosity for its own sake — diving into something unfamiliar just to understand how it works, not because a ticket demanded it;
 * a bias toward simplifying instead of over-engineering — protecting whoever inherits the code from complexity that isn't earning its keep;
@@ -284,7 +282,7 @@ Here's what hasn't changed in ten years — and to me, this is the main point. W
 * knowing when to step back and hand ownership to someone else — probably the thing I still have to consciously work at the most, same as ten years ago.
 
 The stack changes every couple of years; this doesn't. Learning Compose on top of a solid foundation is far easier than the other way around.
-# Advice for Juniors Starting Out Now, in the Age of AI
+## Advice for Juniors Starting Out Now, in the Age of AI
 The most interesting part of this experiment for me wasn't the score — it was the question: what's it like to start out now, with AI around?
 
 **How this would be written today.** The same project would get built by a junior today on Kotlin + Compose + Coroutines + Retrofit + Coil in a couple of evenings, instead of a month of brute-forcing it from books like I did. Most of the boilerplate would be written by Copilot or Cursor, and Claude or ChatGPT would explain any error you didn't understand.
@@ -322,13 +320,13 @@ So here's my advice for people starting out now:
 * every time, ask yourself: *why* does the suggested code work? If you can't answer, don't paste it in.
 
 One last, personal thing. Ten years ago, what made me a developer was the fight with the incomprehensible — when, up against a deadline, I had to work through by hand what now gets written by autocomplete. AI removes a lot of that pain, and that's great. But it doesn't remove the need to think — and in an age when writing code has become easy, the ability to think is valued more than ever.
-# See You in Ten Years
+## See You in Ten Years
 If I could say something now to my 2016 self — the one grinding through nights before the deadline on this project — I'd probably tell him it wasn't for nothing. That "somehow put together" code, with its main-thread work and busy-waits, got me into a profession I love, and taught me the main lesson: don't be afraid to dive into the unknown and figure it out.
 
 Over these ten years I'm grateful to a lot of people: Android, for opening the door; my parents, for backing a risky pivot; KODE, for that competition and everything that came after; and the people around me I learned from. The bar has risen sky-high since then, the tools have changed almost completely, but the thrill of hunting down an unconventional solution is exactly the same as it was back then, on that game server.
 
 So the next review — of this project, and of myself — I'll do again in another ten years, in 2036. I'm curious what I'll have to say then about the code I'm writing now (and how much of it will turn out to be me, and how much AI). Deal?
-# The Full Category-by-Category Review
+## The Full Category-by-Category Review
 
 <details>
 <summary>Expand for the line-by-line breakdown — Build, Repository Setup, Libraries, Architecture, Code Quality, Design, Logic, and what stood out along the way (code snippets included)</summary>
@@ -421,7 +419,7 @@ I hadn't even heard of Clean Architecture back then, but somehow managed to dist
 
 It's not actually that bad — the code isn't dumped into one pile, and it's generally clear where things live. I think expecting full Clean Architecture understanding from an intern is excessive, so I'll give this part a pass.
 
-![Collagation project structure](collagation-project-structure.png)
+<img src="collagation-project-structure.png" alt="Collagation project structure" width="700" height="958">
 
 But what could've been improved:
 * Split by feature: posts, collage, share
@@ -431,7 +429,7 @@ But what could've been improved:
 <p class="detail-h3">DI</p>
 
 In principle, any solution that let you provide dependencies into classes from the outside would've worked here. Some things in the project are passed in that way, but not all — some classes are created inside methods, which isn't great. For example, in the `InstagramCollageFactory` class, in the `generateCombinations` method:
-```
+```java
 private void generateCombinations(int size) {  
     PermutationsGenerator permutationsGenerator = new PermutationsGenerator();  
     sInstagramImgsCombinations = permutationsGenerator.getCombinations(size);  
@@ -461,7 +459,7 @@ What could be improved:
 <p class="detail-h4">Magic Numbers</p>
 
 There are places with magic numbers, for example in the `onCreateView` method of `CollageFragment`:
-```
+```java
 public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {  
 	   ...
 	   
@@ -476,7 +474,7 @@ And the method name doesn't help you figure out what the number being passed mea
 <p class="detail-h4">Unused Variables</p>
 
 There are unused variables, for example in the `CollageFragment` class:
-```
+```java
 private static final String KEY_TASK_STATUS = "taskStatus";  
 private static final String KEY_PROGRESS_DIALOG = "mProgressDialog";  
 private static final String TAG = "CollageFragment";
@@ -485,7 +483,7 @@ And it's not an isolated case — there are plenty of places where `Context` is 
 <p class="detail-h4">Commented-Out Code</p>
 
 There are quite a few places with commented-out chunks of code. One example, from `CollageFragment`:
-```
+```java
     @Override  
     public void onSaveInstanceState(Bundle outState) {  
        super.onSaveInstanceState(outState);  
@@ -497,7 +495,7 @@ Using Git would've made keeping these dead bits around unnecessary. It might loo
 <p class="detail-h4">Useless Comments</p>
 
 Oddly enough, there's almost nothing to complain about here: I hardly wrote any of the "increment the counter by one" style explanatory comments. The one thing that fits this bucket is a bunch of commented-out `Log` calls scattered through almost every method. For example, in the `positionsOnlyCheckedItems` method of `CollageFragment`:
-```
+```java
 //		Log.d(TAG, "Positions of checked posts (before): " + checkedItemPositions.toString());  
 //		Log.d(TAG, "Size: " + checkedItemPositions.size());  
 		...
@@ -508,7 +506,7 @@ This overlaps a bit with the previous point, but while commented-out *logic* can
 <p class="detail-h4">Variable Naming</p>
 
 Variable naming tries to follow Hungarian notation, but there are exceptions that can't be explained by anything other than carelessness or being in a rush. For example, in the `CollageFragment` class you can see some variables starting with `m` while others don't, even though they're at the same level:
-```
+```java
 private ImageButton mBackImageButton;  
 private TextView mSelectedPostsCounterEditText;  
 private Button mCollageButton;  
@@ -521,7 +519,7 @@ private PostAdapter adapter;
 Code tidiness (magic numbers, unused variables, commented-out chunks, and inconsistent notation) cost me a couple more points.
 <p class="detail-h2" id="design">Design</p>
 
-![Zapilika design mockup](zapilika-design.png)
+<img src="zapilika-design.png" alt="Zapilika design mockup" width="760" height="609">
 What I'd want to see in a project like this today:
 * Match with the mockup
 * Adaptive layout
@@ -564,7 +562,7 @@ What I'd want to see in a project like this today:
 <p class="detail-h3">Error Handling</p>
 
 There's basic handling: before a request, network availability is checked (`NetworkConnector.isConnection`) and a `Toast` is shown, and empty states have dedicated screens prepared. But in the network layer itself, errors are simply swallowed — `printStackTrace()` and `return null`:
-```
+```java
 } catch (IOException ex) {  
     ex.printStackTrace();  
 }  
@@ -577,7 +575,7 @@ There's no pull-to-refresh. Refreshing is done via a toolbar button (`menu_item_
 <p class="detail-h3">Navigation Abstraction</p>
 
 There's no abstraction over navigation at all. Transitions happen directly in click handlers via `startActivity`:
-```
+```java
 Intent intent = new Intent(getActivity(), PublishActivity.class);  
 intent.putExtra(PublishFragment.EXTRA_IMAGES_IDS, checkedPostsIDs);  
 startActivity(intent);
@@ -592,7 +590,7 @@ It launches — but, as we already established in the Build section, only after 
 <p class="detail-h3">The App Doesn't Crash</p>
 
 This is where the real problems are. The scariest spot is image loading: `NetworkConnector.getBitmapFromURL` kicks off an `AsyncTask` and then immediately blocks waiting for the result via `.get()`:
-```
+```java
 public Bitmap getBitmapFromURL(String url) {  
     bitmapURL = url;  
     AsyncTask<Void, Void, Bitmap> requestBitmap = new GetBitmap().execute();  
@@ -606,7 +604,7 @@ And this is called from the adapter's `getView`, meaning the network is effectiv
 <p class="detail-h3">No Leaks</p>
 
 There's plenty to pick at here too. The `AsyncTask` holds a reference to the fragment listener (though `setRetainInstance(true)` partially saves it), and there's a lingering `ProgressDialog`. The cache is also cleared in a rather hacky way — via a shell command:
-```
+```java
 String deleteCmd = "rm -r " + mDirectory;  
 Runtime.getRuntime().exec(deleteCmd);
 ```
@@ -619,7 +617,7 @@ I load and cache images by hand: `BitmapFactory.decodeStream` over the network p
 <p class="detail-h3">Logical Separation of Responsibilities</p>
 
 The UI controller decides where data comes from — cache or a request — even though that's not its job. For example, in the `onCreate` method of `CollageFragment`:
-```
+```java
 if ((mGotIstagramId != null) && !isGetPostsTaskRunning) {  
     if (!InstagramPostsFactory.getFactory(getContext()).getInstagramPostsStatus(mGotIstagramId)) {  
        BitmapWorker.deleteAllBitmapsFromCacheDirectory(getContext());  
@@ -642,7 +640,7 @@ Checklist aside, while digging through the code I found a few spots worth callin
 <p class="detail-h3">Homemade Multithreading With a Busy-Wait</p>
 
 The most telling find is combination generation for the collage. In `PermutationsGenerator` I kick off a background thread through a homemade "Executor", then wait for it in an infinite loop, polling the result size and sleeping for a second:
-```
+```java
 public HashSet<ArrayList<String>> getCombinations(int size) {  
     ...  
     GenerateExecutor mExecutor = new GenerateExecutor();  
@@ -663,7 +661,7 @@ There's a whole bouquet of problems here at once: a busy-wait spinning the CPU f
 <p class="detail-h3">Global Singletons Holding a Context</p>
 
 Almost my entire "model" layer is static singletons that also hold onto a `Context`:
-```
+```java
 public static InstagramPostsFactory getFactory(Context c) {  
     if (sInstagramPostsFactory == null) {  
         sInstagramPostsFactory = new InstagramPostsFactory(c);  
@@ -676,7 +674,7 @@ Right alongside it lives mutable static state (`sUserID`, `sInstagramImgsCombina
 <p class="detail-h3">A Flag-Based Cache State Machine</p>
 
 I determine whether the post cache is valid with this tangle of conditions in `getInstagramPostsStatus`:
-```
+```java
 if (((sUserID == null) && (mInstagramPosts == null)) || ((sUserID != null) && !sUserID.equals(id))) {  
     sUserID = id;  
     status = false;  

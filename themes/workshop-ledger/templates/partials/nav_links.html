@@ -1,0 +1,5 @@
+{% for item in config.extra.navigation %}
+{% set url = item.url | replace(from="$BASE_URL", to=config.base_url) %}
+{% set is_active = current_url and url | trim_end_matches(pat="/") == current_url | trim_end_matches(pat="/") %}
+<a href="{{ url }}"{% if is_active %} aria-current="page"{% endif %}>{{ item.title }}</a>
+{% endfor %}

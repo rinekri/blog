@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% import "macros/glyph.svg.html" as glyph -%}
+{% block content %}
+<article class="post-single">
+    <header class="post-header" data-reveal>
+        <div class="breadcrumbs">
+            <a href="{{ config.base_url }}">Home</a>&nbsp;/&nbsp;
+            <a href="{{ get_url(path='@/posts/_index.md') }}">Posts</a>
+        </div>
+
+        {% if page.extra.cover %}
+        <img class="post-cover" src="{{ page.extra.cover }}" alt="{{ page.title }}" width="1200" height="630">
+        {% else %}
+        <div class="post-hero">
+            <canvas data-seed="{{ page.slug }}" data-hero aria-hidden="true"></canvas>
+        </div>
+        {% endif %}
+
+        <h1 class="post-title">{{ page.title }}</h1>
+
+        {% if page.description %}
+        <div class="post-description">{{ page.description }}</div>
+        {% endif %}
+
+        {% if config.extra.show_post_meta %}
+        <div class="post-meta">
+            {% include "partials/post_meta.html" %}
+            <span class="post-meta__sep">·</span>
+            <button type="button" class="post-share" data-share-title="{{ page.title }}" data-share-url="{{ page.permalink }}">Share</button>
+            {% if config.extra.show_post_edit_button %}
+            {% include "partials/edit_post.html" %}
+            {% endif %}
+        </div>
+        {% endif %}
+    </header>
+
+    {%- set person_id = config.base_url ~ "/#person" -%}
+    {%- set post_description = page.description | default(value=page.summary | default(value="")) | striptags -%}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": {{ page.title | json_encode() | safe }},
+      "datePublished": "{{ page.date | date(format='%Y-%m-%dT%H:%M:%S%:z') }}",
+      "author": { "@id": {{ person_id | json_encode() | safe }} },
+      "publisher": { "@id": {{ person_id | json_encode() | safe }} },
+      "description": {{ post_description | json_encode() | safe }},
+      "url": {{ page.permalink | json_encode() | safe }}
+      {%- if page.extra.cover %},
+      "image": {{ cover_image_url | json_encode() | safe }}
+      {%- endif %}
+      {%- if page.taxonomies.tags %},
+      "keywords": {{ page.taxonomies.tags | json_encode() | safe }}
+      {%- endif %}
+    }
+    </script>
+
+    {% include "partials/toc.html" %}
+
+    <div class="post-layout">
+        {% include "partials/guide-rail.html" %}
+        {% if page.content %}
+        <div class="post-content">
+            {{ page.content | safe }}
+        </div>
+        {% endif %}
+    </div>
+
+    {%- set posts_section = get_section(path="posts/_index.md") -%}
+    {%- set all_posts = posts_section.pages -%}
+    {%- set total_posts = all_posts | length -%}
+    {%- set_global entry_num = total_posts -%}
+    {%- for p in all_posts -%}
+    {%- if p.slug == page.slug -%}{%- set_global entry_num = total_posts - loop.index0 -%}{%- endif -%}
+    {%- endfor -%}
+
+    <div class="post-end" data-reveal>
+        <div class="post-end__plate">
+            <div class="post-end__seal" aria-hidden="true">
+                {{ glyph::mark(class="post-end__seal-glyph") }}
+                <span class="post-end__seal-text">Filed</span>
+            </div>
+
+            <div class="post-end__mark-frame" aria-hidden="true">
+                <canvas class="post-end__mark" data-seed="{{ page.slug }}" width="240" height="88"></canvas>
+            </div>
+
+            <p class="post-end__note">You've reached the end of this entry.</p>
+
+            <div class="post-end__ledger">
+                <span class="post-end__ledger-id">Entry No. {% if entry_num < 10 %}0{{ entry_num }}{% else %}{{ entry_num }}{% endif %} / {% if total_posts < 10 %}0{{ total_posts }}{% else %}{{ total_posts }}{% endif %}</span>
+                {% if config.extra.show_word_count or config.extra.show_reading_time %}<span class="post-end__ledger-sep" aria-hidden="true">&middot;</span>{% endif %}
+                {% if config.extra.show_word_count %}<span class="post-end__ledger-stat">{{ page.word_count }} words</span>{% endif %}
+                {% if config.extra.show_word_count and config.extra.show_reading_time %}<span class="post-end__ledger-sep" aria-hidden="true">&middot;</span>{% endif %}
+                {% if config.extra.show_reading_time %}<span class="post-end__ledger-stat">{{ page.reading_time }} min read</span>{% endif %}
+            </div>
+        </div>
+    </div>
+
+    <footer class="post-footer" data-reveal>
+        {% if page.taxonomies.tags %}
+        <ul class="post-tags">
+            {% for tag in page.taxonomies.tags %}
+            {% set tag_url = get_taxonomy_url(kind="tags", name=tag, lang=page.lang) %}
+            <li><a class="chip chip--tag" href="{{ tag_url }}">{{ tag }}</a></li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        {% if config.extra.show_post_nav_links %}
+        {% include "partials/post_nav_links.html" %}
+        {% endif %}
+
+        {% include "comments.html" %}
+    </footer>
+</article>
+{% endblock content %}

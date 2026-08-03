@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% block content %}
+{% set leadership = load_data(path="data/leadership.toml") %}
+<header class="page-header">
+    <div class="breadcrumbs"><a href="{{ config.base_url }}">Home</a></div>
+    <span class="kicker">Management, hiring, mentorship</span>
+    <h1 class="section-display">Leadership</h1>
+</header>
+
+<p class="lead-strip lead-strip--dropcap">{{ leadership.lead_strip | safe }}</p>
+
+<div class="growth-strip">
+    <div class="growth-dots">
+        {% for i in range(end=leadership.growth_strip.total) %}
+        {% set n = i + 1 %}
+        <span class="growth-dot{% if n > leadership.growth_strip.added_after %} growth-dot--added{% endif %}"></span>
+        {% endfor %}
+    </div>
+    <p class="growth-caption">{{ leadership.growth_strip.caption }}</p>
+</div>
+
+<div class="workbench">
+{% for section in leadership.sections | default(value=[]) %}
+    <section class="bench{% if not section.stats %} bench--solo{% endif %}" id="{{ section.id }}">
+        <header class="bench__head">
+            <span class="bench__num">{{ section.num }}</span>
+            <span class="bench__label">{{ section.label | safe }}</span>
+            <span class="bench__line"></span>
+        </header>
+        <div class="bench__main">
+        {% for block in section.blocks %}
+            {% if block.type == "paragraph" %}
+            <p>{{ block.text | safe }}</p>
+            {% elif block.type == "pull" %}
+            <div class="pull">{{ block.text | safe }}</div>
+            {% elif block.type == "arc" %}
+            <div class="bench__arc">
+                {% for node in block.nodes %}
+                <div class="arc__node{% if node.resolved %} arc__node--resolved{% endif %}">
+                    <span class="arc__dot"></span>
+                    <span class="arc__year">{{ node.year }}</span>
+                    <span class="arc__note">{{ node.note }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% elif block.type == "checklist_card" %}
+            <div class="checklist-card">
+                <div class="checklist-card__cols">
+                    <div class="checklist-card__col checklist-card__col--good">
+                        <span class="checklist-card__heading">{{ block.good_label }}</span>
+                        <ul class="checklist-card__list">
+                            {% for item in block.good_items %}<li class="checklist-chip checklist-chip--good">{{ item | safe }}</li>{% endfor %}
+                        </ul>
+                    </div>
+                    <div class="checklist-card__col checklist-card__col--bad">
+                        <span class="checklist-card__heading">{{ block.bad_label }}</span>
+                        <ul class="checklist-card__list">
+                            {% for item in block.bad_items %}<li class="checklist-chip checklist-chip--bad">{{ item | safe }}</li>{% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                <p class="checklist-card__scoring">{{ block.scoring | safe }}</p>
+            </div>
+            {% elif block.type == "ramp_scale" %}
+            <div class="ramp-scale">
+                <span class="ramp-scale__label">{{ block.min_label }}</span>
+                <div class="ramp-scale__track">
+                    <span class="ramp-scale__marker" style="left: {{ block.marker_pct }}%"></span>
+                </div>
+                <span class="ramp-scale__label">{{ block.max_label }}</span>
+            </div>
+            <p class="ramp-scale__caption">{{ block.caption }}</p>
+            {% elif block.type == "chip_row" %}
+            <div class="chip-row">
+                {% for item in block.items %}{% if item.project_seed %}<a class="chip chip--sm" href="{{ get_url(path='@/projects/_index.md') }}#project-{{ item.project_seed }}">{{ item.text }}</a>{% else %}<span class="chip chip--sm">{{ item.text }}</span>{% endif %}{% endfor %}
+            </div>
+            {% elif block.type == "org_tree" %}
+            <ul class="org-tree">
+                <li class="org-node org-node--lead">
+                    <div class="org-node__row">
+                        <span class="dot dot--{{ block.root_dot }} org-node__dot"></span>
+                        <div class="org-node__info">
+                            <span class="org-node__name">{{ block.root_name }}</span>
+                            <span class="org-node__role">{{ block.root_role }}</span>
+                        </div>
+                    </div>
+                    <ul>
+                        {% for child in block.children %}
+                        <li class="org-node {% if child.dot == "deputy" %}org-node--deputy{% else %}org-node--techlead{% endif %}">
+                            <div class="org-node__row">
+                                {% if child.dot == "deputy" %}<span class="dot org-node__dot org-node__dot--deputy"></span>{% else %}<span class="dot dot--{{ child.dot }} org-node__dot"></span>{% endif %}
+                                <div class="org-node__info">
+                                    <span class="org-node__name">{{ child.name }}</span>
+                                    <span class="org-node__role">{{ child.role }}</span>
+                                </div>
+                            </div>
+                            {% if child.leaves %}
+                            <ul>
+                                {% for leaf in child.leaves %}
+                                <li class="org-node org-node--team">
+                                    <div class="org-node__row">
+                                        <span class="dot dot--{{ leaf.dot }} org-node__dot"></span>
+                                        <div class="org-node__info">
+                                            <span class="org-node__name">{{ leaf.name }}</span>
+                                        </div>
+                                    </div>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            </ul>
+            {% elif block.type == "outlook" %}
+            <div class="outlook">
+                <div class="outlook__col outlook__col--goals">
+                    <span class="outlook__heading">{{ block.heading }}</span>
+                    <ul class="outlook__list outlook__list--goals">
+                        {% for item in block.items %}<li>{{ item }}</li>{% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+        {% endfor %}
+        </div>
+        {% if section.stats %}
+        <aside class="bench__aside">
+            {% for stat in section.stats %}
+            <div class="bench-stat">
+                <span class="bench-stat__num">{{ stat.num }}</span>
+                <span class="bench-stat__label">{{ stat.label }}</span>
+            </div>
+            {% endfor %}
+        </aside>
+        {% endif %}
+    </section>
+{% endfor %}
+</div>
+{% endblock content %}

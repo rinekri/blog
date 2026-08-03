@@ -1,0 +1,506 @@
+// ============================================================
+// /leadership/ — five numbered workbench sections (Hiring,
+// Mentorship, Grading, Systems & infrastructure, Org structure).
+// ============================================================
+
+// ---------- intro ----------
+
+.lead-strip--dropcap::first-letter {
+  font-family: var(--font-serif);
+  font-size: 4.2em;
+  line-height: 0.85;
+  float: left;
+  padding-right: 10px;
+  padding-top: 4px;
+  color: var(--moss);
+}
+
+// ---------- headcount growth strip ----------
+
+.growth-strip {
+  margin: 0 0 40px;
+}
+
+.growth-dots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.growth-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ink-faint);
+}
+
+.growth-dot--added {
+  width: 10px;
+  height: 10px;
+  background: var(--spark);
+}
+
+.growth-caption {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink-faint);
+  margin: 0;
+}
+
+// ---------- bench sections ----------
+
+.workbench {
+  margin-top: 8px;
+}
+
+.bench {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 200px;
+  gap: 40px;
+}
+
+.bench + .bench {
+  margin-top: 64px;
+}
+
+.bench__head {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin: 0 0 22px;
+}
+
+.bench__num {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 36px;
+  color: var(--ink);
+  line-height: 1;
+}
+
+.bench__label {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 17px;
+  color: var(--ink);
+}
+
+.bench__line {
+  flex: 1;
+  height: 2px;
+  background: var(--ink);
+}
+
+.bench__main {
+  color: var(--ink);
+  line-height: 1.68;
+  max-width: 68ch;
+}
+
+.bench__main p {
+  margin: 0 0 14px;
+}
+
+.bench__main b {
+  color: var(--moss);
+  font-weight: 600;
+  font-family: var(--font-sans);
+}
+
+.bench__main a {
+  @extend %interactive-link;
+}
+
+.bench__aside {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.bench-stat {
+  border: 1px solid var(--line);
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+}
+
+.bench-stat__num {
+  display: block;
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 34px;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.bench-stat__label {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+// %interactive-chip is the canonical clickable-chip hover, same as .fchip on /projects/.
+#systems .chip-row a.chip {
+  @extend %interactive-chip;
+  cursor: pointer;
+}
+
+@media (max-width: 800px) {
+  .bench {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ---------- mentorship: ramp-up scale ----------
+
+.ramp-scale {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 22px 0 6px;
+}
+
+.ramp-scale__track {
+  position: relative;
+  flex: 1;
+  height: 2px;
+  background: var(--line);
+}
+
+// avg 3mo within a 1mo-6mo range -> (3 - 1) / (6 - 1) = 40%.
+.ramp-scale__marker {
+  position: absolute;
+  top: 50%;
+  left: 40%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--spark);
+  transform: translate(-50%, -50%);
+}
+
+.ramp-scale__label {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink-faint);
+  white-space: nowrap;
+}
+
+.ramp-scale__caption {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink-faint);
+  margin: 0 0 14px;
+}
+
+// ---------- org structure: delegation arc ----------
+// One continuous line via ::before, not per-segment — a fixed 3-node arc
+// has no variable row count, so it avoids the archive connector's per-row-gap bug.
+
+.bench__arc {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  margin: 28px 0 24px;
+}
+
+.bench__arc::before {
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--line);
+}
+
+.arc__node {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  max-width: 33%;
+  text-align: center;
+}
+
+.arc__dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--ink-faint);
+  border: 2px solid var(--paper);
+}
+
+.arc__node--resolved .arc__dot {
+  background: var(--spark);
+}
+
+.arc__year {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink-faint);
+}
+
+.arc__node--resolved .arc__year {
+  color: var(--spark-deep);
+  font-weight: 600;
+}
+
+.arc__note {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.4;
+}
+
+.pull {
+  border-inline-start: 3px solid var(--spark);
+  padding: 20px 24px;
+  font-style: italic;
+  background: var(--card);
+  color: var(--ink);
+  margin: 0 0 36px;
+}
+
+// ---------- org structure: org tree ----------
+// Connector lines drawn locally per <li> (same per-row approach as the
+// archive connector in sass/_post.scss) so the tree stays correct for any branch size.
+
+.org-tree,
+.org-tree ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.org-tree {
+  margin-top: 4px;
+}
+
+.org-tree ul {
+  padding-left: 26px;
+}
+
+.org-node {
+  position: relative;
+}
+
+// horizontal branch from the parent's vertical line to this node's dot
+.org-tree ul > .org-node::before {
+  content: "";
+  position: absolute;
+  top: 20px;
+  left: -18px;
+  width: 18px;
+  height: 2px;
+  background: var(--line);
+}
+
+// vertical line down to the next sibling; continuing through every sibling
+// but the last, it also doubles as the line up to the parent branch
+.org-tree ul > .org-node::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -18px;
+  width: 2px;
+  height: 100%;
+  background: var(--line);
+}
+
+.org-tree ul > .org-node:last-child::after {
+  height: 20px;
+}
+
+.org-node__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 0;
+}
+
+.org-node__dot {
+  flex-shrink: 0;
+}
+
+.org-node__dot--deputy {
+  background: var(--ink-soft);
+}
+
+.org-node__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.org-node__name {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--ink);
+}
+
+// Only leaf nodes linking to a /projects/ entry get this — others stay
+// plain <span>s, so hover never implies a link that isn't there.
+.org-node__name[href] {
+  cursor: pointer;
+}
+
+.org-node__name[href]:hover {
+  color: var(--moss);
+  text-decoration: underline;
+}
+
+.org-node__role {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+// ---------- mentorship: inline voice quotes ----------
+// Deliberately lighter-weight than .pull, reserved for the delegation-arc payoff quote.
+
+.voice-quote {
+  font-style: italic;
+  color: var(--ink-soft);
+}
+
+// ---------- hiring: green/red flag signal card ----------
+// Styled like .bench-stat's card chrome but wide, spanning bench__main rather than the aside's narrow cells.
+
+.checklist-card {
+  border: 1px solid var(--line);
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  margin: 20px 0;
+}
+
+.checklist-card__cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.checklist-card__col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.checklist-card__heading {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.checklist-card__col--good .checklist-card__heading {
+  color: var(--moss);
+}
+
+.checklist-card__col--bad .checklist-card__heading {
+  color: var(--danger);
+}
+
+.checklist-card__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.checklist-chip {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.4;
+  padding: 6px 10px;
+  border-radius: var(--radius);
+  border: 1px solid;
+}
+
+.checklist-chip code {
+  font-family: inherit;
+}
+
+.checklist-chip--good {
+  color: var(--moss);
+  border-color: var(--moss);
+  background: var(--paper-dim);
+}
+
+.checklist-chip--bad {
+  color: var(--danger);
+  border-color: var(--danger);
+  background: var(--paper-dim);
+}
+
+.checklist-card__scoring {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink-faint);
+  margin: 16px 0 0;
+}
+
+@media (max-width: 560px) {
+  .checklist-card__cols {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ---------- org structure: 2026 outlook panel ----------
+// Plain list, no card chrome — dot markers reuse the .org-node__dot ::before idiom rather than native bullets.
+
+.outlook {
+  margin-top: 32px;
+}
+
+.outlook__heading {
+  display: block;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+
+.outlook__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.outlook__list li {
+  position: relative;
+  padding-left: 18px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+.outlook__list li::before {
+  content: "";
+  position: absolute;
+  top: 7px;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.outlook__list--goals li::before {
+  background: var(--moss);
+}

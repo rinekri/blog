@@ -1,0 +1,44 @@
+{% import "macros/glyph.svg.html" as glyph -%}
+{% set posts_section = get_section(path="posts/_index.md") %}
+{% set featured = posts_section.pages | first %}
+{% if featured %}
+{% set rest = posts_section.pages | slice(start=1, end=3) %}
+{% set rest_count = rest | length %}
+{% set total = posts_section.pages | length %}
+<div class="bench-notes">
+    <h2 class="list-heading">{{ glyph::mark() }} Latest posts</h2>
+    <div class="notes-frame">
+        <div class="notes-grid{% if rest_count == 0 %} notes-grid--solo{% endif %}">
+            <a class="notes-featured" href="{{ featured.permalink }}">
+                <canvas class="notes-featured__fp" data-seed="{{ featured.slug }}" width="640" height="180" aria-hidden="true"></canvas>
+                <span class="notes-featured__meta">
+                    <span title="{{ featured.date | date(format='%Y-%m-%d %H:%M:%S %z') }}">{{ featured.date | date(format=config.extra.date_format) }}</span>
+                    {% if config.extra.show_reading_time %}<span>{{ featured.reading_time }} min</span>{% endif %}
+                </span>
+                <h3 class="notes-featured__title">{{ featured.title }}</h3>
+                {% if featured.summary %}<p class="notes-featured__summary">{{ featured.summary | safe }}</p>{% endif %}
+            </a>
+            {% if rest_count > 0 %}
+            <div class="notes-side{% if rest_count == 1 %} notes-side--solo{% endif %}">
+                {% for post in rest %}
+                <a class="notes-row" href="{{ post.permalink }}">
+                    {% if rest_count == 1 %}<canvas class="notes-row__fp" data-seed="{{ post.slug }}" width="480" height="100" aria-hidden="true"></canvas>{% endif %}
+                    <span class="notes-row__meta">
+                        <span title="{{ post.date | date(format='%Y-%m-%d %H:%M:%S %z') }}">{{ post.date | date(format=config.extra.date_format) }}</span>
+                        {% if config.extra.show_reading_time %}<span>{{ post.reading_time }} min</span>{% endif %}
+                    </span>
+                    <span class="notes-row__title">{{ post.title }}</span>
+                    {% if rest_count == 1 and post.summary %}<p class="notes-row__summary">{{ post.summary | safe }}</p>{% endif %}
+                </a>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        <p class="notes-more">
+            <a href="{{ get_url(path='@/posts/_index.md') }}">See all {{ total }} posts &rarr;</a>
+            <span class="notes-more__sep">&middot;</span>
+            <a href="{{ '$BASE_URL/archive' | replace(from='$BASE_URL', to=config.base_url) }}">Browse the archive &rarr;</a>
+        </p>
+    </div>
+</div>
+{% endif %}

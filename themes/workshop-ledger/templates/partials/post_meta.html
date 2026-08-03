@@ -1,0 +1,15 @@
+{% set meta = [] %}
+{% set meta = meta | concat(with='<span>By <a href="' ~ get_url(path='@/resume/_index.md') ~ '">' ~ config.author ~ '</a></span>') %}
+{% set formatted_long = page.date | date(format="%Y-%m-%d %H:%M:%S %z") %}
+{% set formatted_short = page.date | date(format=config.extra.date_format) %}
+{% set meta = meta | concat(with='<span title="' ~ formatted_long ~ '">' ~ formatted_short ~ '</span>') %}
+
+{% if config.extra.show_reading_time %}
+{% set meta = meta | concat(with='<span>' ~ page.reading_time ~ ' min read</span>') %}
+{% endif %}
+
+{% if config.extra.show_word_count %}
+{% set meta = meta | concat(with='<span>' ~ page.word_count ~ ' words</span>') %}
+{% endif %}
+
+{% for item in meta %}{% if not loop.first %}<span class="post-meta__sep">·</span>{% endif %}{{ item | safe }}{% endfor %}

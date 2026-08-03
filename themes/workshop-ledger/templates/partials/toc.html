@@ -1,0 +1,54 @@
+{# Narrow-viewport (<1360px) fallback — guide-rail.html is the wide-viewport enhancement. Manually unrolled h2-h6: Tera macros can't self-recurse in this Zola version. #}
+{% if page.toc %}
+{% set expand_toc = page.extra.toc_open | default(value=config.extra.default_toc_open) %}
+<div class="toc">
+    <details{% if expand_toc == true %} open{% endif %}>
+        <summary>Table of Contents<span class="toc__position"></span></summary>
+        <div class="inner">
+            <ul class="toc__list">
+                {% for l2 in page.toc %}
+                <li class="toc__item toc__item--h{{ l2.level }}">
+                    <a href="#{{ l2.id }}">{{ l2.title }}</a>
+                    {% if l2.children | length > 0 %}
+                    <ul class="toc__list">
+                        {% for l3 in l2.children %}
+                        <li class="toc__item toc__item--h{{ l3.level }}">
+                            <a href="#{{ l3.id }}">{{ l3.title }}</a>
+                            {% if l3.children | length > 0 %}
+                            <ul class="toc__list">
+                                {% for l4 in l3.children %}
+                                <li class="toc__item toc__item--h{{ l4.level }}">
+                                    <a href="#{{ l4.id }}">{{ l4.title }}</a>
+                                    {% if l4.children | length > 0 %}
+                                    <ul class="toc__list">
+                                        {% for l5 in l4.children %}
+                                        <li class="toc__item toc__item--h{{ l5.level }}">
+                                            <a href="#{{ l5.id }}">{{ l5.title }}</a>
+                                            {% if l5.children | length > 0 %}
+                                            <ul class="toc__list">
+                                                {% for l6 in l5.children %}
+                                                <li class="toc__item toc__item--h{{ l6.level }}">
+                                                    <a href="#{{ l6.id }}">{{ l6.title }}</a>
+                                                </li>
+                                                {% endfor %}
+                                            </ul>
+                                            {% endif %}
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                    {% endif %}
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </details>
+</div>
+{% endif %}

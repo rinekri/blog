@@ -1,0 +1,193 @@
+# Data for /leadership/ (templates/leadership.html). Same typed-block
+# system as data/about.toml (see its header comment) plus a few block
+# types unique to this page: "checklist_card", "ramp_scale", "chip_row"
+# (items optionally link to a /projects/ entry seed), "org_tree" (root +
+# one level of children, each optionally with its own leaf list — matches
+# this page's actual org depth, not a generic recursive tree; Tera macros
+# can't self-recurse in this Zola version), "outlook".
+
+lead_strip = "I lead KODE's Android department — <b>26 people</b> as of early 2026, grown from 17 over the course of 2025. Below is what I actually do besides writing code."
+
+[growth_strip]
+total = 26
+added_after = 17
+caption = "17 → 26 engineers, 2025"
+
+[[sections]]
+id = "hiring"
+num = "01"
+label = "Hiring"
+
+  [[sections.blocks]]
+  type = "paragraph"
+  text = "I've worked through roughly <b>80–100 candidates</b> across interview and review work — 62 resume-review files, 59 recorded interviews (including 19 in a single day, once), 22 personal-prep files. For one staff-augmentation project, I wrote a full hiring kit from scratch: candidate requirements, a four-stage interview process, and roughly 15 hard questions with reference answers."
+
+  [[sections.blocks]]
+  type = "paragraph"
+  text = "Beyond that kit, I've authored a universal Middle-level interview built around a \"design a banking app from scratch\" scenario, a 12-criterion rubric for what an \"ideal Middle\" looks like, a 7-file L1–L7 knowledge-check matrix system, and a heuristic for matching candidates to KODE's projects by stack."
+
+  [[sections.blocks]]
+  type = "checklist_card"
+  good_label = "Good signs"
+  good_items = ["explains structured concurrency via <code>viewModelScope</code>", "mentions SSL pinning / Play Integrity"]
+  bad_label = "Watch for"
+  bad_items = ["uses <code>GlobalScope</code> as the norm", "stores tokens in plain SharedPreferences", '"just buy a faster machine" for slow builds']
+  scoring = "Scoring bands: 40–45 strong Senior (hire immediately) · 30–39 Middle+/Senior- · 20–29 weak Middle · <20 not a fit."
+
+[[sections.stats]]
+num = "80–100"
+label = "candidates worked through"
+[[sections.stats]]
+num = "4"
+label = "stage interview process"
+
+[[sections]]
+id = "mentorship"
+num = "02"
+label = "Mentorship"
+
+  [[sections.blocks]]
+  type = "paragraph"
+  text = "I curate a mentorship program — five mentors, including myself, take an intern through interview → test review → closing meeting. <b>13</b> have been through it. In practice the ceiling is around 4 mentees per mentor per year at that pace; a hired mentee reaches full productivity in about a year. A regular (non-mentee) internship is shorter — 1 to 1.5 months active, roughly 3.5 months total including prep."
+
+  [[sections.blocks]]
+  type = "paragraph"
+  text = "Ideal-candidate profile: a technical-degree background, Kotlin preferred (other languages are acceptable with retraining), experience with Google-recommended frameworks, git familiarity a plus."
+
+  [[sections.blocks]]
+  type = "paragraph"
+  text = "Feedback style stays concrete on code — <span class=\"voice-quote\">\"don't over-lean on Material components\"</span>, <span class=\"voice-quote\">\"unnecessary complexity from over-splitting use-cases\"</span> — and humane on rejection — <span class=\"voice-quote\">\"shows promise, we'll stay in touch\"</span>."
+
+  [[sections.blocks]]
+  type = "ramp_scale"
+  min_label = "1mo"
+  max_label = "6mo"
+  marker_pct = 40
+  caption = "Ramp-up time for a new intern — avg: 3mo"
+
+[[sections.stats]]
+num = "13"
+label = "mentees run through the program"
+[[sections.stats]]
+num = "5"
+label = "mentors"
+
+[[sections]]
+id = "grading"
+num = "03"
+label = "Grading system"
+
+  [[sections.blocks]]
+  type = "paragraph"
+  text = "I've built a grading system twice now. The second version, in 2026, outgrew being just a grading app — it covers the whole HR lifecycle: setting up a new department, onboarding and probation, the review/grade cycle itself, compensation, offboarding, even an analytics dashboard on top of it all. I built it solo — React, Express, Prisma — with 33 competency matrices spanning everything from Kotlin and Compose to security, team leading, KMP, and iOS/Swift. <a href=\"/projects/\">See it as an engineering project →</a>"
+
+[[sections.stats]]
+num = "33"
+label = "competency matrices"
+
+[[sections]]
+id = "systems"
+num = "04"
+label = "Systems & infrastructure"
+
+  [[sections.blocks]]
+  type = "paragraph"
+  text = "Beyond process, I build the tooling the department runs on. I've documented the full employee lifecycle — hiring → onboarding → probation → performance review → offboarding — as department wiki, plus a separate 1-on-1 (O3) process, a salary-raise process, and monthly \"technologization\" tech sessions."
+
+  [[sections.blocks]]
+  type = "paragraph"
+  text = "Infrastructure I've personally implemented (2025–early 2026):"
+
+  [[sections.blocks]]
+  type = "chip_row"
+    [[sections.blocks.items]]
+    text = "CI Toolkit — shared CI templates/scripts across every project"
+    project_seed = "ci-toolkit"
+    [[sections.blocks.items]]
+    text = "Build-Publish Gradle plugin — multi-module publish + changelog automation"
+    project_seed = "build-publish-plugin"
+    [[sections.blocks.items]]
+    text = "Self-hosted Telegram Bot API server — 2GB upload limit vs. the default 50MB"
+    project_seed = "team-infrastructure"
+    [[sections.blocks.items]]
+    text = "Self-hosted Reposilite Maven proxy"
+    project_seed = "team-infrastructure"
+    [[sections.blocks.items]]
+    text = "Self-hosted Squid HTTP/S proxy"
+    project_seed = "team-infrastructure"
+    [[sections.blocks.items]]
+    text = "Spotless → Ktlint CLI migration for faster builds"
+
+[[sections.stats]]
+num = "5-stage"
+label = "lifecycle documented"
+[[sections.stats]]
+num = "6"
+label = "infra tools shipped"
+
+[[sections]]
+id = "org-structure"
+num = "05"
+label = "Org structure"
+
+  [[sections.blocks]]
+  type = "paragraph"
+  text = "Since 2025, two axes under me as Team Lead (strategy, final calls): two deputies running day-to-day people management for the two developer teams, and two tech leads running the technical vertical — architecture and code review — across both teams, not owning a team of their own."
+
+  [[sections.blocks]]
+  type = "arc"
+    [[sections.blocks.nodes]]
+    year = 2022
+    note = "one person did it all: interviews, O3s, docs, code"
+    [[sections.blocks.nodes]]
+    year = 2023
+    note = "same theme repeats"
+    [[sections.blocks.nodes]]
+    year = 2025
+    note = "3-tier structure formalized"
+    resolved = true
+
+  [[sections.blocks]]
+  type = "pull"
+  text = "\"Didn't delegate enough\" is a recurring theme in every one of my retrospectives from 2022 through 2023. By 2025 that had become a formal three-tier structure with deputies and a second tech lead."
+
+  [[sections.blocks]]
+  type = "org_tree"
+  root_name = "Team Lead"
+  root_role = "strategy, final calls"
+  root_dot = "leadership"
+
+    [[sections.blocks.children]]
+    name = "Deputy"
+    role = "day-to-day people management"
+    dot = "deputy"
+      [[sections.blocks.children.leaves]]
+      name = "Developer team"
+      dot = "feature"
+
+    [[sections.blocks.children]]
+    name = "Deputy"
+    role = "day-to-day people management"
+    dot = "deputy"
+      [[sections.blocks.children.leaves]]
+      name = "Developer team"
+      dot = "feature"
+
+    [[sections.blocks.children]]
+    name = "Tech Lead"
+    role = "architecture, code review — spans both teams"
+    dot = "architecture"
+
+    [[sections.blocks.children]]
+    name = "Tech Lead"
+    role = "architecture, code review — spans both teams"
+    dot = "architecture"
+
+  [[sections.blocks]]
+  type = "outlook"
+  heading = "Goals for 2026"
+  items = ["Grow AI's role in code review, codegen, and hiring", "Lower the barrier to spinning up a new project", "Grow KMP adoption"]
+
+[[sections.stats]]
+num = "2"
+label = "axes: people ops, tech vertical"

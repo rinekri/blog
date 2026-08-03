@@ -1,0 +1,49 @@
+# Data for /changelog/ (templates/changelog.html) — a hand-maintained log of
+# real changes to /projects/, /resume/, /stack/, and similar data-driven
+# pages, distinct from the blog itself. Dates and substance come from actual
+# git history, not auto-generated from data/projects.toml (which has no
+# reliable per-entry "last touched" timestamp to diff against). Add an entry
+# by hand whenever a change to that kind of page is worth surfacing —
+# newest first.
+
+[[entries]]
+date = "2026-08-01"
+text = "Filled in exhaustive tech-stack tags across all 42 projects, and corrected how the Android department's leadership structure (team leads vs. tech leads vs. deputies) was described."
+url = "$BASE_URL/leadership/"
+link_label = "Leadership"
+
+[[entries]]
+date = "2026-08-01"
+text = "Added a color legend for the project-card category dots, plus two new entries: Way's flavor support and moxy-ksp."
+url = "$BASE_URL/projects/"
+link_label = "Projects"
+
+[[entries]]
+date = "2026-07-20"
+text = "Documented the self-hosted CI infrastructure — Reposilite, a Telegram Bot API server, Squid — as its own project entry."
+url = "$BASE_URL/projects/"
+link_label = "Projects"
+
+[[entries]]
+date = "2026-07-20"
+text = "Added this /about/ page and expanded the site's structured data for search engines."
+url = "$BASE_URL/about/"
+link_label = "About"
+
+[[entries]]
+date = "2026-07-19"
+text = "Fixed the home hero's signature field to actually composite all projects instead of a handful, and untangled the stroke-clustering that was crowding them together."
+url = "$BASE_URL/"
+link_label = "Home"
+
+[[entries]]
+date = "2026-07-18"
+text = "Split resume experience into leadership/architecture/feature categories and made each project card expandable for the full detail."
+url = "$BASE_URL/resume/"
+link_label = "Resume"
+
+[[entries]]
+date = "2026-07-13"
+text = "Added /resume/ as its own data-driven page, generated from the same project records as /projects/."
+url = "$BASE_URL/resume/"
+link_label = "Resume"

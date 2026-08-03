@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% import "macros/project_card.html" as project_card -%}
+{% block content %}
+{% set projects = load_data(path="data/projects.toml") %}
+{% set groups = projects.groups %}
+{% set_global total_count = 0 %}
+{% set_global public_count = 0 %}
+{% set_global card_count = 0 %}
+{% for group in groups %}
+{% set group_len = group.items | length %}
+{% set_global total_count = total_count + group_len %}
+{% for item in group.items %}
+{% if item.vis == "public" %}{% set_global public_count = public_count + 1 %}{% endif %}
+{% if item.kind == "card" %}{% set_global card_count = card_count + 1 %}{% endif %}
+{% endfor %}
+{% endfor %}
+<header class="page-header">
+    <div class="breadcrumbs"><a href="{{ config.base_url }}">Home</a></div>
+    <span class="kicker">10 years &middot; {{ total_count }} shipped things</span>
+    <h1 class="section-display">Projects</h1>
+</header>
+
+<p class="lead-strip">{{ projects.lead_strip | safe }}</p>
+
+<p class="lead-strip lead-strip--secondary">{{ projects.lead_strip_secondary | safe }}</p>
+
+<div class="filter-bar" id="filterBar">
+    <button class="fchip active" data-f="all" aria-pressed="true">All <span class="n">{{ total_count }}</span></button>
+    {% for group in groups %}
+    {% if group.items | length > 0 %}
+    <button class="fchip" data-f="{{ group.key }}" aria-pressed="false">{{ group.label }} <span class="n">{{ group.items | length }}</span></button>
+    {% endif %}
+    {% endfor %}
+    <button class="fchip" data-f="public" aria-pressed="false">Public only <span class="n">{{ public_count }}</span></button>
+    <button class="fchip" data-f="highlights" aria-pressed="false">Highlights <span class="n">{{ card_count }}</span></button>
+    <input type="search" id="stackFilter" class="stack-filter" placeholder="Filter by tech…" aria-label="Filter projects by technology">
+</div>
+
+<div class="cat-legend">
+    <span class="cat-legend__item"><span class="dot dot--leadership"></span>Leadership</span>
+    <span class="cat-legend__item"><span class="dot dot--architecture"></span>Architecture</span>
+    <span class="cat-legend__item"><span class="dot dot--feature"></span>Feature work</span>
+</div>
+
+{% for group in groups %}
+{% if group.items | length > 0 %}
+<div class="pgroup" data-group="{{ group.key }}">
+    <div class="pgroup-head"><span class="cnt">{{ group.label }}</span><span class="line"></span><span class="pgroup-count">{{ group.items | length }}</span></div>
+    {% set cards = group.items | filter(attribute="kind", value="card") %}
+    {% if cards | length > 0 %}
+    <div class="anchors">
+        {% for item in cards %}
+        {{ project_card::card(item=item) }}
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% set rows = group.items | filter(attribute="kind", value="row") %}
+    {% for item in rows %}
+    {% set prow_first = loop.first %}
+    {% set cat = item.category | default(value='feature') %}
+    {% if cat == "leadership" %}{% set cat_label = "Leadership" %}
+    {% elif cat == "architecture" %}{% set cat_label = "Architecture" %}
+    {% else %}{% set cat_label = "Feature work" %}{% endif %}
+    {% if item.achievements or item.architecture or item.features or item.stack %}
+    <details class="prow-entry" name="prow-{{ group.key }}">
+        <summary class="prow{% if prow_first %} prow--first{% endif %}" id="project-{{ item.seed }}" data-vis="{{ item.vis }}" data-stack="{{ item.stack | default(value=[]) | join(sep=' ') | lower }}">
+            <span class="dot dot--{{ cat }}" title="{{ cat_label }}"></span>
+            <div>
+                <span class="prow-name">{% if item.url %}<a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.name }}</a>{% else %}{{ item.name }}{% endif %}<span class="yr">{{ item.meta[0] | safe }}</span></span>
+                <span class="prow-desc">{{ item.desc | safe }}</span>
+            </div>
+            <span class="badge {{ item.vis }} prow-badge">{{ item.badge_label }}</span>
+            <span class="prow-toggle" aria-hidden="true"><span class="dtoggle__cross"></span></span>
+        </summary>
+        <div class="prow-more">
+            {% if item.architecture %}<span class="pcard-more__label">Architecture</span><p class="pcard-arch">{{ item.architecture | safe }}</p>{% endif %}
+            {% if item.features %}
+            <span class="pcard-more__label">Features</span>
+            <ul class="pcard-achievements">
+                {% for f in item.features %}<li>{{ f | safe }}</li>{% endfor %}
+            </ul>
+            {% endif %}
+            {% if item.achievements %}
+            <span class="pcard-more__label">Achievements</span>
+            <ul class="pcard-achievements">
+                {% for a in item.achievements %}<li>{{ a | safe }}</li>{% endfor %}
+            </ul>
+            {% endif %}
+            {% if item.stack %}
+            <span class="pcard-more__label">Stack</span>
+            <div class="pcard-stack">
+                {% for tag in item.stack %}<span class="chip chip--sm">{{ tag }}</span>{% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </details>
+    {% else %}
+    <div class="prow{% if prow_first %} prow--first{% endif %}" id="project-{{ item.seed }}" data-vis="{{ item.vis }}" data-stack="{{ item.stack | default(value=[]) | join(sep=' ') | lower }}">
+        <span class="dot dot--{{ cat }}" title="{{ cat_label }}"></span>
+        <div>
+            <span class="prow-name">{% if item.url %}<a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.name }}</a>{% else %}{{ item.name }}{% endif %}<span class="yr">{{ item.meta[0] | safe }}</span></span>
+            <span class="prow-desc">{{ item.desc | safe }}</span>
+        </div>
+        <span class="badge {{ item.vis }} prow-badge">{{ item.badge_label }}</span>
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>
+{% endif %}
+{% endfor %}
+{% endblock content %}

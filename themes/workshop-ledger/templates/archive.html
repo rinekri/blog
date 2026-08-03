@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% import "macros/social_icon.svg.html" as social -%}
+{% block content %}
+{% set posts_section = get_section(path="posts/_index.md") %}
+{% set all_posts = posts_section.pages %}
+{% set total = all_posts | length %}
+{% set newest = all_posts | first %}
+{% set oldest = all_posts | last %}
+{% set_global total_words = 0 %}
+{% for p in all_posts %}{% set_global total_words = total_words + p.word_count %}{% endfor %}
+{% set yearly_posts = all_posts | group_by(attribute="year") %}
+{% set_global busiest_year = "" %}
+{% set_global busiest_count = 0 %}
+{% for year, posts in yearly_posts %}
+{% if posts | length > busiest_count %}
+{% set_global busiest_count = posts | length %}
+{% set_global busiest_year = year %}
+{% endif %}
+{% endfor %}
+
+<header class="page-header">
+    <div class="breadcrumbs"><a href="{{ config.base_url }}">Home</a></div>
+    <h1 class="section-display">
+        Archive
+        <a class="rss-link" href="{{ '$BASE_URL/atom.xml' | replace(from='$BASE_URL', to=config.base_url) }}" title="RSS" aria-label="RSS feed">{{ social::icon(name="rss") }}</a>
+    </h1>
+</header>
+
+<div class="archive-stats">
+    <div class="astat">
+        <span class="astat__num">{{ total }}</span>
+        <span class="astat__label">posts written</span>
+    </div>
+    <div class="astat">
+        <span class="astat__num">{{ newest.year - oldest.year + 1 }}</span>
+        <span class="astat__label">years of record</span>
+    </div>
+    <div class="astat">
+        <span class="astat__num">{% if total_words >= 1000 %}{{ (total_words / 1000) | round(method="floor", precision=1) }}k{% else %}{{ total_words }}{% endif %}</span>
+        <span class="astat__label">words on record</span>
+    </div>
+    <div class="astat">
+        <span class="astat__num">{{ busiest_year }}</span>
+        <span class="astat__label">{{ busiest_count }} post{% if busiest_count != 1 %}s{% endif %} &mdash; busiest year</span>
+    </div>
+</div>
+
+<div class="archive-timeline">
+    {% set_global prev_ym = 0 %}
+    {% for year, posts in yearly_posts %}
+    {% set_global strip_slugs = "" %}
+    {% for post in posts %}{% if not loop.first %}{% set_global strip_slugs = strip_slugs ~ "," %}{% endif %}{% set_global strip_slugs = strip_slugs ~ post.slug %}{% endfor %}
+    <div class="archive-plate">
+        <div class="archive-plate__head">
+            <h2 class="archive-plate__year">{{ year }}</h2>
+            <span class="archive-plate__meta">{% if posts | length == 1 %}1 post{% else %}{{ posts | length }} posts{% endif %}</span>
+        </div>
+        <canvas class="archive-plate__strip" data-strip="{{ strip_slugs }}" height="56" aria-hidden="true"></canvas>
+        {% for post in posts %}
+        {% set ym = post.year * 12 + post.month %}
+        {% if prev_ym > 0 %}
+        {% set gap = prev_ym - ym %}
+        {% if gap > 0 %}
+        <div class="archive-gap" style="--gap-months: {{ gap }}">
+            {% if gap >= 3 %}<span class="archive-gap__label">&mdash; {{ gap }} month{% if gap != 1 %}s{% endif %} quiet &mdash;</span>{% endif %}
+        </div>
+        {% endif %}
+        {% endif %}
+        <div class="archive-entry">
+            <span class="archive-entry__node"><canvas data-seed="{{ post.slug }}" width="32" height="32" aria-hidden="true"></canvas></span>
+            <span class="archive-entry__date" title="{{ post.date | date(format='%Y-%m-%d %H:%M:%S %z') }}">{{ post.date | date(format=config.extra.date_format) }}</span>
+            <h3 class="archive-entry-title">{{ post.title }}</h3>
+            <span class="archive-entry__time">{{ post.reading_time }} min</span>
+            <a class="entry-link" aria-label="Read {{ post.title }}" href="{{ post.permalink }}"></a>
+        </div>
+        {% set_global prev_ym = ym %}
+        {% endfor %}
+    </div>
+    {% endfor %}
+</div>
+{% endblock content %}

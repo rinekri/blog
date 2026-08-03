@@ -1,0 +1,7 @@
+<a class="post-row" href="{{ page.permalink }}">
+    <span class="post-row__meta">
+        <span title="{{ page.date | date(format='%Y-%m-%d %H:%M:%S %z') }}">{{ page.date | date(format=config.extra.date_format) }}</span>
+        {% if config.extra.show_reading_time %}<span>{{ page.reading_time }} min</span>{% endif %}
+    </span>
+    <span class="post-row__title">{{ page.title }}</span>
+</a>
