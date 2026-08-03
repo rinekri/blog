@@ -35,6 +35,7 @@ Identity & branding:
 | `hero_name_html` | Optional raw HTML override for the hero heading — lets you accent-color a specific letter/word without the theme guessing where to split a name |
 | `portrait_image` | Path (under `static/`) to your portrait photo — used on `/about/`, as the OG/share image, and in the `Person` JSON-LD |
 | `portrait_image_resume` | Optional alternate crop for `/resume/`, falls back to `portrait_image` |
+| `home_og_image` | Optional static screenshot of the home hero (recommended 1200x630), used as the home page's `og:image`/`twitter:image` since social crawlers can't render the live canvas. Falls back to `portrait_image` when unset — keep it in sync by hand if the hero copy changes |
 | `signature_seed` | Seed string for the colophon's generative signature/wordmark canvas, falls back to `author` |
 | `portrait_seed` | Seed string for the about page's generative portrait pattern, falls back to `author` |
 

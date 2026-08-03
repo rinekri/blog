@@ -68,6 +68,11 @@ portrait_image = "images/ilia-nekrasov-1.png"
 # Larger/alternate crop for the resume page specifically; falls back to
 # portrait_image when unset.
 portrait_image_resume = "images/ilia-nekrasov-2.png"
+# Optional static screenshot of the home hero used as og:image/twitter:image
+# for the home page specifically (social crawlers can't render the live
+# canvas). Recommended 1200x630. Omit to fall back to portrait_image like
+# every other page. Keep this in sync by hand if the hero's copy changes.
+home_og_image = "images/og-home.png"
 # Seed string for the colophon's generative signature/wordmark canvas.
 # Falls back to `author` when unset.
 signature_seed = "rinekri"
