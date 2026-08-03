@@ -1,0 +1,80 @@
+{% import "macros/glyph.svg.html" as glyph -%}
+{% import "macros/social_icon.svg.html" as social -%}
+<footer class="site-footer">
+    <div class="shell site-footer__inner">
+        <div class="social-icons">
+            {% for item in config.extra.social_icons %}
+            <a href="{{ item.url | replace(from='$BASE_URL', to=config.base_url) }}" target="_blank" rel="noopener noreferrer me" title="{{ item.title }}" aria-label="{{ item.title }}">
+                {{ social::icon(name=item.icon) }}
+            </a>
+            {% endfor %}
+        </div>
+        {{ glyph::mark(class="site-footer__glyph") }}
+        <div class="site-footer__meta">
+            <span>&copy; {{ now() | date(format="%Y") }} <a href="{{ config.base_url }}">{{ config.title }}</a></span>
+            <span>Built with <a href="https://www.getzola.org/" rel="noopener noreferrer" target="_blank">Zola</a></span>
+            <span><a href="{{ get_url(path='@/posts/_index.md') }}">Posts</a></span>
+            <span><a href="{{ '$BASE_URL/tags' | replace(from='$BASE_URL', to=config.base_url) }}">Tags</a></span>
+            <span><a href="{{ get_url(path='@/changelog/_index.md') }}">Changelog</a></span>
+            <span><a href="{{ get_url(path='@/colophon/_index.md') }}">Colophon</a></span>
+        </div>
+    </div>
+</footer>
+
+{% if config.extra.show_scroll_to_top %}
+<a href="#top" aria-label="Back to top" title="Back to top" class="top-link" id="top-link">
+    <svg viewBox="0 0 12 6" fill="currentColor" aria-hidden="true"><path d="M12 6H0l6-6z"/></svg>
+</a>
+<script>
+(function () {
+    var link = document.getElementById("top-link");
+    if (!link) return;
+    window.addEventListener("scroll", function () {
+        var show = window.scrollY > 800;
+        link.style.visibility = show ? "visible" : "hidden";
+        link.style.opacity = show ? "1" : "0";
+    });
+})();
+</script>
+{% endif %}
+
+{% if config.extra.show_code_copy_buttons %}
+<script>
+(function () {
+    document.querySelectorAll("pre > code").forEach(function (codeblock) {
+        var pre = codeblock.parentNode;
+        var button = document.createElement("button");
+        button.className = "copy-code";
+        button.type = "button";
+        button.innerText = "copy";
+        button.addEventListener("click", function () {
+            var content = codeblock.textContent;
+            navigator.clipboard.writeText(content).then(function () {
+                button.innerText = "copied!";
+                setTimeout(function () { button.innerText = "copy"; }, 2000);
+            });
+        });
+        pre.appendChild(button);
+    });
+})();
+</script>
+{% endif %}
+
+<script src="{{ get_url(path='js/nav.js', cachebust=true) }}" defer></script>
+<script src="{{ get_url(path='js/theme.js', cachebust=true) }}" defer></script>
+<script src="{{ get_url(path='js/fingerprint.js', cachebust=true) }}" type="module"></script>
+<script src="{{ get_url(path='js/signature-toy.js', cachebust=true) }}" defer></script>
+<script src="{{ get_url(path='js/signature.js', cachebust=true) }}" type="module"></script>
+<script src="{{ get_url(path='js/portrait.js', cachebust=true) }}" type="module"></script>
+<script src="{{ get_url(path='js/reveal.js', cachebust=true) }}" defer></script>
+<script src="{{ get_url(path='js/tocspy.js', cachebust=true) }}" defer></script>
+<script src="{{ get_url(path='js/post-share.js', cachebust=true) }}" defer></script>
+<script src="{{ get_url(path='js/projects-filter.js', cachebust=true) }}" defer></script>
+<script src="{{ get_url(path='js/graph.js', cachebust=true) }}" defer></script>
+<script src="{{ get_url(path='js/email-reveal.js', cachebust=true) }}" defer></script>
+<script src="{{ get_url(path='js/search.js', cachebust=true) }}" defer></script>
+
+{% if config.extra.cloudflare_analytics_token %}
+{# Cloudflare Web Analytics — the one external script here, everything else is local static/js/*.js. No cachebust=true since get_url() can't hash a remote asset. #}
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "{{ config.extra.cloudflare_analytics_token }}"}'></script>
+{% endif %}

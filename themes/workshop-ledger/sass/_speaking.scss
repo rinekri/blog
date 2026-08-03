@@ -1,0 +1,304 @@
+// ============================================================
+// /speaking/ — three acts staged in the register that fits their medium.
+// Reuses the site's act-header idiom and %interactive-card/%interactive-link
+// for hover — no new chrome or hover mechanism introduced.
+// ============================================================
+
+.act__head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin: 0 0 22px;
+}
+
+.act__num {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 36px;
+  color: var(--ink);
+  line-height: 1;
+}
+
+.act__label {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 17px;
+  color: var(--ink);
+}
+
+.act__count {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink-faint);
+}
+
+.act__line {
+  flex: 1;
+  height: 2px;
+  background: var(--ink);
+}
+
+.act + .act {
+  margin-top: 64px;
+}
+
+.speak-acts {
+  margin-top: 8px;
+}
+
+// ---------- Act I: Talks — poster plates ----------
+
+.bill {
+  @extend %interactive-card;
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 88px 1fr;
+  gap: 28px;
+  padding: 36px 40px;
+  border: 1px solid var(--line);
+  background: var(--card);
+}
+
+.bill + .bill {
+  margin-top: 20px;
+}
+
+.bill__seal {
+  display: block;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--paper-dim);
+}
+
+.bill:nth-of-type(odd) .bill__seal {
+  transform: rotate(-4deg);
+}
+
+.bill:nth-of-type(even) .bill__seal {
+  transform: rotate(3deg);
+}
+
+.bill__frame {
+  position: relative;
+  z-index: 1;
+}
+
+.bill__year {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink-faint);
+}
+
+.bill__title {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: clamp(26px, 3.2vw, 40px);
+  line-height: 1.15;
+  color: var(--ink);
+  margin: 4px 0 10px;
+}
+
+.bill__venue {
+  display: block;
+  font-size: 14px;
+  color: var(--ink-faint);
+  margin-bottom: 10px;
+}
+
+.bill__venue a {
+  @extend %interactive-link;
+}
+
+.bill__desc {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+.bill__cta {
+  @extend %interactive-link;
+}
+
+.bill__note {
+  margin: 8px 0 0;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-style: italic;
+  color: var(--ink-faint);
+}
+
+.blank-tag {
+  letter-spacing: 2px;
+  opacity: 0.5;
+}
+
+// The frame stays solid — it's still a real specimen, nothing damaged
+// the case — only what's inside fades, plus the stamp.
+.bill--blank .bill__title,
+.bill--blank .bill__venue,
+.bill--blank .bill__desc {
+  color: var(--ink-faint);
+}
+
+.bill__stamp {
+  position: absolute;
+  top: 50%;
+  // Steep angle + pulled in from the edge keeps the word legible while
+  // still bleeding off the card, reading as "stamped" rather than clipped.
+  right: -3%;
+  z-index: 0;
+  transform: translateY(-50%) rotate(-18deg);
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: clamp(48px, 9vw, 110px);
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  opacity: 0.055;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+// ---------- Act II: the article — a pinned clipping ----------
+
+.clipping {
+  @extend %interactive-card;
+  position: relative;
+  max-width: 620px;
+  padding: 28px 32px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  transform: rotate(-1deg);
+}
+
+.clipping__pin {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--spark);
+}
+
+.clipping__kicker {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.clipping__title {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 26px;
+  line-height: 1.3;
+  color: var(--ink);
+  margin: 8px 0 6px;
+}
+
+.clipping__byline {
+  margin: 0 0 8px;
+}
+
+.clipping__byline a {
+  @extend %interactive-link;
+}
+
+.clipping__desc {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  max-width: 56ch;
+}
+
+// ---------- Act III: the course — a sealed vault entry ----------
+
+.vault-entry {
+  @extend %interactive-card;
+  position: relative;
+  padding: 26px 32px;
+  border: 1.5px dashed var(--ink-faint);
+  background: transparent;
+}
+
+.vault-entry__lock {
+  position: absolute;
+  top: 26px;
+  left: 32px;
+  width: 16px;
+  height: 16px;
+  color: var(--ink-faint);
+}
+
+.vault-entry__label {
+  display: block;
+  margin-left: 26px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.vault-entry__year {
+  float: right;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink-faint);
+}
+
+.vault-entry__title {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 23px;
+  color: var(--ink);
+  margin: 10px 0 6px 26px;
+}
+
+.vault-entry__desc {
+  margin: 0 0 0 26px;
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+@media (max-width: 720px) {
+  .act__num {
+    font-size: 28px;
+  }
+
+  .bill {
+    grid-template-columns: 1fr;
+    padding: 22px 20px;
+  }
+
+  .bill__seal {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 14px;
+  }
+
+  .bill__stamp {
+    font-size: clamp(36px, 14vw, 64px);
+    right: -4%;
+  }
+
+  .clipping {
+    max-width: none;
+    transform: none;
+  }
+
+  .vault-entry__year {
+    float: none;
+    display: block;
+    margin-top: 2px;
+    margin-left: 26px;
+  }
+}

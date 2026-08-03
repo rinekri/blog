@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% import "macros/project_card.html" as project_card -%}
+{% block content %}
+{% set resume = load_data(path="data/resume.toml") %}
+{% set projects = load_data(path="data/projects.toml") %}
+{% set current_role = resume.employment | first %}
+
+{% set_global kode_items = [] %}
+{% for group in projects.groups %}
+{% if group.key != "personal" %}
+{% set_global kode_items = kode_items | concat(with=group.items) %}
+{% endif %}
+{% endfor %}
+
+{% set_global card_items = [] %}
+{% set_global total_project_count = 0 %}
+{% for group in projects.groups %}
+{% set_global card_items = card_items | concat(with=group.items | filter(attribute="kind", value="card")) %}
+{% set group_len = group.items | length %}
+{% set_global total_project_count = total_project_count + group_len %}
+{% endfor %}
+
+<header class="page-header">
+    <div class="breadcrumbs"><a href="{{ config.base_url }}">Home</a></div>
+    <span class="kicker">Résumé</span>
+    <h1 class="section-display">{{ config.extra.hero_name }}</h1>
+</header>
+
+<div class="resume-byline">
+    <figure class="resume-portrait">
+        <img class="resume-portrait__photo" src="{{ get_url(path=config.extra.portrait_image_resume | default(value=config.extra.portrait_image)) }}" alt="{{ resume.full_name }}" width="900" height="1200">
+        <svg class="resume-portrait__ring" viewBox="0 0 120 120" aria-hidden="true">
+            <circle cx="60" cy="60" r="57"></circle>
+        </svg>
+    </figure>
+    <div class="resume-byline__body">
+        <div class="resume-byline__info">
+            <span class="resume-byline__role">{{ current_role.role }}</span>
+            <span class="resume-byline__sep">&middot;</span>
+            <span class="resume-byline__location">{{ resume.location | default(value="") }}</span>
+            <span class="resume-byline__sep">&middot;</span>
+            <button type="button" id="email-unmask" class="resume-unmask" aria-label="Reveal contact email">
+                <span class="resume-unmask__caption" aria-hidden="true">masked</span>
+                <span class="resume-unmask__mask" aria-hidden="true">████████████████</span>
+            </button>
+            <span id="email-unmask-live" class="sr-only" role="status" aria-live="polite"></span>
+        </div>
+        <div class="resume-byline__actions">
+            <a class="resume-print" href="{{ get_url(path='@/resume-text/_index.md') }}">Plain text</a>
+            <button class="resume-print" type="button" onclick="window.print()">Print</button>
+        </div>
+    </div>
+</div>
+
+<p class="resume-summary">{{ resume.summary | default(value="") }}</p>
+
+<section class="resume-section">
+    <h2 class="resume-section__title">Experience</h2>
+    {% for era in resume.employment %}
+    {% set era_items = kode_items | filter(attribute="company", value=era.company) | filter(attribute="role", value=era.role) %}
+    <div class="resume-era">
+        <div class="resume-era__head">
+            <span class="resume-era__role">{{ era.role }}</span>
+            <span class="resume-era__company">{{ era.company }}</span>
+            <span class="resume-era__dates">{{ era.date_start }}&ndash;{{ era.date_end }}</span>
+        </div>
+        {% set cat_keys = ["leadership", "architecture", "feature"] %}
+        {% set cat_labels = ["Leadership", "Architecture", "Features shipped"] %}
+        {% for cat_key in cat_keys %}
+        {% set cat_items = era_items | filter(attribute="category", value=cat_key) %}
+        {% if cat_items | length > 0 %}
+        <h3 class="resume-era__cat">{{ cat_labels[loop.index0] }}</h3>
+        <ul class="resume-era__bullets">
+            {% for item in cat_items %}
+            <li>{{ item.desc | safe }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% endfor %}
+</section>
+
+<section class="resume-section">
+    <h2 class="resume-section__title">Selected Projects</h2>
+    <div class="anchors">
+        {% for item in card_items %}
+        {{ project_card::card(item=item, link_to_projects=true) }}
+        {% endfor %}
+    </div>
+    <p class="resume-projects__more"><a href="{{ get_url(path='@/projects/_index.md') }}">See all {{ total_project_count }} projects &rarr;</a></p>
+</section>
+
+<div class="resume-two-col">
+    <section class="resume-section">
+        <h2 class="resume-section__title">Education</h2>
+        {% for school in resume.education | default(value=[]) %}
+        <div class="resume-edu">
+            <span class="resume-edu__school">{{ school.school }}</span>
+            <span class="resume-edu__dates">{{ school.date_start }}&ndash;{{ school.date_end }}</span>
+        </div>
+        {% endfor %}
+
+        <h2 class="resume-section__title">Languages</h2>
+        {% for lang in resume.languages | default(value=[]) %}
+        <div class="resume-lang">
+            <span class="resume-lang__name">{{ lang.name }}</span>
+            <span class="resume-lang__level">{{ lang.level }}{% if lang.detail %} &middot; {{ lang.detail }}{% endif %}</span>
+        </div>
+        {% endfor %}
+
+        {% if resume.certifications %}
+        <h2 class="resume-section__title">Certifications</h2>
+        {% for cert in resume.certifications %}
+        <div class="resume-cert">
+            {% if cert.url %}<a href="{{ cert.url }}" target="_blank" rel="noopener">{{ cert.name }}</a>{% else %}{{ cert.name }}{% endif %}
+            <span class="resume-cert__date">{{ cert.date }}</span>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </section>
+
+    <section class="resume-section">
+        <h2 class="resume-section__title">Skills</h2>
+        {% for group in resume.skills %}
+        <div class="resume-skill-group">
+            <span class="resume-skill-group__category">{{ group.category }}</span>
+            <span class="resume-skill-group__items">{{ group.items | map(attribute="name") | join(sep=", ") }}</span>
+        </div>
+        {% endfor %}
+    </section>
+</div>
+{% endblock content %}

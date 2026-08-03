@@ -1,0 +1,47 @@
+{% macro card(item, link_to_projects=false) %}
+{% set cat = item.category | default(value='feature') %}
+{% if cat == "leadership" %}{% set cat_label = "Leadership" %}
+{% elif cat == "architecture" %}{% set cat_label = "Architecture" %}
+{% else %}{% set cat_label = "Feature work" %}{% endif %}
+<div class="pcard" id="project-{{ item.seed }}" data-vis="{{ item.vis }}" data-stack="{{ item.stack | default(value=[]) | join(sep=' ') | lower }}">
+    {% if link_to_projects %}
+    {# Stretched-link sibling <a>, not a wrapping one: <details> can't nest inside <a>. Sits below the name link and details toggle in stacking order (sass/_projects.scss) so those stay independently clickable. #}
+    <a class="pcard-stretched-link" href="{{ get_url(path='@/projects/_index.md') }}#project-{{ item.seed }}" aria-label="View {{ item.name }} on Projects"></a>
+    {% endif %}
+    <canvas class="fp" data-seed="{{ item.seed }}" aria-hidden="true"></canvas>
+    <div class="pcard-top">
+        <div class="pcard-name">
+            <span class="dot dot--{{ cat }}" title="{{ cat_label }}"></span>{% if item.url %}<a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.name }}</a>{% else %}{{ item.name }}{% endif %}
+        </div>
+        <span class="badge {{ item.vis }}">{{ item.badge_label }}</span>
+    </div>
+    <div class="pcard-desc">{{ item.desc | safe }}</div>
+    <div class="pcard-meta">{% for m in item.meta | default(value=[]) %}{{ m | safe }}{% endfor %}</div>
+    {% if item.achievements or item.architecture or item.features or item.stack %}
+    <details class="pcard-more">
+        <summary class="dtoggle" aria-label="{% if item.achievements %}{{ item.achievements | length }} achievements — {% endif %}show project details">
+            <span class="dtoggle__cross" aria-hidden="true"></span>
+        </summary>
+        {% if item.architecture %}<span class="pcard-more__label">Architecture</span><p class="pcard-arch">{{ item.architecture | safe }}</p>{% endif %}
+        {% if item.features %}
+        <span class="pcard-more__label">Features</span>
+        <ul class="pcard-achievements">
+            {% for f in item.features %}<li>{{ f | safe }}</li>{% endfor %}
+        </ul>
+        {% endif %}
+        {% if item.achievements %}
+        <span class="pcard-more__label">Achievements</span>
+        <ul class="pcard-achievements">
+            {% for a in item.achievements %}<li>{{ a | safe }}</li>{% endfor %}
+        </ul>
+        {% endif %}
+        {% if item.stack %}
+        <span class="pcard-more__label">Stack</span>
+        <div class="pcard-stack">
+            {% for tag in item.stack %}<span class="chip chip--sm">{{ tag }}</span>{% endfor %}
+        </div>
+        {% endif %}
+    </details>
+    {% endif %}
+</div>
+{% endmacro card %}

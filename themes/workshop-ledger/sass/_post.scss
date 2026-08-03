@@ -1,0 +1,1450 @@
+// ============================================================
+// Post header + prose column + supporting page types
+// (archive, tags, 404)
+// ============================================================
+
+.prose-col {
+  max-width: var(--prose-width);
+  margin-inline: auto;
+}
+
+// Used only on list-type pages (archive, /posts/, tags) whose content
+// spans the full shell width — align with it, not the prose column.
+.page-header {
+  padding-block: 40px 28px;
+  border-bottom: 2px solid var(--ink);
+  margin-bottom: 34px;
+}
+
+.page-header h1 {
+  font-size: 34px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+// Oversized section-divider tier, opt-in via class on specific
+// page-header h1s; never applied globally.
+//
+// Must out-specificity .page-header h1 (0-1-1) — a bare .section-display
+// (0-1-0) loses regardless of source order, since specificity beats position.
+.page-header h1.section-display {
+  font-size: clamp(48px, 7vw, 88px);
+  line-height: 1.02;
+}
+
+.rss-link {
+  display: flex;
+  color: var(--ink-faint);
+}
+
+.rss-link svg {
+  width: 20px;
+  height: 20px;
+}
+
+.rss-link:hover {
+  color: var(--moss);
+}
+
+.breadcrumbs {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 12px;
+}
+
+.breadcrumbs a {
+  color: inherit;
+}
+
+.breadcrumbs a:hover {
+  color: var(--moss);
+}
+
+.post-header {
+  margin-bottom: 40px;
+  border-bottom: 2px solid var(--ink);
+  padding-bottom: 26px;
+}
+
+// Generative duotone hero — same seeded FNV+mulberry32 technique as
+// static/js/fingerprint.js's drawHero(). Mutually exclusive with
+// .post-cover below (matching margins): a post has one or the other,
+// never both, always right after the breadcrumbs.
+.post-hero {
+  margin-top: 4px;
+  margin-bottom: 22px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--card);
+}
+
+.post-hero canvas {
+  display: block;
+  width: 100%;
+  height: 200px;
+}
+
+@media (max-width: 640px) {
+  .post-hero canvas {
+    height: 140px;
+  }
+}
+
+.post-title {
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 600;
+  line-height: 1.12;
+  margin-top: 6px;
+}
+
+.post-description {
+  margin-top: 14px;
+  font-family: var(--font-serif);
+  font-size: 19px;
+  color: var(--ink-soft);
+}
+
+// Same slot as .post-hero (mutually exclusive, matching margins) — a
+// post has one or the other, never both.
+.post-cover {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1200 / 630;
+  object-fit: cover;
+  margin-top: 4px;
+  margin-bottom: 22px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.post-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 18px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-faint);
+}
+
+.post-meta__sep {
+  color: var(--line);
+}
+
+.post-share {
+  font: inherit;
+  color: var(--ink-faint);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.post-share:hover {
+  color: var(--moss);
+}
+
+// ---------- table of contents ----------
+.toc {
+  max-width: var(--prose-width);
+  margin: 0 auto 40px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 4px 16px;
+}
+
+.toc summary {
+  cursor: pointer;
+  padding: 10px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.toc__position {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.03em;
+  text-transform: none;
+  font-weight: 400;
+  color: var(--ink-faint);
+}
+
+.toc .inner {
+  padding: 4px 0 16px;
+}
+
+// Per-level size/weight/color step so a 5-deep h2-h6 tree (the real
+// ceiling — no h7) stays legible instead of blurring into identical text.
+// Indent uses 18px/level, not --gap (28px), which would eat 112px at
+// 4 nested levels on a narrow viewport.
+.toc a {
+  color: var(--ink-soft);
+  line-height: 1.9;
+}
+
+.toc a:hover {
+  color: var(--moss);
+}
+
+.toc a.is-current {
+  color: var(--moss);
+  font-weight: 600;
+}
+
+.toc a.is-current::before {
+  content: "";
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  margin-inline-end: 6px;
+  border-radius: 50%;
+  background: var(--moss);
+  vertical-align: middle;
+}
+
+.toc__item--h2 > a {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.toc__item--h3 > a {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.toc__item--h4 > a {
+  font-size: 14px;
+}
+
+.toc__item--h5 > a,
+.toc__item--h6 > a {
+  font-size: 14px;
+  color: var(--ink-faint);
+}
+
+// Scoped to nested lists only (a .toc__list living inside a .toc__item) —
+// the outermost list sits directly in .toc .inner and shouldn't get this
+// extra indent on top of that container's own padding.
+.toc__item .toc__list {
+  padding-inline-start: 18px;
+}
+
+// ---------- guide rail TOC (>=1360px enhancement; .toc above is the
+// fallback below that width) ----------
+// Gutter width = (viewport - 56px shell padding - 700px prose - 80px
+// column-gaps) / 2. Needs ~212px for the 230px rail (5 levels of type),
+// which is why the breakpoint is 1360px, not lower.
+.post-layout {
+  display: block;
+}
+
+.guide-rail {
+  display: none;
+}
+
+@media (min-width: 1360px) {
+  .toc {
+    display: none;
+  }
+
+  .post-layout {
+    display: grid;
+    grid-template-columns: 1fr var(--prose-width) 1fr;
+    column-gap: 40px;
+  }
+
+  .guide-rail {
+    display: block;
+    grid-column: 1;
+    justify-self: end;
+    width: 230px;
+    position: sticky;
+    top: 100px;
+    align-self: start;
+  }
+
+  .post-layout .post-content {
+    grid-column: 2;
+    max-width: none;
+    margin-inline: 0;
+  }
+}
+
+// Position readout + progress mark both driven from tocspy.js's existing
+// scroll-spy state, not a new listener; the mark reuses fingerprint.js's
+// drawFingerprint() via its data-weight attribute.
+.guide-rail__status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.guide-rail__progress {
+  display: block;
+  width: 40px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.guide-rail__position {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.03em;
+  color: var(--ink-faint);
+}
+
+.guide-rail__rule {
+  position: relative;
+  padding-inline-start: 18px;
+  border-inline-start: 2px solid var(--line);
+}
+
+.guide-rail__fill {
+  position: absolute;
+  left: -2px;
+  top: 0;
+  width: 2px;
+  height: 0%;
+  background: var(--moss);
+  transition: height 0.25s ease;
+}
+
+.guide-rail__group {
+  position: relative;
+}
+
+.guide-rail__item {
+  position: relative;
+  display: block;
+  padding-block: 6px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--ink-faint);
+  transition: color 0.15s ease;
+}
+
+// Stepped size/weight/color per real heading level (item.level, not
+// nesting position) so all 5 tiers (h2-h6, the real ceiling) stay
+// distinguishable from each other.
+.guide-rail__item--h2 {
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.guide-rail__item--h3 {
+  font-size: 13.5px;
+  font-weight: 500;
+}
+
+.guide-rail__item--h4 {
+  font-size: 13px;
+  padding-block: 5px;
+}
+
+.guide-rail__item--h5 {
+  font-size: 13px;
+  padding-block: 4px;
+}
+
+.guide-rail__item--h6 {
+  font-size: 13px;
+  padding-block: 4px;
+  font-style: italic;
+}
+
+.guide-rail__item::before {
+  content: "";
+  position: absolute;
+  left: -22px;
+  top: 11px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--paper);
+  border: 2px solid var(--line);
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.guide-rail__item:hover {
+  color: var(--ink-soft);
+}
+
+.guide-rail__item.is-current {
+  color: var(--spark-deep);
+  font-weight: 600;
+}
+
+.guide-rail__item.is-current::before {
+  background: var(--spark);
+  border-color: var(--spark);
+}
+
+.guide-rail__item.is-past::before {
+  background: var(--moss);
+  border-color: var(--moss);
+}
+
+// h2 stays outside .guide-rail__children (always visible regardless of
+// scroll), so a post with many top-level sections stays scannable.
+// Below h2, disclosure follows the active ancestor path (tocspy.js
+// toggles .is-open per level for the group containing the in-view
+// heading), so depth and breadth never multiply against each other.
+.guide-rail__children {
+  position: relative;
+  margin-inline-start: 14px;
+  padding-inline-start: 14px;
+  border-inline-start: 1px solid var(--line);
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transition: max-height 0.25s ease, opacity 0.2s ease, visibility 0s linear 0.25s;
+}
+
+.guide-rail__children.is-open {
+  max-height: 480px;
+  opacity: 1;
+  visibility: visible;
+  transition: max-height 0.25s ease, opacity 0.2s ease, visibility 0s linear;
+}
+
+.guide-rail__item--h3::before {
+  left: -18px;
+  top: 9px;
+  width: 5px;
+  height: 5px;
+  border-width: 1px;
+}
+
+.guide-rail__item--h4::before,
+.guide-rail__item--h5::before,
+.guide-rail__item--h6::before {
+  left: -18px;
+  top: 8px;
+  width: 4px;
+  height: 4px;
+  border-width: 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .guide-rail__fill {
+    transition: none;
+  }
+
+  .guide-rail__item {
+    transition: none;
+  }
+
+  .guide-rail__children,
+  .guide-rail__children.is-open {
+    transition: none;
+  }
+}
+
+// ---------- sidenotes (Tufte-style margin notes) ----------
+.post-content {
+  counter-reset: sidenote-counter;
+}
+
+.sidenote-ref {
+  counter-increment: sidenote-counter;
+}
+
+.sidenote-ref::after {
+  content: counter(sidenote-counter);
+  font-family: var(--font-mono);
+  font-size: 0.7em;
+  vertical-align: super;
+  color: var(--moss);
+}
+
+.sidenote {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+@media (min-width: 1200px) {
+  .sidenote {
+    display: block;
+    float: right;
+    clear: right;
+    width: 150px;
+    margin-top: 0.2em;
+    margin-right: -172px;
+    padding-inline-start: 10px;
+    border-inline-start: 1px solid var(--line);
+  }
+}
+
+@media (max-width: 1199px) {
+  .sidenote {
+    display: block;
+    margin-block: 10px;
+    padding: 10px 14px;
+    background: var(--card);
+    border-inline-start: 2px solid var(--moss);
+  }
+}
+
+// ---------- prose ----------
+.post-content {
+  max-width: var(--prose-width);
+  margin-inline: auto;
+  color: var(--ink);
+}
+
+.post-content > * + * {
+  margin-top: 20px;
+}
+
+.post-content h1 {
+  font-size: 36px;
+  margin-top: 48px;
+}
+
+.post-content h2 {
+  font-size: 30px;
+  margin-top: 44px;
+}
+
+.post-content h3 {
+  font-size: 24px;
+  margin-top: 36px;
+}
+
+.post-content h4 {
+  font-size: 19px;
+  margin-top: 28px;
+}
+
+.post-content h1,
+.post-content h2,
+.post-content h3,
+.post-content h4 {
+  scroll-margin-top: 24px;
+}
+
+.anchor {
+  display: none;
+  margin-inline-start: 10px;
+  color: var(--ink-faint);
+  font-family: var(--font-mono);
+  font-weight: 400;
+}
+
+h1:hover .anchor,
+h2:hover .anchor,
+h3:hover .anchor,
+h4:hover .anchor {
+  display: inline;
+}
+
+.anchor:hover {
+  color: var(--moss);
+}
+
+.post-content ul,
+.post-content ol {
+  padding-inline-start: 22px;
+  list-style: disc;
+}
+
+.post-content ol {
+  list-style: decimal;
+}
+
+.post-content li {
+  margin-top: 6px;
+}
+
+.post-content li + li {
+  margin-top: 6px;
+}
+
+// ---------- task lists (GFM `- [ ]`/`- [x]`) ----------
+// Zola emits a plain <li><input type="checkbox"> with no distinguishing
+// class, so :has() picks out those <li>s to drop the native bullet
+// marker and lay the custom-drawn box next to the text instead.
+.post-content li:has(> input[type="checkbox"]) {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.post-content input[type="checkbox"] {
+  appearance: none;
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--card);
+  position: relative;
+}
+
+.post-content input[type="checkbox"]:checked {
+  background: var(--moss);
+  border-color: var(--moss);
+}
+
+.post-content input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 4px;
+  height: 8px;
+  border: solid var(--paper);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.post-content a {
+  color: var(--moss);
+  box-shadow: 0 1px 0 currentColor;
+}
+
+.post-content a:hover {
+  color: var(--moss-deep);
+}
+
+.post-content strong {
+  font-weight: 600;
+}
+
+.post-content blockquote {
+  padding-inline-start: 16px;
+  border-inline-start: 2px solid var(--moss);
+  color: var(--ink-soft);
+}
+
+// Every other callout in the prose column (sidenote, code block, table)
+// already reads as boxed content, so the pull-quote uses a quote mark +
+// spark rule instead of one more gray card.
+.post-content blockquote.pull-quote {
+  position: relative;
+  margin-block: 40px;
+  padding: 4px 0 4px 28px;
+  border-inline-start: 3px solid var(--spark);
+  background: none;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.3em;
+  line-height: 1.35;
+  color: var(--ink);
+}
+
+.post-content blockquote.pull-quote::before {
+  content: "\201C";
+  position: absolute;
+  left: -2px;
+  top: -30px;
+  font-family: var(--font-serif);
+  font-style: normal;
+  font-size: 64px;
+  line-height: 1;
+  color: var(--spark);
+  opacity: 0.55;
+}
+
+// Drop cap on the post's opening paragraph only — :first-of-type (not
+// :first-child) so it degrades safely if a post ever opens with something
+// else (an image, a raw-HTML block) instead of plain prose.
+.post-content > p:first-of-type::first-letter {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 3.4em;
+  line-height: 0.82;
+  float: left;
+  padding: 4px 8px 0 0;
+  color: var(--moss);
+}
+
+.post-content hr {
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin-block: 40px;
+}
+
+.post-content img {
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+}
+
+.post-content figure > figcaption {
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink-faint);
+  text-align: center;
+}
+
+.post-content code {
+  font-size: 0.85em;
+  padding: 2px 6px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  // Long unbroken inline tokens (identifiers, URLs) silently overflow the
+  // prose column without this; fenced blocks handle overflow via scroll.
+  overflow-wrap: anywhere;
+}
+
+// Optional sibling immediately before a fence's <pre> (see
+// templates/shortcodes/code_title.html), fused to it via the
+// adjacent-sibling rule below.
+.code-title {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  background: var(--paper-dim);
+  border: 1px solid var(--line);
+  border-bottom: none;
+  border-radius: var(--radius) var(--radius) 0 0;
+  padding: 8px 14px;
+}
+
+.post-content > .code-title + pre {
+  margin-top: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.post-content pre {
+  position: relative;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow-x: auto;
+}
+
+.post-content pre code {
+  display: block;
+  padding: 16px;
+  border: 0;
+  background: transparent;
+  border-radius: 0;
+  font-size: 0.82em;
+  line-height: 1.6;
+}
+
+.post-content .highlight,
+.post-content pre {
+  background: var(--card) !important;
+}
+
+.post-content pre,
+.post-content pre code,
+.post-content pre code span:not([style]) {
+  color: var(--ink) !important;
+}
+
+.copy-code {
+  // opacity, not display:none — a hidden button would never receive
+  // keyboard focus, so a tabbing keyboard user would skip it entirely.
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 3px 8px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--ink-soft);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+
+.post-content pre:hover .copy-code,
+.copy-code:focus {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.copy-code:hover {
+  color: var(--moss);
+  border-color: var(--moss);
+}
+
+.post-content table {
+  display: block;
+  overflow-x: auto;
+  max-width: 100%;
+  margin-block: 24px;
+  font-size: 15px;
+}
+
+.post-content th,
+.post-content td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  text-align: start;
+}
+
+.post-content th {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+// ---------- end-of-post moment: a stamped, archived record ----------
+// Reuses the ledger-frame recipe from .archive-stats/.page-header (2px
+// ink border + --card fill) and the real brand glyph from
+// macros/glyph.svg.html. Gets its own heavier reveal transition below
+// instead of the generic [data-reveal] fade.
+.post-end {
+  max-width: var(--prose-width);
+  margin: 56px auto 48px;
+  text-align: center;
+}
+
+.post-end__plate {
+  position: relative;
+  padding: 54px 32px 32px;
+  border: 2px solid var(--ink);
+  border-radius: var(--radius);
+  background: var(--card);
+}
+
+// Opaque fill lets the seal read correctly whether the pixels behind it
+// are --paper (above the border) or --card (below), no color-matching needed.
+.post-end__seal {
+  position: absolute;
+  top: -42px;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  background: var(--card);
+  border: 2px solid var(--moss);
+  // Ring-in-ring via box-shadow (paper gap, then a moss ring) reads as a
+  // stamp's double border without a second nested element.
+  box-shadow: 0 0 0 4px var(--paper), 0 0 0 6px var(--moss);
+  transform: translateX(-50%) rotate(-8deg);
+}
+
+.post-end__seal-glyph {
+  width: 26px;
+  height: 26px;
+}
+
+.post-end__seal-text {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--moss);
+}
+
+.post-end__mark-frame {
+  max-width: 260px;
+  margin: 0 auto 22px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper-dim);
+  overflow: hidden;
+}
+
+.post-end__mark {
+  display: block;
+  width: 100%;
+  height: 88px;
+}
+
+.post-end__note {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 18px;
+  color: var(--ink);
+  margin: 0 0 16px;
+}
+
+.post-end__ledger {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.post-end__ledger-id {
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+
+.post-end__ledger-sep {
+  color: var(--line);
+}
+
+// Scale + settle-tilt on top of the generic [data-reveal] fade.
+// .post-end[data-reveal] (0-2-0) beats the plain [data-reveal] rule
+// (0-1-0) regardless of source order.
+.post-end[data-reveal] {
+  transform: scale(0.92) rotate(-1.5deg);
+  transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.post-end[data-reveal].is-revealed {
+  transform: none;
+}
+
+@media (max-width: 640px) {
+  .post-end__plate {
+    padding: 46px 20px 26px;
+  }
+
+  .post-end__seal {
+    top: -34px;
+    width: 68px;
+    height: 68px;
+  }
+
+  .post-end__seal-glyph {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+// Same specificity fight, mirrored for reduced motion — without this,
+// the unconditional (0-2-0) transform above would keep beating the
+// generic reduced-motion rule (0-1-0) regardless of media-query nesting.
+@media (prefers-reduced-motion: reduce) {
+  .post-end[data-reveal] {
+    transform: none;
+    transition: none;
+  }
+}
+
+// ---------- footer / tags / paginav ----------
+.post-footer {
+  max-width: var(--prose-width);
+  margin: 48px auto 0;
+}
+
+.post-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+// Reuses the shared .chip/.chip--tag component (sass/_components.scss).
+.post-tags .chip--tag {
+  padding: 5px 12px;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+.paginav {
+  display: flex;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  margin-top: 24px;
+}
+
+.paginav a {
+  flex: 1 1 50%;
+  padding: 16px 4px;
+}
+
+.paginav .next {
+  text-align: right;
+  border-inline-start: 1px solid var(--line);
+}
+
+.paginav .title {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 4px;
+}
+
+.paginav a:hover .title {
+  color: var(--moss);
+}
+
+// ---------- archive: "core log" timeline ----------
+// Vertical connector assembled from per-row segments, not one absolutely-
+// positioned line, so it stays correct regardless of post/gap count.
+// .archive-stats reuses the flush 2px-ink ledger frame from sass/_home.scss's .numbers.
+
+.archive-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border: 2px solid var(--ink);
+  margin-block: 40px 48px;
+}
+
+.astat {
+  padding: 24px 20px;
+  border-right: 2px solid var(--ink);
+}
+
+.astat:last-child {
+  border-right: 0;
+}
+
+.astat__num {
+  display: block;
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 46px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.astat__label {
+  font-size: 15px;
+  color: var(--ink-soft);
+}
+
+.archive-plate {
+  margin-top: 56px;
+}
+
+.archive-plate:first-child {
+  margin-top: 0;
+}
+
+.archive-plate__head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding-bottom: 10px;
+  margin-bottom: 14px;
+  border-bottom: 2px solid var(--ink);
+}
+
+.archive-plate__year {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: clamp(38px, 4vw, 52px);
+  color: var(--ink);
+  line-height: 1;
+}
+
+.archive-plate__meta {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink-faint);
+}
+
+// Composite fingerprint "core-strip" — every post that year strung into
+// one continuous band via static/js/fingerprint.js's drawStrip().
+.archive-plate__strip {
+  display: block;
+  width: 100%;
+  height: 56px;
+  margin-bottom: 18px;
+  border-radius: var(--radius);
+  background: var(--paper-dim);
+}
+
+.archive-entry,
+.archive-gap {
+  position: relative;
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  column-gap: 20px;
+  // Both need the same box geometry so their connector lines and the
+  // entry's node circle line up: .archive-entry needs padding-inline
+  // (+ compensating negative margin) so %interactive-row-fill's hover
+  // background can extend past the content edge, same trick as .prow.
+  // .archive-gap must share the same offset or its line renders 10px
+  // off from .archive-entry's.
+  padding-inline: 10px;
+  margin-inline: -10px;
+}
+
+// Drawn per-row so it composes correctly for any number of entries/gaps,
+// instead of one absolutely-positioned line spanning a measured height.
+// Centered under the 32px node column: 10px padding + half of 32px = 26px,
+// minus half the line's own 2px width.
+.archive-entry::before,
+.archive-gap::before {
+  content: "";
+  position: absolute;
+  left: 25px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--line);
+}
+
+// Height driven by --gap-months (set inline per gap from the template's
+// date-delta math) so a burst of posts compresses to the 10px floor and
+// a real multi-month silence visibly stretches the page.
+.archive-gap {
+  height: clamp(10px, calc(var(--gap-months, 1) * 12px), 200px);
+  align-items: center;
+}
+
+.archive-gap__label {
+  grid-column: 2;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink-faint);
+  letter-spacing: 0.03em;
+}
+
+.archive-entry {
+  @extend %interactive-row-fill;
+  @include interactive-row-title(".archive-entry-title");
+  grid-template-columns: 32px 90px 1fr 60px;
+  align-items: center;
+  padding-block: 8px;
+}
+
+.archive-entry__node {
+  position: relative;
+  z-index: 1; // sits on top of the connector line drawn by ::before
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--paper-dim);
+  overflow: hidden;
+  transition: border-color 0.15s ease;
+}
+
+.archive-entry:hover .archive-entry__node {
+  border-color: var(--moss);
+}
+
+.archive-entry__node canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.archive-entry__date {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink-faint);
+  white-space: nowrap;
+}
+
+.archive-entry-title {
+  font-weight: 500;
+}
+
+.archive-entry__time {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink-faint);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.archive-entry .entry-link {
+  position: absolute;
+  inset: 0;
+}
+
+@media (max-width: 720px) {
+  .archive-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .astat:nth-child(2) {
+    border-right: 0;
+  }
+
+  .astat:nth-child(3),
+  .astat:nth-child(4) {
+    border-top: 2px solid var(--ink);
+  }
+
+  .archive-plate__year {
+    font-size: 32px;
+  }
+
+  .archive-plate__strip {
+    height: 40px;
+  }
+
+  .archive-entry,
+  .archive-gap {
+    grid-template-columns: 24px 1fr;
+    column-gap: 14px;
+  }
+
+  .archive-entry::before,
+  .archive-gap::before {
+    // 10px padding (unchanged at this breakpoint) + half of the 24px node.
+    left: 21px;
+  }
+
+  .archive-entry__node {
+    width: 24px;
+    height: 24px;
+  }
+
+  .archive-entry {
+    grid-template-columns: 24px 1fr auto;
+    grid-template-areas:
+      "node title title"
+      "node date time";
+    row-gap: 2px;
+  }
+
+  .archive-entry__node {
+    grid-area: node;
+  }
+
+  .archive-entry-title {
+    grid-area: title;
+  }
+
+  .archive-entry__date {
+    grid-area: date;
+  }
+
+  .archive-entry__time {
+    grid-area: time;
+  }
+}
+
+// ---------- tags index (specimen catalog) ----------
+// Same mono/ink-faint treatment as .growth-caption (sass/_leadership.scss).
+.tag-index__meta {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink-faint);
+  margin: 0 0 28px;
+}
+
+.tag-clusters {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+// Numeral + label + trailing rule — same idiom as .act__num
+// (sass/_speaking.scss), .bench__num (sass/_leadership.scss), and
+// .archive-plate__year (above). Not extracted into a shared mixin.
+.tag-index__head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.tag-index__num {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 36px;
+  color: var(--ink);
+  line-height: 1;
+}
+
+.tag-index__label {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 17px;
+  color: var(--ink);
+}
+
+.tag-index__line {
+  flex: 1;
+  height: 2px;
+  background: var(--ink);
+}
+
+// Each tag card carries a catalog index, a generative fingerprint
+// (static/js/fingerprint.js), and its post count. minmax(180px, 1fr)
+// leaves room for the largest (96px) canvas tier plus label/count.
+.specimen-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 14px;
+}
+
+.specimen {
+  @extend %interactive-card;
+  @include interactive-row-title(".specimen__name");
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 18px;
+  text-align: center;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.specimen__idx {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink-faint);
+}
+
+.specimen__name {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 19px;
+  color: var(--ink);
+  transition: color 0.15s ease;
+}
+
+.specimen__canvas {
+  display: block;
+}
+
+.specimen__count {
+  margin-top: auto;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink-faint);
+}
+
+// ---------- tag single: post count in heading ----------
+.term-count {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--ink-faint);
+}
+
+.term-count::before {
+  content: "\00b7";
+  margin-inline-end: 10px;
+  color: var(--line);
+}
+
+// ---------- 404 ----------
+// "Notarized": dip a stamp from the ink pad, press it to the blank ledger
+// line — static/js/404.js reuses theme.js's press-and-hold-to-commit gesture
+// and fingerprint.js's seeded mark as the impression, rather than a borrowed
+// game genre. Desk-scene aspect, not the wide runner strip an earlier
+// iteration used.
+.not-found {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-height: 40vh;
+  text-align: center;
+  padding: 24px 0;
+}
+
+.not-found__glyph {
+  width: 40px;
+  height: 40px;
+}
+
+.not-found__canvas {
+  width: min(560px, 92vw);
+  height: min(300px, 48vh);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--card);
+  cursor: grab;
+  touch-action: none;
+  // Scoped to the canvas itself, not the viewport — a game-over/level-up
+  // flash on every full page would fight the site's restraint; this is
+  // rare enough here to earn even this much attention.
+  box-shadow: 0 0 0 0 transparent;
+  transition: box-shadow 0.3s ease;
+}
+
+.not-found__canvas.is-holding {
+  cursor: grabbing;
+}
+
+.not-found__canvas.flash-win {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--spark) 55%, transparent);
+}
+
+.not-found__canvas.flash-loss {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--danger) 55%, transparent);
+}
+
+.not-found__controls {
+  display: flex;
+  gap: 18px;
+}
+
+.not-found__mute,
+.not-found__copy {
+  @extend %interactive-link;
+  // A plain `border: none` reset here would also wipe the extend's
+  // border-bottom underline (shorthand resets every side) — reset first,
+  // then re-declare just the bottom so the underline survives.
+  background: none;
+  border: none;
+  border-bottom: 2px solid var(--spark);
+  padding: 0 0 2px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-faint);
+  cursor: pointer;
+}
+
+.not-found__text {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  color: var(--ink-soft);
+}
+
+.not-found a {
+  @extend %interactive-link;
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+.not-found__caption {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--ink-faint);
+}
+

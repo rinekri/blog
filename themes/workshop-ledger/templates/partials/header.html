@@ -1,0 +1,62 @@
+{% import "macros/glyph.svg.html" as glyph -%}
+<header class="site-header">
+    <div class="shell site-header__inner">
+        <a class="site-logo" href="{{ config.base_url }}" title="{{ config.extra.site_name }} (home)">
+            {{ glyph::mark(class="site-logo__glyph") }}
+            {{ config.extra.site_name }}
+        </a>
+        <div class="site-header__actions">
+            {% if config.extra.navigation %}
+            <nav class="site-nav">
+                {% include "partials/nav_links.html" %}
+            </nav>
+            <button
+                type="button"
+                id="nav-toggle"
+                class="nav-toggle"
+                aria-expanded="false"
+                aria-controls="site-nav-panel"
+                aria-label="Toggle navigation menu"
+            >
+                <svg class="nav-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                    <path class="nav-icon__bar nav-icon__bar--top" d="M4 7h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <path class="nav-icon__bar nav-icon__bar--mid" d="M4 12h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <path class="nav-icon__bar nav-icon__bar--bottom" d="M4 17h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+            {% endif %}
+            <button
+                type="button"
+                id="search-trigger"
+                class="theme-toggle"
+                aria-label="Search"
+                title="Search (&#8984;K)"
+            >
+                <svg class="theme-toggle__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                    <circle cx="11" cy="11" r="7"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </button>
+            <button
+                type="button"
+                id="theme-toggle"
+                class="theme-toggle"
+                aria-pressed="false"
+                aria-label="Toggle color theme"
+                title="Click to swap theme — drag to paint it in instead. Shift+click resets to auto."
+            >
+                <svg class="icon-duo theme-toggle__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path class="icon-duo__fill" d="M7 14c-1.66 0-3 1.34-3 3 0 1.31-1.16 2-2 2 .92 1.22 2.49 2 4 2 2.21 0 4-1.79 4-4 0-1.66-1.34-3-3-3z"/>
+                    <path class="icon-duo__stroke" d="M20.71 4.63l-1.34-1.34a1.003 1.003 0 0 0-1.42 0L9 12.25 11.75 15l8.96-8.95c.39-.39.39-1.03 0-1.42z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+    {% if config.extra.navigation %}
+    <nav class="site-nav-panel" id="site-nav-panel" hidden>
+        <div class="shell">
+            {% include "partials/nav_links.html" %}
+        </div>
+    </nav>
+    {% endif %}
+</header>

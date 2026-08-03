@@ -1,63 +1,113 @@
 # The URL the site will be built for
 base_url = "https://rinekri.com"
-# theme = "anatole-zola"
-theme = "papermod"
+theme = "workshop-ledger"
 taxonomies = [
   {name = "tags", feed = true},
 ]
-title = "Ilya Nekrasov"
+title = "Ilia Nekrasov"
 description = "Android developer"
+author = "Ilia Nekrasov"
 
 # Whether to automatically compile all Sass files in the sass directory
-compile_sass = false
+compile_sass = true
 generate_feed = true
 
-# Whether to build a search index to be used later on by a JavaScript library
-build_search_index = true
+# Zola's built-in index needs a third-party JS library (elasticlunr) to query
+# and was never wired up — search instead runs off a small hand-rolled JSON
+# corpus (templates/search_data.html -> /search-data.json) and vanilla-JS
+# substring matching, matching this site's no-bundler/no-dependency convention.
+build_search_index = false
+
+# AGENTS.md docs live alongside code (including under content/) but aren't site pages
+ignored_content = ["**/AGENTS.md"]
 
 [markdown]
 # Whether to do syntax highlighting
 # Theme can be customised by setting the `highlight_theme` variable to a theme supported by Zola
 highlight_code = true
-highlight_theme = "base16-ocean-light"
+highlight_theme = "inspired-github"
 
 [extra]
 default_language = "en"
+language_direction = "ltr"
+site_name = "rinekri"
+keywords = ["Ilia Nekrasov", "rinekri", "Android", "blog"]
 
-[extra.comment.utterances]
-repo = "rinekri/blog-comments"
-issue_term = "pathname"
-theme = "github-light"
+# Cloudflare Web Analytics beacon token (free account at dash.cloudflare.com
+# -> Analytics & Logs -> Web Analytics -> Add a site — does NOT require
+# moving this domain's nameservers to Cloudflare, just registers a beacon
+# token). Loads templates/partials/footer.html's tracking snippet when set;
+# leave blank (or delete the line) to ship with analytics off. No
+# cookies/no consent banner needed — visible only in the Cloudflare
+# dashboard, not this repo.
+cloudflare_analytics_token = "cb1d5f8d4c93493597543c11f16e539e"
 
-[extra.papermod]
-title = "rinekri"
-default_theme = "light"
-theme = "light"
-language_direction = "en"
-keywords = ["Ilya Nekrasov", "rinekri", "Android", "blog"]
-show_theme_toggle = false
 show_scroll_to_top = true
 show_code_copy_buttons = true
 show_reading_time = true
-show_word_count = true
+show_word_count = false
 show_post_nav_links = false
 show_post_meta = true
-posts_title = "Last posts"
 default_toc_open = false
 show_post_edit_button = false
 edit_post_url = "https://github.com/rinekri/blog/tree/master"
 #copyright = ""
 date_format = "%Y-%m-%d"
-navigation = [
-    { url = "$BASE_URL/archive", title = "Archive" },
-    { url = "$BASE_URL/tags", title = "Tags" },
+
+hero_name = "Ilia Nekrasov"
+# Optional raw HTML override for the home hero's name heading — lets you
+# style a specific letter/word (e.g. an accent-colored character) without
+# the theme having to guess where to split a plain name string. Falls back
+# to a plain `hero_name` heading when unset.
+hero_name_html = 'Ilia<br>Nekra<span class="accent-word">s</span>ov'
+
+# Portrait photo used on /about/ and /resume/, and as the fallback social
+# share (og:image) / structured-data (schema.org Person) image. Path is
+# relative to static/images/.
+portrait_image = "images/ilia-nekrasov-1.png"
+# Larger/alternate crop for the resume page specifically; falls back to
+# portrait_image when unset.
+portrait_image_resume = "images/ilia-nekrasov-2.png"
+# Seed string for the colophon's generative signature/wordmark canvas.
+# Falls back to `author` when unset.
+signature_seed = "rinekri"
+# Seed string for the about page's generative portrait pattern. Falls back
+# to `author` when unset.
+portrait_seed = "ilia-nekrasov"
+
+hero_status_focus = "building internal AI tooling for code review and CI/CD infrastructure."
+
+hero_stats = [
+    { key = "years", label = "years in the profession", url = "$BASE_URL/resume/" },
+    { key = "team_size", label = "people on the team", url = "$BASE_URL/leadership/" },
+    { key = "commercial_projects", label = "commercial projects", url = "$BASE_URL/projects/?group=commercial" },
+    { key = "talks", label = "conference talks", url = "$BASE_URL/speaking/" },
+]
+team_size = 26
+career_start_year = 2016
+current_year = 2026
+
+tag_clusters = [
+    { name = "Android & Platform", tags = ["android", "bug", "guide"] },
+    { name = "Career & Craft", tags = ["career", "review", "experience"] },
 ]
 
-home_title = "Ilya Nekrasov"
-home_content = "Hi! I'm an <b>Android Developer</b> with more then <b>7 years</b> of experience.<br>I worked on apps for banks, corporate chats, maps, disks, and for a lot of smaller projects.<br>Interested in different sides of developing: CI/CD, build optimizations, different languages and platforms."
+navigation = [
+    { url = "$BASE_URL/about/", title = "About" },
+    { url = "$BASE_URL/resume/", title = "Resume" },
+    { url = "$BASE_URL/projects/", title = "Projects" },
+    { url = "$BASE_URL/leadership/", title = "Leadership" },
+    { url = "$BASE_URL/speaking/", title = "Materials" },
+]
+
 social_icons = [
     { url = "https://github.com/rinekri", title = "GitHub", icon = "github" },
     { url = "https://www.linkedin.com/in/rinekri", title = "LinkedIn", icon = "linkedin" },
-    { url = "https://x.com/rinekri", title = "X", icon = "twitter" },
+    { url = "https://x.com/rinekri", title = "X", icon = "x" },
     { url = "$BASE_URL/atom.xml", title = "RSS", icon = "rss" },
 ]
+
+[extra.comment.utterances]
+repo = "rinekri/blog-comments"
+issue_term = "pathname"
+theme = "github-light"

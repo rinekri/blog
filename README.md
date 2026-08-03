@@ -2,13 +2,14 @@
 
 Source for [rinekri.com](https://rinekri.com) — my personal blog. Android engineering write-ups, career reflections, and the occasional deep dive into a bug that ate a weekend.
 
-Built with [Zola](https://www.getzola.org/), a fast static site generator written in Rust, using a Zola port of the [PaperMod](https://github.com/adityatelange/hugo-PaperMod) theme.
+Built with [Zola](https://www.getzola.org/), a fast static site generator written in Rust, using a custom theme of my own, **[Workshop Ledger](themes/workshop-ledger)** — see that theme's own README for its config reference and data-file schema if you want to reuse it for your own site.
 
 ## Stack
 
 - **[Zola](https://www.getzola.org/)** `0.18.0` — static site generator (config in [`config.toml`](config.toml))
-- **Theme:** `papermod` ([`themes/papermod`](themes/papermod)) — a Zola-compatible port of Hugo's PaperMod
+- **Theme:** [`workshop-ledger`](themes/workshop-ledger) — see [`themes/workshop-ledger/README.md`](themes/workshop-ledger/README.md)
 - Content lives in [`content/posts/`](content/posts), one file or [page bundle](https://www.getzola.org/documentation/content/page/#page-bundles) per post
+- Site data (projects, resume, speaking, leadership, about, ...) lives in [`data/*.toml`](data), loaded by the theme's templates — see the theme README for each file's schema
 
 ## Running locally
 
@@ -24,7 +25,7 @@ Then, from the repo root:
 zola serve
 ```
 
-This starts a local dev server at `http://127.0.0.1:1111` with live reload — edit any file under `content/` or `themes/papermod/` and the browser updates automatically.
+This starts a local dev server at `http://127.0.0.1:1111` with live reload — edit any file under `content/`, `data/`, or `themes/workshop-ledger/` and the browser updates automatically.
 
 To validate the site without serving it (broken internal links, anchors, etc.):
 
@@ -70,4 +71,4 @@ Pushing to `main` triggers [`.github/workflows/ftp-deploy.yml`](.github/workflow
 
 ## License
 
-Personal blog content — all rights reserved unless a post says otherwise. The `papermod` and `anatole-zola` themes under `themes/` keep their own upstream licenses.
+The [`workshop-ledger`](themes/workshop-ledger) theme (templates, Sass, and JS) is MIT-licensed — see [`LICENSE`](LICENSE). Everything else — posts, `data/*.toml`, and `static/images/` — is personal content, all rights reserved unless a specific post says otherwise.

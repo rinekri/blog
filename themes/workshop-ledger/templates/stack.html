@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block content %}
+<header class="page-header">
+    <div class="breadcrumbs"><a href="{{ config.base_url }}">Home</a></div>
+    <h1 class="section-display">Stack</h1>
+</header>
+
+{% set stack_page = load_data(path="data/stack.toml") %}
+{% set projects = load_data(path="data/projects.toml") %}
+{% set_global total_project_count = 0 %}
+{% for group in projects.groups %}{% set group_len = group.items | length %}{% set_global total_project_count = total_project_count + group_len %}{% endfor %}
+
+<p class="lead-strip">{{ stack_page.lead_strip | safe }} <a href="{{ get_url(path='@/projects/_index.md') }}">See all {{ total_project_count }} projects →</a></p>
+
+<p class="lead-strip lead-strip--secondary">{{ stack_page.lead_strip_secondary | safe }}</p>
+
+{# No map/object literals in Tera, so counts can't ride along on each entry — flat array of mentions, distinct names, then a live recount per name at render time. #}
+{% set_global stack_pairs = [] %}
+{% for group in projects.groups %}
+{% for item in group.items %}
+{% set_global stack_pairs = stack_pairs | concat(with=item.stack | default(value=[])) %}
+{% endfor %}
+{% endfor %}
+
+{% set_global unique_names = [] %}
+{% for name in stack_pairs %}
+{% if not (unique_names is containing(name)) %}
+{% set_global unique_names = unique_names | concat(with=[name]) %}
+{% endif %}
+{% endfor %}
+
+{% set_global stack_names = [] %}
+{% set_global max_count = 1 %}
+{% for name in unique_names %}
+{% set_global cnt = 0 %}
+{% for n in stack_pairs %}{% if n == name %}{% set_global cnt = cnt + 1 %}{% endif %}{% endfor %}
+{% if cnt >= 3 %}
+{% set_global stack_names = stack_names | concat(with=[name]) %}
+{% if cnt > max_count %}{% set_global max_count = cnt %}{% endif %}
+{% endif %}
+{% endfor %}
+
+{# Tera has no sort-by-custom-key, so frequency order (most-used first) is faked via "<inverted-count>::<name>" string keys sorted ascending, then split apart at render time. #}
+{% set_global sort_keys = [] %}
+{% for name in stack_names %}
+{% set_global cnt = 0 %}
+{% for n in stack_pairs %}{% if n == name %}{% set_global cnt = cnt + 1 %}{% endif %}{% endfor %}
+{% set_global inv = max_count - cnt %}
+{% if inv < 10 %}{% set_global inv_padded = "00" ~ inv %}
+{% elif inv < 100 %}{% set_global inv_padded = "0" ~ inv %}
+{% else %}{% set_global inv_padded = inv ~ "" %}{% endif %}
+{% set_global sort_keys = sort_keys | concat(with=[inv_padded ~ "::" ~ name]) %}
+{% endfor %}
+{% set ranked_names = sort_keys | sort %}
+
+<p class="tag-index__meta">{{ stack_names | length }} recurring technologies &middot; {{ stack_pairs | length }} total uses across every project</p>
+
+<div class="specimen-grid">
+    {% for key in ranked_names %}
+    {% set name = key | split(pat="::") | last %}
+    {% set idx = loop.index %}
+    {% if idx is odd %}{% set_global s_tint = "moss" %}{% else %}{% set_global s_tint = "spark" %}{% endif %}
+    {% set_global cnt = 0 %}
+    {% for n in stack_pairs %}{% if n == name %}{% set_global cnt = cnt + 1 %}{% endif %}{% endfor %}
+    <a class="specimen" href="{{ get_url(path='@/projects/_index.md') }}?stack={{ name | urlencode }}">
+        <span class="specimen__idx">No. {% if idx < 10 %}0{{ idx }}{% else %}{{ idx }}{% endif %}</span>
+        <span class="specimen__name">{{ name }}</span>
+        <canvas class="specimen__canvas" data-seed="{{ name }}" data-tint="{{ s_tint }}" data-weight="{{ 0.5 + 0.5 * cnt / max_count }}" width="80" height="80" aria-hidden="true"></canvas>
+        <span class="specimen__meter" aria-hidden="true"><span class="specimen__meter-fill" style="width: {{ (100.0 * cnt / max_count) | round }}%"></span></span>
+        <span class="specimen__count">{{ cnt }} projects</span>
+    </a>
+    {% endfor %}
+</div>
+
+<h2 class="stack-timeline__title">By year</h2>
+<p class="stack-timeline__note">{{ stack_page.timeline_note | safe }}</p>
+
+{# `seen_before` is a global array that only ever grows, checked before each year's new arrivals fold in — Tera has no set/map type to track this otherwise. #}
+{% set_global seen_before = [] %}
+
+<div class="stack-timeline">
+    {% for year in range(start=config.extra.career_start_year, end=config.extra.current_year + 1) %}
+    {% set_global year_names = [] %}
+    {% for group in projects.groups %}
+    {% for item in group.items %}
+    {% if item.date_start %}
+    {% if item.date_end == "present" %}{% set eff_end = config.extra.current_year %}{% else %}{% set eff_end = item.date_end | default(value=item.date_start) %}{% endif %}
+    {% if item.date_start <= year and eff_end >= year %}
+    {% for tech in item.stack | default(value=[]) %}
+    {% if not (year_names is containing(tech)) %}
+    {% set_global year_names = year_names | concat(with=[tech]) %}
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+    {% endif %}
+    {% endfor %}
+    {% endfor %}
+    {% if year_names | length > 0 %}
+    {% set_global year_new = [] %}
+    {% set_global year_carried = [] %}
+    {% for tech in year_names | sort %}
+    {% if seen_before is containing(tech) %}
+    {% set_global year_carried = year_carried | concat(with=[tech]) %}
+    {% else %}
+    {% set_global year_new = year_new | concat(with=[tech]) %}
+    {% endif %}
+    {% endfor %}
+    {% for tech in year_new %}{% set_global seen_before = seen_before | concat(with=[tech]) %}{% endfor %}
+    <div class="stack-timeline__row">
+        <span class="stack-timeline__year">{{ year }}{% if year_new | length > 0 %}<span class="stack-timeline__new-badge">+{{ year_new | length }} new</span>{% endif %}</span>
+        <div class="stack-timeline__techs">
+            {% for tech in year_new %}<a class="chip chip--sm chip--tag stack-timeline__chip stack-timeline__chip--new" href="{{ get_url(path='@/projects/_index.md') }}?stack={{ tech | urlencode }}">{{ tech }}</a>{% endfor %}
+            {% for tech in year_carried %}<a class="chip chip--sm chip--tag stack-timeline__chip" href="{{ get_url(path='@/projects/_index.md') }}?stack={{ tech | urlencode }}">{{ tech }}</a>{% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>
+{% endblock content %}

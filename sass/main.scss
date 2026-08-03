@@ -1,0 +1,10 @@
+// Zola only auto-compiles the site's own sass/ directory, not a theme's —
+// this is the site's single compiled entry point, pulling in every partial
+// from the Workshop Ledger theme. See themes/workshop-ledger/sass/_main.scss
+// for the actual import list and load order.
+
+// Bare domain (no protocol), used by _print.scss to tell internal links from
+// external ones — must be set before the @import below to take effect.
+$site-domain: "rinekri.com";
+
+@import "../themes/workshop-ledger/sass/main";

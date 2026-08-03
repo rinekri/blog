@@ -2,3 +2,10 @@
 public/
 .idea
 ./**/.DS_Store
+node_modules/
+.codegraph/
+.playwright-mcp/
+.omc/
+!.omc/skills/
+AGENTS.md
+CLAUDE.md

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% import "macros/social_icon.svg.html" as social -%}
+{% block content %}
+{% set clusters = config.extra.tag_clusters | default(value=[]) %}
+{% set_global sibling_terms = [] %}
+{% for cluster in clusters %}
+{% if cluster.tags is containing(term.name) %}
+{% for tag_name in cluster.tags %}
+{% if tag_name != term.name %}
+{% set_global sibling_terms = sibling_terms | concat(with=[tag_name]) %}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endfor %}
+<header class="page-header">
+    <div class="breadcrumbs">
+        <a href="{{ config.base_url }}">Home</a>&nbsp;/&nbsp;
+        <a href="{{ get_url(path='@/tags/_index.md') }}">Tags</a>&nbsp;/&nbsp;
+        <a href="{{ current_url }}">{{ term.name }}</a>
+    </div>
+    <h1 class="section-display">
+        {{ term.name }}
+        <span class="term-count">{% if term.page_count == 1 %}1 post{% else %}{{ term.page_count }} posts{% endif %}</span>
+        <a class="rss-link" href="{{ term.permalink ~ config.feed_filename }}" title="RSS" aria-label="RSS feed">{{ social::icon(name="rss") }}</a>
+    </h1>
+    {% if sibling_terms | length > 0 %}
+    <div class="term-siblings">
+        <span class="term-siblings__label">Also in this area:</span>
+        {% for name in sibling_terms %}
+        <a class="chip chip--tag" href="{{ get_taxonomy_url(kind='tags', name=name, lang=lang) }}">{{ name }}</a>
+        {% endfor %}
+    </div>
+    {% endif %}
+</header>
+<h2 class="sr-only">Posts tagged &quot;{{ term.name }}&quot;</h2>
+<div class="post-card-grid">
+    {% for page in term.pages %}
+    {% include "partials/post_card.html" %}
+    {% endfor %}
+</div>
+{% endblock content %}

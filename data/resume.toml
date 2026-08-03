@@ -1,0 +1,138 @@
+# Data for /resume/ (templates/resume.html). Experience bullets are pulled live from
+# data/projects.toml (filtered by company + role) — nothing here duplicates project detail.
+# full_name is also read by templates/partials/json_ld.html and the /resume/ and /about/
+# portrait photos' alt text — the one place this exact string lives.
+
+full_name = "Ilia Nekrasov"
+summary = "Ten years building Android software, the last two leading KODE's Android department — 26 engineers, up from 17 in 2025. Shipped banking, fintech, VoIP, and mapping products for real user bases, and still write code personally: architecture for an AI-powered MR reviewer, internal Gradle/CI tooling, a grading platform built from scratch. I care about systems — code and teams alike — that keep working after the person who built them moves on."
+
+contact_email = "rinekri@gmail.com"
+location = "Lisbon, Portugal"
+
+[[employment]]
+company = "KODE"
+role = "Android Department Lead"
+date_start = 2025
+date_end = "present"
+
+[[employment]]
+company = "KODE"
+role = "Team Lead"
+date_start = 2020
+date_end = 2025
+
+[[employment]]
+company = "KODE"
+role = "Android Developer"
+date_start = 2016
+date_end = 2020
+
+[[education]]
+school = "Kaliningrad Technical State University"
+date_start = 2010
+date_end = 2015
+
+[[education]]
+school = "Yakut Finance and Economics College"
+date_start = 2008
+date_end = 2010
+
+[[languages]]
+name = "English"
+level = "C1 Advanced"
+
+[[languages]]
+name = "Russian"
+level = "Native"
+
+[[certifications]]
+name = "EF SET English Certificate — C1 Advanced (68/100)"
+url = "https://cert.efset.org/wz5NA4"
+date = 2025
+
+[[skills]]
+category = "Kotlin & Multiplatform"
+items = [
+  { name = "Kotlin", chip_icon = "kotlin" },
+  { name = "Kotlin Multiplatform (KMP)", chip_icon = "stack", chip_label = "KMP", chip_query = "Multiplatform" },
+  { name = "Java" },
+  { name = "Flutter/Dart" },
+]
+
+[[skills]]
+category = "UI"
+items = [
+  { name = "Jetpack Compose", chip_icon = "jetpackcompose", chip_label = "Compose" },
+  { name = "Android Views (XML)" },
+  { name = "Design systems (uikit)" },
+]
+
+[[skills]]
+category = "Architecture & Concurrency"
+items = [
+  { name = "Coroutines/Flow", chip_icon = "arrows-clockwise", chip_query = "Coroutines" },
+  { name = "RxJava/RxAndroid" },
+  { name = "MVI" },
+  { name = "Clean Architecture" },
+]
+
+[[skills]]
+category = "Networking & Serialization"
+items = [
+  { name = "Retrofit/OkHttp" },
+  { name = "Moshi/kotlinx.serialization" },
+  { name = "Ktor", chip_icon = "ktor" },
+  { name = "WebSocket" },
+  { name = "WebRTC/pjsip" },
+]
+
+[[skills]]
+category = "DI & Navigation"
+items = [
+  { name = "Dagger" },
+  { name = "Toothpick" },
+  { name = "Conductor" },
+]
+
+[[skills]]
+category = "Persistence"
+items = [
+  { name = "Room" },
+  { name = "SQLDelight" },
+  { name = "DataStore" },
+]
+
+[[skills]]
+category = "Testing & Quality"
+items = [
+  { name = "Kotest" },
+  { name = "MockK" },
+  { name = "Espresso/Robolectric" },
+]
+
+[[skills]]
+category = "Build & CI/CD"
+items = [
+  { name = "Gradle (plugin authoring)", chip_icon = "gradle", chip_label = "Gradle" },
+  { name = "GitLab CI", chip_icon = "gear-six", chip_label = "CI/CD infra", chip_query = "GitLab CI" },
+  { name = "Docker" },
+  { name = "detekt/ktlint" },
+  { name = "Self-hosted CI infra (Reposilite, Telegram Bot API, Squid proxy)" },
+]
+
+[[skills]]
+category = "Observability"
+items = [
+  { name = "Firebase" },
+  { name = "Crashlytics" },
+  { name = "AppMetrica" },
+  { name = "LeakCanary" },
+]
+
+[[skills]]
+category = "AI-assisted engineering"
+items = [
+  { name = "LLM-based code review tooling", chip_icon = "sparkle", chip_label = "LLM tooling", chip_query = "LLM" },
+  { name = "AI toolkit architecture" },
+  { name = "Prompt-driven development" },
+]

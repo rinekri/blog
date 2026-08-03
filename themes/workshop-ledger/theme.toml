@@ -1,0 +1,11 @@
+name = "workshop-ledger"
+description = "A ledger/workbench-themed personal site theme: TOML-driven project graph, resume, and speaking pages, a generative signature/portrait system, dark/light theme toggle, and a playable easter-egg 404."
+license = "MIT"
+homepage = "https://github.com/rinekri/blog"
+min_version = "0.18.0"
+
+[author]
+name = "Ilia Nekrasov"
+homepage = "https://rinekri.com"
+
+[extra]

@@ -1,0 +1,368 @@
+// ============================================================
+// /resume/ — CV built live from data/projects.toml + data/resume.toml.
+// Reuses .badge / .mask (from _projects.scss) and .chip / .chip--sm
+// (from _components.scss) via the cascade; only new layout rules here.
+// .resume-portrait is this page's one bespoke element — see its own
+// comment below.
+// ============================================================
+
+// ---------- byline: role / location / contact / download ----------
+.resume-byline {
+  display: flex;
+  flex-wrap: wrap;
+  // Centers .resume-byline__body against the portrait as one unit — safe
+  // since body's own layout keeps info/actions from fighting over the slot.
+  align-items: center;
+  gap: 10px 16px;
+  font-family: var(--font-mono);
+  font-size: 16px;
+  color: var(--ink-soft);
+  margin-bottom: 22px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+// Info + actions share one flex row that wraps as a whole, so Print drops
+// to its own line below info rather than centering independently against
+// it. space-between keeps Print pinned to the far edge when both fit.
+.resume-byline__body {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+  flex: 1;
+  min-width: 0;
+}
+
+// Grouped block, not a loose sibling of .resume-byline__actions — without
+// this, the email button (last in source order) wraps alone at narrow widths.
+.resume-byline__info {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  // Flex items default to min-width:auto, which can force this group wider
+  // than the page instead of wrapping — min-width:0 is the standard fix.
+  min-width: 0;
+}
+
+// A print-safe echo of /about/'s generative ring-frame: real photo + static
+// SVG ring, no canvas/JS (needs to survive Print's black-on-white export).
+// A plain circle, not hand-wobbled — a wobble reads off-center when enlarged.
+.resume-portrait {
+  position: relative;
+  width: 132px;
+  height: 132px;
+  flex-shrink: 0;
+  // Extra margin beyond the byline row's own 10px flex gap — the ring
+  // overflows -8px past the photo's own edge, so without this the moss
+  // stroke sits almost flush against the role text.
+  margin: 0 8px 0 0;
+}
+
+.resume-portrait__photo {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: 50% 20%;
+  display: block;
+}
+
+.resume-portrait__ring {
+  position: absolute;
+  inset: -8px;
+  // Base reset (img, svg { max-width:100% }) was capping this at 100% of its
+  // container, so the -8px inset shifted the corner without growing size.
+  max-width: none;
+  max-height: none;
+  width: calc(100% + 16px);
+  height: calc(100% + 16px);
+  fill: none;
+  stroke: var(--moss);
+  stroke-width: 1.5;
+}
+
+// ---------- contact email: click-to-reveal ("unmask") ----------
+// Real address never appears in server-rendered HTML (see email-reveal.js) —
+// this button is what a scraper sees. Reuses .mask's recipe from _projects.scss.
+.resume-unmask {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  border: 1px dashed var(--ink-faint);
+  border-radius: var(--radius);
+  padding: 3px 7px;
+  background: none;
+  color: var(--ink-faint);
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+.resume-unmask:hover,
+.resume-unmask:focus-visible {
+  border-color: var(--moss);
+}
+
+.resume-unmask__caption {
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 14px;
+}
+
+.resume-unmask__mask {
+  background: var(--ink-faint);
+  color: var(--ink-faint);
+  opacity: 0.28;
+  letter-spacing: 1px;
+  border-radius: 1px;
+  padding: 0 3px;
+  transition: opacity 0.4s ease, background-color 0.4s ease;
+}
+
+.resume-unmask.is-unmasking {
+  border-color: var(--moss);
+}
+
+.resume-unmask.is-unmasking .resume-unmask__mask {
+  background: transparent;
+  opacity: 1;
+  color: var(--ink);
+}
+
+.resume-byline__role {
+  color: var(--moss);
+  font-weight: 600;
+}
+
+.resume-byline__sep {
+  color: var(--ink-faint);
+}
+
+.resume-byline__contact {
+  @extend %interactive-link;
+}
+
+.resume-byline__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.resume-print {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  padding: 8px 14px;
+  border: 1px solid var(--moss);
+  border-radius: var(--radius);
+  background: var(--card);
+  color: var(--moss);
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+}
+
+.resume-print:hover {
+  background: var(--moss);
+  color: var(--paper);
+}
+
+// ---------- summary ----------
+.resume-summary {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  color: var(--ink);
+  line-height: 1.6;
+  max-width: 74ch;
+  margin: 0 0 44px;
+}
+
+// ---------- section shell ----------
+.resume-section {
+  margin-bottom: 44px;
+}
+
+.resume-section__title {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin: 0 0 22px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--ink);
+}
+
+// A section can hold more than one heading (Education/Languages/
+// Certifications share one .resume-section) — the first needs no top
+// margin, repeats need breathing room above them.
+.resume-section__title:not(:first-child) {
+  margin-top: 32px;
+}
+
+// ---------- experience eras ----------
+.resume-era {
+  margin-bottom: 28px;
+}
+
+.resume-era:last-child {
+  margin-bottom: 0;
+}
+
+.resume-era__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.resume-era__role {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.resume-era__company {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--moss);
+}
+
+.resume-era__dates {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink-faint);
+  margin-inline-start: auto;
+}
+
+.resume-era__cat {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin: 16px 0 8px;
+}
+
+.resume-era__cat:first-of-type {
+  margin-top: 4px;
+}
+
+.resume-era__bullets {
+  margin: 0;
+  padding-inline-start: 20px;
+  font-size: 16px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+
+.resume-era__bullets li {
+  margin-bottom: 6px;
+}
+
+.resume-era__bullets li:last-child {
+  margin-bottom: 0;
+}
+
+// ---------- selected projects: reuses .anchors/.pcard* from _projects.scss ----------
+.resume-projects__more {
+  margin: 14px 0 0;
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+}
+
+.resume-projects__more a {
+  @extend %interactive-link;
+}
+
+// ---------- education / languages + skills two-column ----------
+.resume-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+
+@media (max-width: 700px) {
+  .resume-two-col {
+    grid-template-columns: 1fr;
+  }
+
+  // Below this width the portrait's fixed 132px + gap leave too little room
+  // for .resume-byline__body to wrap properly. Stacking gives it full width.
+  .resume-byline {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .resume-byline__body {
+    width: 100%;
+  }
+}
+
+.resume-edu,
+.resume-lang,
+.resume-cert {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+  font-size: 14px;
+}
+
+.resume-edu:first-of-type,
+.resume-lang:first-of-type,
+.resume-cert:first-of-type {
+  border-top: none;
+}
+
+.resume-edu__school,
+.resume-lang__name {
+  color: var(--ink);
+}
+
+.resume-cert a {
+  @extend %interactive-link;
+}
+
+.resume-edu__dates,
+.resume-lang__level,
+.resume-cert__date {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink-faint);
+  text-align: right;
+}
+
+.resume-skill-group {
+  padding: 8px 0;
+  border-top: 1px solid var(--line);
+  font-size: 16px;
+}
+
+.resume-skill-group:first-of-type {
+  border-top: none;
+}
+
+// Weight/case/spacing matches other small mono "eyebrow" labels
+// (.pcard-more__label, .kicker) rather than a fainter sentence-case treatment.
+.resume-skill-group__category {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--moss);
+  margin-bottom: 4px;
+}
+
+.resume-skill-group__items {
+  color: var(--ink-soft);
+}

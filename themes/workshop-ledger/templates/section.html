@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% import "macros/social_icon.svg.html" as social -%}
+{% block content %}
+<header class="page-header">
+    <div class="breadcrumbs"><a href="{{ config.base_url }}">Home</a></div>
+    <h1 class="section-display">
+        {{ section.title }}
+        <a class="rss-link" href="{{ get_url(path=config.feed_filename, trailingslash=false) | safe }}" title="RSS" aria-label="RSS feed">{{ social::icon(name="rss") }}</a>
+    </h1>
+    {% set posts_section = get_section(path="posts/_index.md") %}
+    {% set all_pages = posts_section.pages %}
+    {% set oldest_page = all_pages | last %}
+    <p class="post-list__total">{{ all_pages | length }} post{% if all_pages | length != 1 %}s{% endif %} since {{ oldest_page.year }}</p>
+</header>
+{% set yearly_pages = paginator.pages | group_by(attribute="year") %}
+<div class="post-list">
+    {% for year, pages in yearly_pages %}
+    <div class="post-list__year" id="{{ year }}">
+        <div class="year-heading">
+            <h2 class="year-heading__num">{{ year }}</h2>
+            <span class="year-heading__count">{% if pages | length == 1 %}1 post{% else %}{{ pages | length }} posts{% endif %}</span>
+            <span class="year-heading__line"></span>
+        </div>
+        {% if loop.first %}
+        <div class="post-card-grid">
+            {% for page in pages %}
+            {% include "partials/post_card.html" %}
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="post-row-list">
+            {% for page in pages %}
+            {% include "partials/post_row.html" %}
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+<p class="post-list__archive-link"><a href="{{ '$BASE_URL/archive' | replace(from='$BASE_URL', to=config.base_url) }}">Prefer the full year-by-year timeline? Browse the Archive &rarr;</a></p>
+{% if paginator.number_pagers > 1 %}
+<nav class="paginav">
+    {% if paginator.previous %}
+    <a class="prev" href="{{ paginator.previous }}"><span class="title">« Newer</span></a>
+    {% endif %}
+    {% if paginator.next %}
+    <a class="next" href="{{ paginator.next }}"><span class="title">Older »</span></a>
+    {% endif %}
+</nav>
+{% endif %}
+{% endblock content %}

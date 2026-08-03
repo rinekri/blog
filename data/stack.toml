@@ -1,0 +1,8 @@
+# Data for /stack/ (templates/stack.html). The "See all N projects" count
+# in lead_strip is computed live in the template instead of baked in here,
+# since it drifts every time a project is added — a static number here
+# would silently go stale.
+
+lead_strip = "Every technology that recurs across at least 3 shipped projects, as a specimen wall ranked by how often it comes up — not A-Z. Each mark's stroke density and the bar beneath it both echo that same count; click a specimen to jump to the matching projects."
+lead_strip_secondary = "Or see the same technologies as a connected <a href=\"/graph/\">project graph →</a>"
+timeline_note = "What was actually in use each year, derived from every project's own start/end dates and stack list — not a curated narrative, whatever the data says. Technologies marked <strong>new</strong> are appearing for the first time that year; everything else carried over from an earlier one. Click any technology to jump to its matching projects."

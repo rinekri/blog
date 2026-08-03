@@ -1,0 +1,67 @@
+# Data for /colophon/ (templates/colophon.html). Same typed-block system
+# as data/about.toml/data/leadership.toml, plus "mark_catalog" (fixed grid
+# of seed+canvas specimens) and "signature_toy" (marks where the live
+# type-your-own-seed widget renders — the widget itself stays in the
+# template since it's interactive markup, not content).
+
+lead_strip = "This site is itself a small engineering artifact, not just a container for one. Here's how it's actually built."
+
+[[sections]]
+id = "stack"
+num = "01"
+label = "Stack"
+
+  [[sections.blocks]]
+  type = "paragraph"
+  text = "Built with <a href=\"https://www.getzola.org/\" target=\"_blank\" rel=\"noopener noreferrer\">Zola</a>, a Rust static site generator — content in Markdown/TOML, templates in Tera. No JavaScript framework, no bundler, no build step for the frontend beyond Zola's own Sass compilation — no npm dependency tree to audit or update either, since Zola's own pipeline (Sass, cache-busted asset URLs) already covers what a bundler would otherwise be for. Every script under <code>static/js/</code> is plain vanilla JS, self-guarding (<code>if (!el) return;</code>) so it's safe to load unconditionally on every page rather than being conditionally included per page type."
+
+  [[sections.blocks]]
+  type = "pull"
+  text = 'The theme has a name for itself, internally: "Workshop Ledger" — a design system built around specimens, stamps, mask bars, and a guide-rail table of contents, all sharing one small set of Sass tokens.'
+
+  [[sections.blocks]]
+  type = "paragraph"
+  text = "Deployment is a GitHub Actions workflow: push to <code>main</code>, it installs Zola, runs <code>zola build</code>, and FTP-deploys the output. No manual step, no server to manage beyond that. The source — every template, Sass partial, and <code>static/js/*.js</code> file behind this page — is public: <a href=\"https://github.com/rinekri/blog\" target=\"_blank\" rel=\"noopener noreferrer\">github.com/rinekri/blog</a>."
+
+[[sections]]
+id = "generative"
+num = "02"
+label = "The generative marks"
+
+  [[sections.blocks]]
+  type = "paragraph"
+  text = "Every fingerprint-like mark on this site — the flat scatter on post/project/tag cards, the wide banner on a post's own header, the composite strip on each archive year, the polar ring around the photo on <a href=\"/about/\">/about/</a>, the flow-field on the home page — comes from one small shared PRNG core: an FNV-1a string hash feeding a mulberry32 generator. The same seed always produces the exact same mark, deterministically, with no server round-trip and no stored image — it's drawn fresh on every page load from a few bytes of seed text."
+
+  [[sections.blocks]]
+  type = "paragraph"
+  text = "Different contexts use different drawing functions tuned for their shape and density (a 200×88 card mark reads very differently than a full-width hero banner drawn with the same technique), but they all share the same PRNG core and the same \"seed in, deterministic mark out\" contract."
+
+  [[sections.blocks]]
+  type = "mark_catalog"
+  caption = "Five seed strings, one drawing function (<code>drawFingerprint()</code> in <code>static/js/fingerprint.js</code>). Reload this page and every one of them redraws pixel-identical — the seed text is the only input."
+    [[sections.blocks.items]]
+    seed = "zola"
+    [[sections.blocks.items]]
+    seed = "tera"
+    [[sections.blocks.items]]
+    seed = "fnv-1a"
+    [[sections.blocks.items]]
+    seed = "mulberry32"
+    [[sections.blocks.items]]
+    seed = "colophon"
+
+[[sections]]
+id = "try-it"
+num = "03"
+label = "Try it"
+
+  [[sections.blocks]]
+  type = "paragraph"
+  text = "The exact same core, live: type anything below and <code>drawFingerprint()</code> redraws the canvas from your text as you go — client-side, no server round-trip, no image stored anywhere."
+
+  [[sections.blocks]]
+  type = "signature_toy"
+
+  [[sections.blocks]]
+  type = "paragraph"
+  text = "The same core also draws the polar portrait ring on <a href=\"/about/\">/about/</a> — angle and radius around a fixed center instead of scattered x/y, a different drawing function for a deliberately different subject, but the same PRNG underneath."

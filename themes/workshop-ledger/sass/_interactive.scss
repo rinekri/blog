@@ -1,0 +1,63 @@
+// Shared interactive-surface primitives for hover/active treatment on
+// structurally identical components (cards, rows, chips, prose links).
+
+// ---------- cards ----------
+// Canonical: border-color -> moss on hover. NOT used by .numbers-card
+// (sass/_home.scss) — that tile owns only a right-side divider, not a
+// full border box, so a border-color hover has nothing to act on.
+%interactive-card {
+  transition: border-color 0.15s ease;
+
+  &:hover {
+    border-color: var(--moss);
+  }
+}
+
+// ---------- rows ----------
+// Two independently-applicable pieces: %interactive-row-fill is the
+// background-fill host treatment (opt in per row, e.g. .prow,
+// .archive-entry — NOT .post-entry, which keeps its own indent-shift +
+// fade-in dot motif); interactive-row-title() is the nested-title-recolor
+// behavior, used regardless of host treatment.
+%interactive-row-fill {
+  transition: background-color 0.12s ease;
+
+  &:hover {
+    background-color: var(--paper-dim);
+  }
+}
+
+@mixin interactive-row-title($title-selector) {
+  &:hover #{$title-selector} {
+    color: var(--moss);
+    border-color: var(--moss);
+  }
+}
+
+// ---------- chips ----------
+// Canonical: border-color + color -> moss on hover. .fchip's own .active
+// state layers a toggle-specific background fill on top of this.
+%interactive-chip {
+  transition: border-color 0.15s ease, color 0.15s ease;
+
+  &:hover {
+    border-color: var(--moss);
+    color: var(--moss);
+  }
+}
+
+// ---------- CTA-style links (isolated clickable phrase, not prose) ----------
+// For standalone CTA phrases, not links embedded in running prose
+// (.post-content a) or structural nav/list titles, which stay moss.
+// 2px underline, not 1px — at 1px it read as nearly invisible against
+// --paper in light theme.
+%interactive-link {
+  color: var(--ink);
+  border-bottom: 2px solid var(--spark);
+  padding-bottom: 2px;
+  transition: color 0.15s ease;
+
+  &:hover {
+    color: var(--spark-deep);
+  }
+}

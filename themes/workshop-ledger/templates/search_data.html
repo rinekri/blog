@@ -1,0 +1,17 @@
+{# Raw JSON, not HTML — no {% extends %}. Consumed by static/js/search.js's substring matcher behind the ⌘K palette. #}
+{% set posts_section = get_section(path="posts/_index.md") %}
+[
+{% for page in posts_section.pages %}
+  {"title": {{ page.title | json_encode() | safe }}, "url": {{ page.permalink | json_encode() | safe }}, "excerpt": {{ page.summary | default(value="") | striptags | json_encode() | safe }}, "kind": "post"},
+{% endfor %}
+  {"title": "Projects", "url": {{ get_url(path="@/projects/_index.md") | json_encode() | safe }}, "excerpt": "10 years of shipped work — commercial, open-source, and personal projects with stack, achievements, and architecture detail.", "kind": "page"},
+  {"title": "Resume", "url": {{ get_url(path="@/resume/_index.md") | json_encode() | safe }}, "excerpt": "CV: employment history, skills, education, selected projects.", "kind": "page"},
+  {"title": "Leadership", "url": {{ get_url(path="@/leadership/_index.md") | json_encode() | safe }}, "excerpt": "Hiring, mentorship, grading framework, and how the Android department is organized.", "kind": "page"},
+  {"title": "About", "url": {{ get_url(path="@/about/_index.md") | json_encode() | safe }}, "excerpt": "Personal record — career arc, why I moved to Lisbon, what I do off the clock.", "kind": "page"},
+  {"title": "Speaking", "url": {{ get_url(path="@/speaking/_index.md") | json_encode() | safe }}, "excerpt": "Conference talks and published articles.", "kind": "page"},
+  {"title": "Archive", "url": {{ get_url(path="@/archive/_index.md") | json_encode() | safe }}, "excerpt": "Every post, chronologically, with a year-by-year activity view.", "kind": "page"},
+  {"title": "Tags", "url": {{ get_url(path="@/tags/_index.md") | json_encode() | safe }}, "excerpt": "Post topics, clustered.", "kind": "page"},
+  {"title": "Colophon", "url": {{ get_url(path="@/colophon/_index.md") | json_encode() | safe }}, "excerpt": "How this site is built — Zola, no framework, the seeded-PRNG generative fingerprint system.", "kind": "page"},
+  {"title": "Stack", "url": {{ get_url(path="@/stack/_index.md") | json_encode() | safe }}, "excerpt": "Every recurring technology across 10 years of projects, as a browsable specimen wall.", "kind": "page"},
+  {"title": "Project graph", "url": {{ get_url(path="@/graph/_index.md") | json_encode() | safe }}, "excerpt": "Every project as a node, connected to projects sharing 2+ technologies — a navigable map of the whole stack.", "kind": "page"}
+]

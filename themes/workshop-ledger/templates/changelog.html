@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+{% set changelog = load_data(path="data/changelog.toml") %}
+<header class="page-header">
+    <div class="breadcrumbs"><a href="{{ config.base_url }}">Home</a></div>
+    <span class="kicker">Meta</span>
+    <h1 class="section-display">Changelog</h1>
+</header>
+
+<p class="lead-strip lead-strip--dropcap">The content that actually changes here most often isn't the blog — it's the project list, the resume, the stack wall. This is a running, honest log of that: what changed, when, hand-written as it happens, not auto-generated.</p>
+
+<ul class="changelog-list">
+    {% for entry in changelog.entries | default(value=[]) %}
+    <li class="changelog-entry">
+        <span class="changelog-entry__date">{{ entry.date }}</span>
+        <p class="changelog-entry__text">{{ entry.text | safe }}</p>
+        {% if entry.url %}
+        <a class="changelog-entry__link" href="{{ entry.url | replace(from='$BASE_URL', to=config.base_url) }}">{{ entry.link_label }} →</a>
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% endblock content %}

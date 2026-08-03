@@ -1,0 +1,130 @@
+# Data for /about/ (templates/about.html).
+# Each section's `blocks` array is an ordered mix of typed content blocks —
+# needed because these sections interleave different component types
+# (a paragraph, then a timeline, then a pull-quote, then another paragraph)
+# rather than being a uniform list of one thing. Block `type` values the
+# template knows how to render: "paragraph" (safe HTML text), "arc"
+# (a small node/year/note timeline), "pull" (a blockquote-style callout),
+# "systems_grid" (two-column org-tree pair, items optionally link to a
+# /projects/ entry via `project_seed`), "chips" (a row of plain tag chips).
+#
+# Link hrefs in text fields are plain paths, not Tera `get_url()` calls —
+# TOML string values are loaded as inert data, so any `{{ }}` inside one
+# would print literally instead of being evaluated. Internal links here
+# also don't get zola check's build-time link validation as a result.
+
+lead_strip = "I'm Ilia — an Android engineer, currently leading KODE's Android department, though becoming a manager was never really the plan. I also can't stop building infrastructure, at work and at home, whether anyone asked me to or not. This page covers what <a href=\"/resume/\">/resume/</a> doesn't."
+
+[[sections]]
+id = "arc"
+num = "01"
+label = "Arc"
+portrait_ring = "career"
+
+  [[sections.blocks]]
+  type = "paragraph"
+  text = "Ten years in Android, all of them at KODE. I joined as a developer in 2016 and spent the next four years just learning the craft — junior to senior, one shipped project at a time. Became Team Lead in 2020, and by 2025 I was leading the whole Android department, 26 people, split across deputies handling day-to-day people management and tech leads running the technical vertical."
+
+  [[sections.blocks]]
+  type = "arc"
+    [[sections.blocks.nodes]]
+    year = 2016
+    note = "Developer"
+    [[sections.blocks.nodes]]
+    year = 2020
+    note = "Team Lead"
+    [[sections.blocks.nodes]]
+    year = 2025
+    note = "Department Lead"
+    resolved = true
+
+  [[sections.blocks]]
+  type = "pull"
+  text = "I care about systems — code and teams alike — that keep working after the person who built them moves on."
+
+  [[sections.blocks]]
+  type = "paragraph"
+  text = "Somewhere in there I also moved from Russia to Lisbon, Portugal, and I'm still here. More on how the department actually runs day to day: <a href=\"/leadership/\">the Leadership page →</a>"
+
+[[sections]]
+id = "two-systems"
+num = "02"
+label = "Two systems"
+portrait_ring = "infrastructure"
+wide = true
+
+  [[sections.blocks]]
+  type = "paragraph"
+  text = "The instinct doesn't stop when I leave the office. Whatever I'm responsible for, I end up building the infrastructure under it myself — same impulse at KODE and at home, just pointed at different things."
+
+  [[sections.blocks]]
+  type = "systems_grid"
+
+    [[sections.blocks.groups]]
+    name = "KODE"
+      [[sections.blocks.groups.items]]
+      name = "CI Toolkit"
+      project_seed = "ci-toolkit"
+      [[sections.blocks.groups.items]]
+      name = "Build-Publish plugin"
+      project_seed = "build-publish-plugin"
+      [[sections.blocks.groups.items]]
+      name = "Telegram Bot API server"
+      project_seed = "team-infrastructure"
+      [[sections.blocks.groups.items]]
+      name = "Reposilite (Maven proxy)"
+      project_seed = "team-infrastructure"
+      [[sections.blocks.groups.items]]
+      name = "Squid proxy"
+      project_seed = "team-infrastructure"
+      [[sections.blocks.groups.items]]
+      name = "MR/PR review tool"
+      project_seed = "karandash-ai-reviewer"
+      [[sections.blocks.groups.items]]
+      name = "Grading platform"
+      project_seed = "career-grading-framework"
+
+    [[sections.blocks.groups]]
+    name = "Home"
+      [[sections.blocks.groups.items]]
+      name = "NAS storage"
+      [[sections.blocks.groups.items]]
+      name = "Media stack"
+      [[sections.blocks.groups.items]]
+      name = "Network & VPN"
+      [[sections.blocks.groups.items]]
+      name = "Home automation"
+
+[[sections]]
+id = "off-the-clock"
+num = "03"
+label = "Off the clock"
+portrait_ring = "off-the-clock"
+
+  [[sections.blocks]]
+  type = "paragraph"
+  text = "When I'm not building things that beep: anime and film, books, games, and the occasional creative project I never quite finish."
+
+  [[sections.blocks]]
+  type = "chips"
+  items = ["Anime & film", "Reading", "Games", "Creative side-projects"]
+
+[[sections]]
+id = "why"
+num = "04"
+label = "Why"
+portrait_ring = "purpose"
+
+  [[sections.blocks]]
+  type = "paragraph"
+  text = "I live with celiac disease. It's shaped a lot of quiet, everyday problem-solving — figuring out what's actually safe to eat somewhere new, tracking down the right specialist, learning to read a menu almost like reading source code. At some point that turned into something bigger than just managing it for myself: I want to make that easier for other adults with celiac too — better information about where's actually safe to eat, support for real treatment research, backing the organizations already doing this work. Still early, honestly — more an intention than an actual project right now. But it's the same instinct as everything else on this page: if the system around you doesn't work well enough, you go build the missing part yourself."
+
+  [[sections.blocks]]
+  type = "pull"
+  text = "Whether it's a CI pipeline, a home network, or making sure someone else with celiac disease can find a safe meal — I'd rather build the missing piece than wait for someone else to."
+
+[[log_continues]]
+text = "The ring above is generated from a seed string, the same way every mark on this site is — <a href=\"/colophon/#try-it\">type your own on the colophon →</a>"
+
+[[log_continues]]
+text = "This log continues in <a href=\"/posts/\">the posts →</a>"

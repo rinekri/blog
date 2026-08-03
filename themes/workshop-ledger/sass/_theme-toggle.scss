@@ -1,0 +1,142 @@
+// ============================================================
+// Theme toggle: header button, brush-mode cursor, paint canvas,
+// coverage progress bar, and the finale recolor transition.
+// See static/js/theme.js for the interaction logic.
+// ============================================================
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius);
+  color: var(--ink-soft);
+  transition: color 0.15s ease, background-color 0.15s ease;
+  // Dragging enters brush-paint mode (theme.js) — without this, a paused
+  // touch-drag can trigger iOS's native long-press callout, fighting the gesture.
+  -webkit-touch-callout: none;
+  touch-action: none;
+}
+
+.theme-toggle:hover {
+  color: var(--ink);
+  background: var(--card);
+}
+
+// One-time cue (theme.js's clearCue()) inviting drag-to-paint. Pulsing ring,
+// not icon motion, so it doesn't pre-empt the paint animation. Skipped
+// entirely under reduced motion rather than given a static fallback.
+@keyframes theme-toggle-cue {
+  0%, 100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--spark) 45%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--spark) 0%, transparent);
+  }
+}
+
+.theme-toggle--cue {
+  animation: theme-toggle-cue 1.6s ease-out 3;
+}
+
+// Icon paints via .icon-duo__fill/__stroke (_layout.scss), not currentColor,
+// so a ring on the button is the only way this state actually renders.
+.theme-toggle[aria-pressed="true"] {
+  background: var(--card);
+  box-shadow: inset 0 0 0 1px var(--moss);
+}
+
+.theme-toggle__icon {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.2s ease;
+}
+
+// Live "armed mode" signal, distinct from aria-pressed's ring (the persisted
+// theme choice) — both can be true at once. Set/cleared by enterBrushMode()/
+// runSplash()/teardownPainting() in theme.js.
+.theme-toggle[data-state="armed"] .icon-duo__fill {
+  fill: var(--spark);
+}
+
+.theme-toggle[data-state="armed"] .icon-duo__stroke {
+  fill: var(--spark-deep);
+}
+
+.theme-toggle[data-state="armed"] .theme-toggle__icon {
+  transform: rotate(-18deg);
+}
+
+// Fixed, negative-z-index sibling of .site-header/.site-main/.site-footer,
+// so static content always paints on top, page background shows through elsewhere.
+#theme-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+#theme-progress {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: 0%;
+  background: var(--moss);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 30;
+  transition: width 0.08s linear, opacity 0.2s ease;
+}
+
+body.theme-painting #theme-progress {
+  opacity: 1;
+}
+
+// Cursors can't read CSS custom properties, so visibility on both painted
+// and unpainted backgrounds comes from a dual outline (light halo + dark body).
+body.brush-mode {
+  cursor:
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><path d="M5 27 L18 14" fill="none" stroke="%23eef1ee" stroke-width="6" stroke-linecap="round"/><path d="M18 14 Q22 10 27 4 Q23 9 20 12 Q17 15 14 18 Q16 16 18 14 Z" fill="none" stroke="%23eef1ee" stroke-width="4" stroke-linejoin="round"/><path d="M5 27 L18 14" fill="none" stroke="%2317211b" stroke-width="2.8" stroke-linecap="round"/><path d="M18 14 Q22 10 27 4 Q23 9 20 12 Q17 15 14 18 Q16 16 18 14 Z" fill="%232f5942" stroke="%2310141a" stroke-width="0.8"/></svg>')
+    4 26,
+    crosshair;
+}
+
+body.brush-mode,
+body.brush-mode * {
+  user-select: none;
+}
+
+// While painting, content must not react (no hovers lighting up). Paint
+// listeners live on window, so cutting pointer-events here doesn't affect them.
+body.brush-mode main,
+body.brush-mode header,
+body.brush-mode footer {
+  pointer-events: none;
+}
+
+body.brush-mode #theme-toggle {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+// Applied to <html> for ~340ms around a theme commit/reset so content
+// recolors instead of snapping. Scoped (not a permanent transition) so
+// normal rendering stays snappy the rest of the time.
+.recolor,
+.recolor * {
+  transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease,
+    fill 0.3s ease, stroke 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .recolor,
+  .recolor * {
+    transition: none !important;
+  }
+
+  .theme-toggle__icon {
+    transition: none;
+  }
+}

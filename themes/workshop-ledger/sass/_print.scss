@@ -1,0 +1,273 @@
+// ============================================================
+// Print stylesheet — strip chrome, keep the words.
+// ============================================================
+
+// @page needs no @media print wrapper (it's inherently print-scoped). No
+// `size` set, so the visitor's locale/printer default (A4 vs Letter) stands.
+@page {
+  margin: 2cm 1.5cm 1.5cm 1.5cm;
+}
+
+@media print {
+  // !important needed: _tokens.scss's dark-theme :root overrides have higher
+  // specificity than plain :root, so without it dark mode would win the cascade.
+  :root {
+    --paper: #fff !important;
+    --paper-dim: #fff !important;
+    --ink: #000 !important;
+    --ink-soft: #222 !important;
+    --ink-faint: #444 !important;
+    --moss: #000 !important;
+    --moss-deep: #000 !important;
+    --spark: #000 !important;
+    --spark-deep: #000 !important;
+    --line: #ccc !important;
+    --card: #fff !important;
+    --danger: #000 !important;
+    color-scheme: light !important;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
+  }
+
+  // ---------- chrome: header/nav/footer, floating controls ----------
+  .site-header,
+  .site-footer,
+  .top-link,
+  .copy-code,
+  .resume-print {
+    display: none !important;
+  }
+
+  // Website-only affordance (link to /projects/) — meaningless on paper.
+  .resume-projects__more {
+    display: none !important;
+  }
+
+  // ---------- guide-rail TOC: meaningless on paper ----------
+  .guide-rail {
+    display: none !important;
+  }
+
+  // Guide rail is gone in print, so collapse the >=1280px grid to a single
+  // column — some browsers evaluate min-width media features against the
+  // print page box, which could otherwise leak the screen grid into print.
+  .post-layout {
+    display: block !important;
+  }
+
+  .post-layout .post-content {
+    max-width: var(--prose-width) !important;
+    margin-inline: auto !important;
+  }
+
+  // ---------- generative fingerprints (canvas) ----------
+  .post-hero,
+  .archive-entry__node,
+  .archive-plate__strip,
+  .bento__status-canvas,
+  .bento__proj3-canvas,
+  canvas[data-seed],
+  canvas[data-strip] {
+    display: none !important;
+  }
+
+  // ---------- utterances comments ----------
+  #comments,
+  .utterances,
+  .utterances-frame {
+    display: none !important;
+  }
+
+  // ---------- sidenotes: always inline, never floated/collapsed ----------
+  .sidenote-toggle,
+  .sidenote-toggle-label {
+    display: none !important;
+  }
+
+  .sidenote {
+    display: block !important;
+    float: none !important;
+    clear: none !important;
+    width: auto !important;
+    margin: 10px 0 !important;
+    padding: 6px 12px !important;
+    border-inline-start: 2px solid #000 !important;
+    border-inline-end: 0 !important;
+  }
+
+  // ---------- expandable detail panels: always open, never collapsed ----------
+  // Native <details> prints closed by default. Chromium hides closed content
+  // via content-visibility on ::details-content (same mechanism _projects.scss's
+  // motion targets), not display:none — both need overriding.
+  details:not([open])::details-content {
+    content-visibility: visible !important;
+    block-size: auto !important;
+  }
+
+  details:not([open]) > *:not(summary) {
+    display: block !important;
+  }
+
+  // ---------- links: print the URL after external link text ----------
+  .post-content a[href^="http"]:not([href*="#{$site-domain}"])::after,
+  .post-entry a[href^="http"]:not([href*="#{$site-domain}"])::after {
+    content: " (" attr(href) ")";
+    font-size: 0.75em;
+    color: #333;
+    word-break: break-all;
+  }
+
+  // ---------- code: wrap instead of horizontal scroll ----------
+  .post-content pre,
+  .post-content pre code {
+    overflow: visible !important;
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+  }
+
+  // ---------- avoid splitting these across a page break ----------
+  pre,
+  figure,
+  blockquote,
+  .stat-tile,
+  .metric-tile,
+  .pcard,
+  .resume-era {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  // ---------- /resume/ pagination ----------
+  // Heading + start of its content move to the next page together, never alone.
+  .resume-section__title,
+  .resume-era__cat {
+    page-break-after: avoid;
+    break-after: avoid-page;
+  }
+
+  .resume-edu,
+  .resume-lang,
+  .resume-cert,
+  .resume-skill-group {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  // Selected Projects gets a fresh page instead of squeezing into what's left
+  // of Experience. :has(.anchors) targets it without a template change.
+  .resume-section:has(.anchors) {
+    page-break-before: always;
+    break-before: page;
+  }
+
+  // Grid's align-items:stretch equalizes card heights (fine on screen, all
+  // closed), but print forces every panel open, so stretch leaves big blank
+  // gaps. Single column removes that plus row-fragmentation coupling.
+  .anchors {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  // Screen sizing fits ~1-2 cards per printed page; shrinking type/padding
+  // here (screen sizing untouched) is what buys back page count.
+  .pcard {
+    padding: 12px 14px;
+  }
+
+  .pcard .fp {
+    margin-bottom: 0;
+  }
+
+  .pcard-top {
+    margin-bottom: 3px;
+  }
+
+  .pcard-name {
+    font-size: 15px;
+  }
+
+  .pcard-desc {
+    font-size: 12.5px;
+    line-height: 1.42;
+    margin-bottom: 4px;
+  }
+
+  .pcard-meta {
+    font-size: 11px;
+    gap: 6px;
+  }
+
+  .pcard-more {
+    margin-top: 4px;
+  }
+
+  .pcard-more[open] {
+    padding: 8px 14px 10px;
+  }
+
+  .pcard-more > * + * {
+    margin-top: 8px;
+  }
+
+  .pcard-more__label {
+    font-size: 10px;
+    margin-bottom: 2px;
+  }
+
+  .pcard-arch,
+  .pcard-achievements {
+    font-size: 12.5px;
+    line-height: 1.42;
+  }
+
+  .pcard-achievements li {
+    margin-bottom: 2px;
+  }
+
+  .pcard-stack {
+    gap: 5px;
+  }
+
+  .pcard-stack .chip.chip--sm {
+    padding: 2px 8px;
+    font-size: 11px;
+  }
+
+  .badge {
+    font-size: 10.5px;
+    padding: 3px 7px;
+  }
+
+  // Same reasoning as .anchors: two independently-flowing columns have no
+  // shared break point, so collapse to one and give it a fresh page.
+  // display:block, not a collapsed grid — Chromium doesn't apply @page
+  // margin to a forced break on a grid ITEM, only on the container or plain
+  // flow children; this makes both children plain flow so break-before works.
+  .resume-two-col {
+    display: block;
+    page-break-before: always;
+    break-before: page;
+  }
+
+  // Column 1 + Skills together sit on a fragile knife-edge where a small
+  // margin change strands the last skill group alone on a near-blank page.
+  // Giving Skills its own page start removes that fragility.
+  .resume-two-col .resume-section + .resume-section {
+    page-break-before: always;
+    break-before: page;
+  }
+
+  // Modest bump from screen's 44px/28px — much more and the last Skills
+  // group (break-inside: avoid) strands alone on a near-blank final page.
+  .resume-section {
+    margin-bottom: 48px;
+  }
+
+  .resume-era {
+    margin-bottom: 30px;
+  }
+}

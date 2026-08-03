@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+{% set colophon = load_data(path="data/colophon.toml") %}
+<header class="page-header">
+    <div class="breadcrumbs"><a href="{{ config.base_url }}">Home</a></div>
+    <span class="kicker">Meta</span>
+    <h1 class="section-display">Colophon</h1>
+</header>
+
+<p class="lead-strip lead-strip--dropcap">{{ colophon.lead_strip | safe }}</p>
+
+<div class="workbench">
+{% for section in colophon.sections | default(value=[]) %}
+    <section class="bench bench--solo" id="{{ section.id }}">
+        <header class="bench__head">
+            <span class="bench__num">{{ section.num }}</span>
+            <span class="bench__label">{{ section.label }}</span>
+            <span class="bench__line"></span>
+        </header>
+        <div class="bench__main">
+        {% for block in section.blocks %}
+            {% if block.type == "paragraph" %}
+            <p>{{ block.text | safe }}</p>
+            {% elif block.type == "pull" %}
+            <div class="pull">{{ block.text | safe }}</div>
+            {% elif block.type == "mark_catalog" %}
+            <div class="mark-catalog">
+                {% for item in block.items %}
+                <div class="mark-catalog__item">
+                    <canvas class="specimen__canvas" data-seed="{{ item.seed }}" width="64" height="64" aria-hidden="true"></canvas>
+                    <span class="mark-catalog__seed">&quot;{{ item.seed }}&quot;</span>
+                </div>
+                {% endfor %}
+            </div>
+            <p class="mark-catalog__caption">{{ block.caption | safe }}</p>
+            {% elif block.type == "signature_toy" %}
+            <div class="signature-toy">
+                <label for="signature-toy-input" class="signature-toy__label">Type a name, a word, this sentence — anything — to see its mark:</label>
+                <div class="signature-toy__row">
+                    <input type="text" id="signature-toy-input" class="signature-toy__input" placeholder="your name, or anything" maxlength="60" autocomplete="off">
+                    <canvas class="signature-toy__canvas" data-seed="{{ config.extra.signature_seed | default(value=config.author) }}" width="200" height="88" aria-hidden="true"></canvas>
+                    <button type="button" id="signature-toy-save" class="signature-toy__save">Save your signature ↓</button>
+                </div>
+                <span id="signature-toy-save-status" class="sr-only" role="status" aria-live="polite"></span>
+            </div>
+            {% endif %}
+        {% endfor %}
+        </div>
+    </section>
+{% endfor %}
+</div>
+{% endblock content %}

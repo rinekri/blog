@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% import "macros/glyph.svg.html" as glyph -%}
+{% block content %}
+<div class="not-found">
+    {{ glyph::mark(class="not-found__glyph") }}
+    <canvas class="not-found__canvas" aria-hidden="true"></canvas>
+    <div class="not-found__controls">
+        <button class="not-found__mute" type="button" aria-pressed="false">sound: on</button>
+        <button class="not-found__copy" type="button">copy case file</button>
+    </div>
+    <div class="not-found__text">This page hasn't been filed yet.</div>
+    <a href="{{ config.base_url }}">Back to the journal</a>
+    <p class="not-found__caption" data-field="caption"></p>
+</div>
+<script type="module" src="{{ get_url(path='js/404.js', cachebust=true) }}"></script>
+{% endblock content %}

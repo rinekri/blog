@@ -1,0 +1,45 @@
+# Data for /speaking/ (templates/speaking.html) and the home hero's "conference talks" stat
+# (templates/partials/home_hero.html, counts entries where type = "Talk").
+#
+# Fields:
+#   type      - "Talk" | "Article" | "Course". Only "Talk" feeds the home stat.
+#   title     - plain text, rendered as-is (not `| safe` — no inline HTML expected).
+#   venue     - optional, appended after title (e.g. conference/publication name).
+#   venue_url - optional, makes `venue` a link.
+#   desc      - one-line description.
+#   url       - optional, makes `desc` end with a labeled link.
+#   url_label - link text when `url` is set.
+#   note      - optional aside shown next to the title (e.g. "recording not preserved").
+#   year      - display string, e.g. 2018 or "~2020".
+
+[[talks]]
+type = "Talk"
+title = "RecyclerView Taken to the Max: a library breakdown"
+venue = "DevFest Kaliningrad"
+note = "recording not preserved"
+desc = "Classic approach, Epoxy, Groupie, AdapterDelegates — materials:"
+url = "https://github.com/appKODE/recyclerview_adapters"
+url_label = "demo repository"
+year = "2018"
+
+[[talks]]
+type = "Talk"
+title = "Building apps for the Google Assistant"
+venue = "GDG"
+venue_url = "https://www.youtube.com/watch?v=TEEY91ZN7a8"
+desc = "Co-presented with colleagues · recording on YouTube"
+year = "2018"
+
+[[talks]]
+type = "Article"
+title = "RecyclerView Taken to the Max"
+venue = "Habr (red_mad_robot)"
+venue_url = "https://habr.com/ru/company/redmadrobot/blog/428525/"
+desc = "Article written ahead of the talk, same material"
+year = "2018"
+
+[[talks]]
+type = "Course"
+title = "Kotlin mini-course, 11 lessons"
+desc = "Recorded for an online school, unpublished"
+year = "~2020"

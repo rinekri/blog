@@ -12,8 +12,8 @@ Detective story of uncovering the reason behind a strange dark mode bug, with a 
 <!-- more -->
 
 In the working process of any project you encounter not trivial bugs and problems, the reasons for which you must find. Sometimes you can find the reason quickly, but other times you need to try hard. I decided to write about how I investigated one of these bugs to illustrate how to find solutions to such tasks.
-# Backstory
-Today I'm working on a mobile project which main features are chats and calls. I recently implemented a **dark theme feature**, which is _toggled off by default_.
+## Backstory
+Today I'm working on [a mobile project](/projects/#project-voip-platform-conf) whose main features are chats and calls. I recently implemented a **dark theme feature**, which is _toggled off by default_.
 
 When we enabled this feature for all user we received a bug report where our client said that they faced with **a strange issue**. A crucial part of this problem was that the app screens had different themes: one screen was light, while another was dark!
 
@@ -82,7 +82,7 @@ class SettingsScreen : Fragment {
     }
 }
 ```
-# First Act: Nothing reproduce
+## First Act: Nothing reproduce
 The client described all the reproduction steps, attached screenshots, and logs. The logs contain detailed information, including opened screens, executed Activity and Fragment Lifecycle methods, and more.
 
 Firstly I tried to reproduce the problem: on different devices and emulators with different OS versions, but I found nothing - everything **worked as expected**! 
@@ -110,7 +110,7 @@ Theme | View | BaseFragment.onAttach():46: [MainFragment.onAttach uiMode(), = UI
 Theme | View | BaseFragment.onViewCreated():49: [MainFragment.onViewCreated view context uiMode(), = UI_MODE_NIGHT_NO]
 Theme | View | BaseActivity.onCreate():79: [SettingsActivity.onCreate uiMode(), = UI_MODE_NIGHT_NO]
 ```
-# Second act: Extended logs
+## Second act: Extended logs
 The client sent us new extended logs with `Theme` tag, which I closely investigated, however  everything worked as expected again!
 
 I started to think why else the theme can be broken, and assume that it might be related to the `Don't keep activities` developer option. Yes, this variant is rare, but because we couldn't reproduce this bug at all it could be a true. Moreover, the bug report from the client was filled by their QA, which uses this option very often.
@@ -134,7 +134,7 @@ It can be googled easy, but maybe it can be useful for someone.
     return state != 0  
 }
 ```
-# Third act: Don’t keep activities
+## Third act: Don’t keep activities
 We received a new answer from the client, stating that they don't use `Don’t keep activities`, and even when it is enabled, the bug can be reproduced. It seemed like they didn't understand us correctly, but thankfully, we got the confirmation we needed anyway. However, the situation didn't become any clearer, and all my _ideas were left_.
 
 But I didn't finish trying, and decided to localize the problem. I asked my colleagues if anyone had the same device with the same OS version where the client reproduced the bug. it was a `Pixel 7, Android 14`. Miraculously, such a person was found.
@@ -142,13 +142,13 @@ But I didn't finish trying, and decided to localize the problem. I asked my coll
 And this person reproduced the bug in exactly the same way as the client did! Nice! And I got even a video and logs from his device.
 
 After that, I created the same emulator and tried to repeat all steps from the video, but nothing happened - **my app worked as usual**. And what to do next? I couldn't reproduce the bug, I didn't have a device to debug it, logs didn't help, and my previous ideas were wrong...
-# Fourth act: Minimal example
+## Fourth act: Minimal example
 It looks like hope is over, but what to do next? I diced to use my last try - to make a minimal example for reproduce.
 
-I quickly created a pair of activities: a [main screen](https://raw.githubusercontent.com/rinekri/DarkModeBugSample/main/screens/main-screen.png) and a [settings screen](https://raw.githubusercontent.com/rinekri/DarkModeBugSample/main/screens/settings-screen.png). On the settings screen, there was an ability to choose the app theme. This example can be found on [GitHub](https://github.com/rinekri/DarkModeBugSample).
+I quickly created a pair of activities: a [main screen](https://raw.githubusercontent.com/rinekri/DarkModeBugSample/main/screens/main-screen.png) and a [settings screen](https://raw.githubusercontent.com/rinekri/DarkModeBugSample/main/screens/settings-screen.png). On the settings screen, there was an ability to choose the app theme. This example can be found on [GitHub](https://github.com/rinekri/DarkModeBugSample) ([writeup on /projects/](/projects/#project-darkmode-bug)).
 
 Next, I tried to reproduce the bug again step by step, but on this minimal example on an emulator with Android 14. However, it turned out that on this example everything **worked correctly too**! I felt empty and didn't understand why it worked... I started comparing the app and the sample side by side. And suddenly, I noticed that the app was restarted when the system theme was changed! _It was a giant clue_, which helped me to find the reason for the bug, but I will tell it a bit later.
-# Fifth act: Restarting the application
+## Fifth act: Restarting the application
 It isn't easy to analyse system logs, so I tried to clear out extra logs and only kept those printed right after theme switching from System settings. I began to investigate the remaining system logs, focusing on places where the process was killed, and found one strange message:
 ```
 2024-04-18 15:40:52.427 526-545 ActivityManager system_server I Killing 11810:com.rinekri.myapp/u0a193 (adj 700): resetConfig
@@ -178,7 +178,7 @@ The second step was to figure out what this code does and see where `restartProc
 But I still didn't understand how it is related to my case because we didn't use `compatibility mode`, and the screen size didn't change, I just changed the system theme! And what does `compatibility mode` even mean? I realised that I should figure out how we can enable this mode to clarify the situation. In the end, I found an article with all available variants related to this mode, and the first reason mentioned was `resizeableActivity=true`. It turned out that our app uses this property, but it set to `false`. Of course I didn't set this property for my sample, and after that I finally reproduced this elusive bug! 
 
 Even if this bug was reproduced in my sample, in the app, when the process was killed, the theme was restored correctly, except for the Splash screen. Here, I realised that I synchronise the app theme on Application start. I commented out this part of the code, and everything came together. At this moment, I was 100% sure that it's an Android bug because neither I nor the user expected that the app would be partially themed when the system changed. I decided to create an issue for Google on Google Issue Tracker.
-# Sixth act: Bugreport for Google
+## Sixth act: Bugreport for Google
 The problem was found, and the secret was revealed, but I was haunted by one strange thing - why the user's app was broken without any manipulations with the code, while the app on my emulator worked correctly (except for the white Splash screen and restart). I wanted to understand this part too. Then I collected information about the [Build Numbers](https://source.android.com/docs/setup/reference/build-numbers) of emulators and phones where I checked the bug, and I formed this list:
 * UE1A.230829.036.A2 - Android 14
 * AP1A.240405.002 - Android 14, Pixel 7 (2024-04-05)
@@ -190,7 +190,7 @@ Additionally, I decided to try to reproduce the bug on Android 15, and as it tur
 Because of that, I collected all information, recorded a video, and created a bug report in [Google Issue Tracker](https://issuetracker.google.com/issues/335782501). I understand that it can be a rare case because not a lot of apps use `resizeableActivity=false`, but this behavior looks not user-friendly.
 
 I would appreciate it if someone would like this bug, maybe Google will fix it faster! Although it's still possible that I found the wrong place and reason, and it turns out that it isn't a bug at all! But that's even better!
-# Summary
+## Summary
 Despite spending nearly a week on investigation, I was happy that I found the reason and made a point in this story. Was it worth it? I think yes. Anyway, because of it, I wrote this article!
 
 **Let's summarize how to research strange bugs:**
@@ -202,7 +202,7 @@ Despite spending nearly a week on investigation, I was happy that I found the re
 6. Consider even unlikely reasons; even if they are not confirmed, they may lead you in the right direction.
 
 Thanks for reading, and offer your options!
-# Used resources
+## Used resources
 * https://cs.android.com/
 * https://source.android.com/
 * ChatGPT to correct spelling mistakes 

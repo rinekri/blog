@@ -1,0 +1,97 @@
+// ============================================================
+// ⌘K search palette (static/js/search.js). Overlay + results list,
+// created on demand and toggled via .is-open — not baked into every
+// page's initial HTML.
+// ============================================================
+
+.search-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.45);
+  // margin:0 auto only centers .search-palette once the overlay is wider
+  // than 560px — below that, the palette fills edge-to-edge with no gutter.
+  padding: 12vh 16px 24px;
+}
+
+.search-overlay.is-open {
+  display: block;
+}
+
+body.search-open {
+  overflow: hidden;
+}
+
+.search-palette {
+  max-width: 560px;
+  margin: 0 auto;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+.search-palette__input {
+  width: 100%;
+  padding: 16px 18px;
+  font-family: var(--font-mono);
+  font-size: 17px;
+  color: var(--ink);
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--line);
+}
+
+.search-palette__input:focus {
+  outline: none;
+}
+
+.search-palette__results {
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  max-height: 50vh;
+  overflow-y: auto;
+}
+
+.search-palette__result {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.search-palette__result.is-selected {
+  background: var(--paper-dim);
+}
+
+// Hidden commands (static/js/search.js's COMMANDS) — same row shape as a
+// normal result, distinguished only by a small leading glyph so they read
+// as "an action" rather than "a page," without a separate visual language.
+.search-palette__result--command .search-palette__result-title::before {
+  content: "⌘ ";
+  color: var(--moss);
+}
+
+.search-palette__result-title {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  color: var(--ink);
+}
+
+.search-palette__result-excerpt {
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+.search-palette__hint {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--ink-faint);
+  padding: 8px 14px;
+  border-top: 1px solid var(--line);
+}

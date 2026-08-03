@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block content %}
+{% set about = load_data(path="data/about.toml") %}
+{% set resume = load_data(path="data/resume.toml") %}
+<header class="page-header">
+    <div class="breadcrumbs"><a href="{{ config.base_url }}">Home</a></div>
+    <span class="kicker">Personal record</span>
+    <h1 class="section-display">About</h1>
+</header>
+
+<div class="about-hero">
+    <div class="about-hero__portrait">
+        <canvas class="portrait-canvas" data-seed="{{ config.extra.portrait_seed | default(value=config.author) }}" width="420" height="420" aria-hidden="true"></canvas>
+        <img class="portrait-photo" src="{{ get_url(path=config.extra.portrait_image) }}" alt="{{ resume.full_name }}" width="900" height="1200" loading="eager">
+    </div>
+</div>
+
+<p class="lead-strip lead-strip--dropcap">{{ about.lead_strip | safe }}</p>
+
+<p class="about-contact">Want to reach out? <button type="button" id="email-unmask" class="resume-unmask" aria-label="Reveal contact email"><span class="resume-unmask__caption" aria-hidden="true">masked</span><span class="resume-unmask__mask" aria-hidden="true">████████████████</span></button><span id="email-unmask-live" class="sr-only" role="status" aria-live="polite"></span></p>
+
+<div class="workbench">
+{% for section in about.sections | default(value=[]) %}
+    <section class="bench bench--solo" id="{{ section.id }}" data-portrait-ring="{{ section.portrait_ring }}">
+        <header class="bench__head">
+            <span class="bench__num">{{ section.num }}</span>
+            <span class="bench__label">{{ section.label }}</span>
+            <span class="bench__line"></span>
+        </header>
+        <div class="bench__main{% if section.wide %} bench__main--wide{% endif %}">
+        {% for block in section.blocks %}
+            {% if block.type == "paragraph" %}
+            <p>{{ block.text | safe }}</p>
+            {% elif block.type == "pull" %}
+            <div class="pull">{{ block.text | safe }}</div>
+            {% elif block.type == "arc" %}
+            <div class="bench__arc">
+                {% for node in block.nodes %}
+                <div class="arc__node{% if node.resolved %} arc__node--resolved{% endif %}">
+                    <span class="arc__dot"></span>
+                    <span class="arc__year">{{ node.year }}</span>
+                    <span class="arc__note">{{ node.note }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% elif block.type == "chips" %}
+            <div class="chip-row">
+                {% for item in block.items %}<span class="chip chip--sm">{{ item }}</span>{% endfor %}
+            </div>
+            {% elif block.type == "systems_grid" %}
+            <div class="systems-grid">
+                {% for group in block.groups %}
+                <ul class="org-tree">
+                    <li class="org-node org-node--lead">
+                        <div class="org-node__row">
+                            <span class="dot dot--architecture org-node__dot"></span>
+                            <div class="org-node__info">
+                                <span class="org-node__name">{{ group.name }}</span>
+                            </div>
+                        </div>
+                        <ul>
+                            {% for item in group.items %}
+                            <li class="org-node org-node--team">
+                                <div class="org-node__row">
+                                    <span class="dot dot--architecture org-node__dot"></span>
+                                    <div class="org-node__info">{% if item.project_seed %}<a class="org-node__name" href="{{ get_url(path='@/projects/_index.md') }}#project-{{ item.project_seed }}">{{ item.name }}</a>{% else %}<span class="org-node__name">{{ item.name }}</span>{% endif %}</div>
+                                </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                </ul>
+                {% endfor %}
+            </div>
+            <div class="systems-converge" aria-hidden="true">
+                <span class="systems-converge__bar systems-converge__bar--left"></span>
+                <span class="systems-converge__bar systems-converge__bar--right"></span>
+                <span class="systems-converge__dot"></span>
+            </div>
+            {% endif %}
+        {% endfor %}
+        </div>
+    </section>
+{% endfor %}
+</div>
+
+{% for line in about.log_continues | default(value=[]) %}
+<p class="log-continues">{{ line.text | safe }}</p>
+{% endfor %}
+{% endblock content %}

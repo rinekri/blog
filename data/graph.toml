@@ -1,0 +1,5 @@
+# Data for /graph/ (templates/graph.html). Only the intro copy lives here —
+# the graph itself is built client-side (static/js/graph.js) from
+# data/projects.toml, not from this file.
+
+lead_strip = "Every project as a node, connected to every other project it shares 2 or more technologies with. The dense center is the KODE Android cluster; projects with a rarer stack sit apart in their own <em>lone pieces</em> strip — set apart because they don't overlap much, not because anything's broken. Hover a node to trace its connections, or a technology below to see where it recurred. <a href=\"/stack/\">See the technologies list →</a>"

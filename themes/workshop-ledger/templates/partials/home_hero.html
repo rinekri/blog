@@ -1,0 +1,95 @@
+{% import "macros/glyph.svg.html" as glyph -%}
+{% import "macros/chip_icon.svg.html" as chip_icon -%}
+{% set projects = load_data(path="data/projects.toml") %}
+{% set_global kode_all = [] %}
+{% set_global home_projects = [] %}
+{% set_global commercial_count = 0 %}
+{% set_global signature_items = [] %}
+{% for group in projects.groups %}
+{% if group.key != "personal" %}
+{% set_global kode_all = kode_all | concat(with=group.items) %}
+{% endif %}
+{% if group.key == "commercial" %}
+{% set_global commercial_count = group.items | length %}
+{% endif %}
+{% for item in group.items %}
+{% if item.seed %}
+{% set_global signature_items = signature_items | concat(with=[item]) %}
+{% endif %}
+{% endfor %}
+{% endfor %}
+{% for item in kode_all %}
+{% if item.home_feature %}
+{% set_global home_projects = home_projects | concat(with=[item]) %}
+{% endif %}
+{% endfor %}
+{% set speaking = load_data(path="data/speaking.toml") %}
+{% set talks_count = speaking.talks | filter(attribute="type", value="Talk") | length %}
+{% set resume = load_data(path="data/resume.toml") %}
+{% set current_role = resume.employment | first %}
+{% set_global hero_chip_items = [] %}
+{% for group in resume.skills %}
+{% for item in group.items %}
+{% if item.chip_icon %}
+{% set_global hero_chip_items = hero_chip_items | concat(with=[item]) %}
+{% endif %}
+{% endfor %}
+{% endfor %}
+<section class="signature-hero" data-seeds='[{% for item in signature_items %}{"seed":{{ item.seed | json_encode() | safe }},"name":{{ item.name | json_encode() | safe }},"url":{{ item.url | default(value="") | json_encode() | safe }},"category":{{ item.category | default(value="feature") | json_encode() | safe }}}{% if not loop.last %},{% endif %}{% endfor %}]'>
+    <canvas class="signature-hero__canvas" aria-hidden="true"></canvas>
+    <div class="signature-hero__content">
+        <span class="signature-hero__kicker">{{ current_role.role }} · {{ current_role.company }} · {{ config.extra.current_year - config.extra.career_start_year }} years in the profession</span>
+        <h1 class="signature-hero__name">{{ config.extra.hero_name_html | default(value=config.extra.hero_name) | safe }}</h1>
+        <p class="signature-hero__role">Leading the Android department ({{ config.extra.team_size }} people), {{ config.extra.hero_status_focus }}</p>
+        <a class="signature-hero__cta" href="#numbers">See the work ↓</a>
+        <div class="signature-hero__catfilter" role="group" aria-label="Highlight projects by category">
+            <button type="button" class="signature-hero__catbtn is-active" data-cat="all"><span class="dot dot--feature"></span>All</button>
+            <button type="button" class="signature-hero__catbtn" data-cat="leadership"><span class="dot dot--leadership"></span>Leadership</button>
+            <button type="button" class="signature-hero__catbtn" data-cat="architecture"><span class="dot dot--architecture"></span>Architecture</button>
+            <button type="button" class="signature-hero__catbtn" data-cat="feature"><span class="dot dot--feature"></span>Feature work</button>
+        </div>
+    </div>
+    <div class="signature-hero__scroll-hint">move your cursor over the field</div>
+</section>
+
+<div class="numbers" id="numbers">
+    <h2 class="list-heading">{{ glyph::mark() }} The numbers</h2>
+
+    <div class="stat-row">
+        {% for stat in config.extra.hero_stats %}
+        <a class="nstat" href="{{ stat.url | replace(from='$BASE_URL', to=config.base_url) }}">
+            <span class="nstat__num">
+                {%- if stat.key == "years" -%}{{ config.extra.current_year - config.extra.career_start_year }}
+                {%- elif stat.key == "team_size" -%}{{ config.extra.team_size }}
+                {%- elif stat.key == "commercial_projects" -%}{{ commercial_count }}
+                {%- elif stat.key == "talks" -%}{{ talks_count }}
+                {%- endif -%}
+            </span>
+            <span class="nstat__label">{{ stat.label }}</span>
+        </a>
+        {% endfor %}
+    </div>
+
+    <div class="chip-row">
+        {% for chip in hero_chip_items %}
+        <a class="chip chip--tag" href="{{ get_url(path='@/projects/_index.md') }}?stack={{ chip.chip_query | default(value=chip.chip_label | default(value=chip.name)) | urlencode }}">{{ chip_icon::icon(name=chip.chip_icon) }}{% if chip.chip_label %}{{ chip.chip_label }}{% else %}{{ chip.name }}{% endif %}</a>
+        {% endfor %}
+    </div>
+
+    <div class="card-row">
+        {% for item in home_projects %}
+        <a class="numbers-card" href="{{ get_url(path='@/projects/_index.md') }}#project-{{ item.seed }}">
+            <div class="numbers-card__top">
+                <span class="numbers-card__name">{{ item.name }}</span>
+                <span class="numbers-card__stars">{% if item.stars %}★ {{ item.stars }}{% elif item.meta %}{{ item.meta[0] | safe }}{% endif %}</span>
+            </div>
+            <p class="numbers-card__desc">{{ item.desc | safe }}</p>
+            <div class="numbers-card__tags">
+                {% for tag in item.stack %}
+                <span class="chip chip--sm">{{ tag }}</span>
+                {% endfor %}
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
