@@ -1,4 +1,5 @@
 RewriteEngine On
+RewriteCond %{HTTPS} off [OR]
 RewriteCond %{HTTP_HOST} ^www\.rinekri\.com$ [NC]
 RewriteRule ^(.*)$ https://rinekri.com/$1 [L,R=301]
 
